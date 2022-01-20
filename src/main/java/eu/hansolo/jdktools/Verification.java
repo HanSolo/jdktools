@@ -63,14 +63,18 @@ public enum Verification implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED -> {
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED: {
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED -> {
+            case FULL_COMPRESSED:
+            case REDUCED_COMPRESSED:
+            case REDUCED_ENRICHED_COMPRESSED: {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -85,9 +89,9 @@ public enum Verification implements Api {
 
     public Boolean getAsBoolean() {
         switch (Verification.this) {
-            case YES -> { return Boolean.TRUE; }
-            case NO  -> { return Boolean.FALSE; }
-            default  -> { return null; }
+            case YES: { return Boolean.TRUE; }
+            case NO : { return Boolean.FALSE; }
+            default : { return null; }
         }
     }
 

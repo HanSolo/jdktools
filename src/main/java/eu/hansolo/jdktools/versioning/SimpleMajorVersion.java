@@ -71,7 +71,7 @@ public class SimpleMajorVersion {
 
     public String toString(final OutputFormat outputFormat) {
         switch(outputFormat) {
-            case FULL_COMPRESSED -> {
+            case FULL_COMPRESSED: {
                 return new StringBuilder().append(CURLY_BRACKET_OPEN)
                                           .append(QUOTES).append(FIELD_MAJOR_VERSION).append(QUOTES).append(COLON).append(featureVersion).append(COMMA)
                                           .append(QUOTES).append(FIELD_TERM_OF_SUPPORT).append(QUOTES).append(COLON).append(QUOTES).append(termOfSupport.getApiString()).append(QUOTES).append(COMMA)
@@ -79,7 +79,7 @@ public class SimpleMajorVersion {
                                           .append(CURLY_BRACKET_CLOSE)
                                           .toString();
             }
-            default -> {
+            default: {
                 return new StringBuilder().append(CURLY_BRACKET_OPEN)
                                           .append(NEW_LINE)
                                           .append(INDENTED_QUOTES).append(FIELD_MAJOR_VERSION).append(QUOTES).append(COLON).append(featureVersion).append(COMMA_NEW_LINE)
