@@ -116,7 +116,7 @@ public enum OperatingSystem implements Api {
         if (null == text) { return NOT_FOUND; }
         return switch (text) {
             case "-linux", "linux", "Linux", "LINUX", "unix", "UNIX", "Unix", "-unix" -> LINUX;
-            case "-linux-musl", "-linux_musl", "Linux-Musl", "linux-musl", "Linux_Musl", "LINUX_MUSL", "linux_musl", "musl", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX", "Alpine Linux", "alpine linux", "ALPINE LINUX" -> ALPINE_LINUX;
+            case "-linux-musl", "-linux_musl", "Linux-Musl", "linux-musl", "Linux_Musl", "LINUX_MUSL", "linux_musl", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX", "Alpine Linux", "alpine linux", "ALPINE LINUX" -> ALPINE_LINUX;
             case "-solaris", "solaris", "SOLARIS", "Solaris" -> SOLARIS;
             case "-qnx", "qnx", "QNX" -> QNX;
             case "-aix", "aix", "AIX" -> AIX;

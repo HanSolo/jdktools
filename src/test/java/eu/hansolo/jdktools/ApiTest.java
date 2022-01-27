@@ -170,7 +170,7 @@ public class ApiTest {
         assert OperatingSystem.fromText("osx") == OperatingSystem.MACOS;
         assert OperatingSystem.fromText("macos") == OperatingSystem.MACOS;
         assert OperatingSystem.fromText("linux") == OperatingSystem.LINUX;
-        assert OperatingSystem.fromText("musl") == OperatingSystem.ALPINE_LINUX;
+        assert OperatingSystem.fromText("linux_musl") == OperatingSystem.ALPINE_LINUX;
         assert OperatingSystem.fromText("qnx") == OperatingSystem.QNX;
         assert OperatingSystem.fromText("solaris") == OperatingSystem.SOLARIS;
         assert OperatingSystem.fromText("windows") == OperatingSystem.WINDOWS;
