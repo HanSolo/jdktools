@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 
 
 public class Constants {
+    private Constants() {}
+
     public static final String SQUARE_BRACKET_OPEN  = "[";
     public static final String SQUARE_BRACKET_CLOSE = "]";
     public static final String CURLY_BRACKET_OPEN   = "{";
