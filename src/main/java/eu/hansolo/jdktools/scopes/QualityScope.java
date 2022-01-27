@@ -43,8 +43,12 @@ public enum QualityScope implements Scope {
 
     public static Scope fromText(final String text) {
         switch(text) {
-            case "tck_tested"      : return TCK_TESTED;
-            case "aqavit_certified": return AQAVIT_CERTIFIED;
+            case "tck_tested"      :
+            case "TCK_TESTED"      : 
+            case "tckTested"       :return TCK_TESTED;
+            case "aqavit_certified":
+            case "AQAVIT_CERTIFIED":
+            case "aqavitCertified" : return AQAVIT_CERTIFIED;
             default                : return NOT_FOUND;
         }
     }

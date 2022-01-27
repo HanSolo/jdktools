@@ -125,6 +125,10 @@ public enum ArchiveType implements Api {
             case ".dmg":
             case "DMG":
                 return DMG;
+            case "exe":
+            case ".exe":
+            case "EXE":
+                return EXE;
             case "msi":
             case ".msi":
             case "MSI":
@@ -147,6 +151,7 @@ public enum ArchiveType implements Api {
             case "tar.Z":
             case ".tar.Z":
             case "TAR.Z":
+            case "tar.z":
                 return TAR_Z;
             case "tar.gz":
             case ".tar.gz":

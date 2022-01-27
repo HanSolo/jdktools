@@ -40,7 +40,7 @@ public enum Latest implements Api {
     PER_VERSION("per version", "per_version"),
     AVAILABLE("available", "available"),
     NONE("-", ""),
-    NOT_FOUND("", "");;
+    NOT_FOUND("", "");
 
     private final String uiString;
     private final String apiString;
@@ -92,6 +92,7 @@ public enum Latest implements Api {
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
     public static Latest fromText(final String text) {
+        if (null == text) { return NOT_FOUND; }
         switch (text) {
             case "per_distro":
             case "per-distro":

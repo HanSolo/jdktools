@@ -243,8 +243,14 @@ public enum Architecture implements Api {
             case "x86lx64":
             case "X86LX64":
                 return X64;
+            case "x32":
             case "x86":
             case "X86":
+            case "286":
+            case "386":
+            case "486":
+            case "586":
+            case "686":
             case "i386":
             case "i486":
             case "i586":

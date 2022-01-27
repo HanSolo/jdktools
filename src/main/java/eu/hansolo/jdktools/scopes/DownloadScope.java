@@ -45,9 +45,13 @@ public enum DownloadScope implements Scope {
         switch(text) {
             case "directly":
             case "directly_downloadable":
+            case "directlyDownloadable":
+            case "DIRECTLY_DOWNLOADABLE":
                 return DIRECTLY;
             case "not_directly":
             case "not_directly_downloadable":
+            case "notDirectlyDownloadable":
+            case "NOT_DIRECTLY_DOWNLOADABLE":
                 return NOT_DIRECTLY;
             default:
                 return NOT_FOUND;

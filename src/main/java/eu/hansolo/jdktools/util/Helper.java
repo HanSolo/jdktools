@@ -24,7 +24,8 @@ import eu.hansolo.jdktools.versioning.VersionNumber;
 
 
 public class Helper {
-    private Helper() {}
+
+    private Helper(){}
 
     public static final String trimPrefix(final String text, final String prefix) {
         return text.replaceFirst(prefix, "");

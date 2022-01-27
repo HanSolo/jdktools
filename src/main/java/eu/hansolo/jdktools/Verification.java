@@ -119,8 +119,6 @@ public enum Verification implements Api {
             case "UNKNOWN":
             case "Unknown":
                 return UNKNOWN;
-            case "":
-                return NONE;
             default:
                 return NOT_FOUND;
         }

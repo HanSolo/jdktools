@@ -45,9 +45,11 @@ public enum SignatureScope implements Scope {
         switch(text) {
             case "signature_available":
             case "SIGNATURE_AVAILABLE":
+            case "signatureAvailable":
                 return SIGNATURE_AVAILABLE;
             case "signature_not_available":
             case "SIGNATURE_NOT_AVAILABLE":
+            case "signatureNotAvailable":
                 return SIGNATURE_NOT_AVAILABLE;
             default:
                 return NOT_FOUND;

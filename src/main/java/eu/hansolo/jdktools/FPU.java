@@ -97,6 +97,7 @@ public enum FPU implements Api {
             case "HARD-FLOAT":
             case "hardfloat":
             case "HARDFLOAT":
+            case "hfl":
             case "hflt":
             case "HFLT":
                 return HARD_FLOAT;
@@ -106,6 +107,7 @@ public enum FPU implements Api {
             case "SOFT-FLOAT":
             case "softfloat":
             case "SOFTFLOAT":
+            case "sfl":
             case "sflt":
             case "SFLT":
                 return SOFT_FLOAT;

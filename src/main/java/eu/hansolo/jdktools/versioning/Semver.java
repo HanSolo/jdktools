@@ -24,6 +24,7 @@ import eu.hansolo.jdktools.util.Helper;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,8 +32,8 @@ import java.util.stream.Collectors;
 
 
 public class Semver implements Comparable<Semver> {
-    public static final Pattern EA_PATTERN           = Pattern.compile("(ea|EA)((\\.|\\+|\\-)([0-9]+))?");
-    public static final Pattern BUILD_NUMBER_PATTERN = Pattern.compile("\\+?(b|B)([0-9]+)");
+    public static final Pattern EA_PATTERN           = Pattern.compile("(ea|EA)(([.+\\-])([0-9]+))?");
+    public static final Pattern BUILD_NUMBER_PATTERN = Pattern.compile("\\+?([bB])([0-9]+)");
 
     private VersionNumber versionNumber;
     private ReleaseStatus releaseStatus;
@@ -66,13 +67,11 @@ public class Semver implements Comparable<Semver> {
             this.preBuild = Integer.toString(versionNumber.getBuild().getAsInt());
         }
 
-        if (this.preBuild.isEmpty() && !metadata.isEmpty()) {
-            if (Helper.isPositiveInteger(this.metadata)) {
-                this.preBuild = this.metadata;
-                Integer build = Integer.valueOf(this.preBuild);
-                if (build > 0) {
-                    this.versionNumber.setBuild(build);
-                }
+        if (this.preBuild.isEmpty() && !metadata.isEmpty() && Helper.isPositiveInteger(this.metadata)) {
+            this.preBuild = this.metadata;
+            Integer build = Integer.valueOf(this.preBuild);
+            if (build > 0) {
+                this.versionNumber.setBuild(build);
             }
         }
 
@@ -90,12 +89,10 @@ public class Semver implements Comparable<Semver> {
                     this.versionNumber.setReleaseStatus(ReleaseStatus.EA);
                     if (null != eaResult.group(4)) {
                         this.preBuild = !eaResult.group(4).equals("0") ? eaResult.group(4) : "";
-                        if (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty()) {
-                            if (!this.preBuild.isEmpty()) {
-                                Integer build = Integer.parseInt(this.preBuild);
-                                if (build > 0) {
-                                    this.versionNumber.setBuild(build);
-                                }
+                        if ((null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty()) && !this.preBuild.isEmpty()) {
+                            Integer build = Integer.parseInt(this.preBuild);
+                            if (build > 0) {
+                                this.versionNumber.setBuild(build);
                             }
                         }
                     }
@@ -121,15 +118,11 @@ public class Semver implements Comparable<Semver> {
             final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
             if (buildNumberResults.size() > 0) {
                 final MatchResult buildNumberResult = buildNumberResults.get(0);
-                if (null != buildNumberResult.group(1)) {
-                    if (null != buildNumberResult.group(2)) {
-                        if (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty()) {
-                            Integer build = Integer.parseInt(buildNumberResult.group(2));
-                            if (build > 0) {
-                                this.versionNumber.setBuild(build);
-                                this.preBuild = Integer.toString(build);
-                            }
-                        }
+                if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
+                    Integer build = Integer.parseInt(buildNumberResult.group(2));
+                    if (build > 0) {
+                        this.versionNumber.setBuild(build);
+                        this.preBuild = Integer.toString(build);
                     }
                 }
             }
@@ -163,14 +156,14 @@ public class Semver implements Comparable<Semver> {
 
     public String getPre() { return pre; }
     public void setPre(final String pre) {
-        if (null == pre && pre.length() > 0) {
+        if (null != pre && pre.length() > 0) {
             Error err = validatePrerelease(pre);
             if (null != err) {
                 throw new IllegalArgumentException(err.getMessage());
             }
         }
         this.pre           = null == pre ? "" : pre;
-        this.releaseStatus = (null == pre || pre.isEmpty()) ? ReleaseStatus.GA : ReleaseStatus.EA;
+        this.releaseStatus = (null == this.pre || this.pre.isEmpty()) ? ReleaseStatus.GA : ReleaseStatus.EA;
     }
 
     public String getPreBuild() { return preBuild; }
@@ -192,7 +185,7 @@ public class Semver implements Comparable<Semver> {
 
     public String getMetadata() { return metadata; }
     public void setMetadata(final String metadata) {
-        if (null == metadata && metadata.length() > 0) {
+        if (null != metadata && metadata.length() > 0) {
             Error err = validateMetadata(metadata);
             if (null != err) {
                 throw new IllegalArgumentException(err.getMessage());
@@ -339,13 +332,7 @@ public class Semver implements Comparable<Semver> {
             int thisBuild  = getPreBuildAsInt();
             int otherBuild = semVer.getPreBuildAsInt();
 
-            if (thisBuild > otherBuild) {
-                d = 1;
-            } else if (thisBuild < otherBuild) {
-                d = -1;
-            } else {
-                d = 0;
-            }
+            d = Integer.compare(thisBuild, otherBuild);
         } else {
             d = 0;
         }
@@ -493,6 +480,20 @@ public class Semver implements Comparable<Semver> {
 
         return versionBuilder.toString();
     }
+
+    @Override public boolean equals(final Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        Semver semver = (Semver) o;
+        return Objects.equals(versionNumber, semver.versionNumber) &&
+               releaseStatus == semver.releaseStatus &&
+               Objects.equals(pre, semver.pre) &&
+               Objects.equals(preBuild, semver.preBuild) &&
+               Objects.equals(metadata, semver.metadata) &&
+               comparison == semver.comparison;
+    }
+
+    @Override public int hashCode() { return Objects.hash(versionNumber, releaseStatus, pre, preBuild, metadata, comparison); }
 
     @Override public String toString() {
         return toString(true);
