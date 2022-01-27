@@ -98,7 +98,7 @@ public enum OperatingSystem implements Api {
                           .append(INDENTED_QUOTES).append("lib_c_type").append(QUOTES).append(COLON).append(QUOTES).append(libCType.getApiString()).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -116,12 +116,13 @@ public enum OperatingSystem implements Api {
         if (null == text) { return NOT_FOUND; }
         return switch (text) {
             case "-linux", "linux", "Linux", "LINUX", "unix", "UNIX", "Unix", "-unix" -> LINUX;
-            case "-linux-musl", "-linux_musl", "Linux-Musl", "linux-musl", "Linux_Musl", "LINUX_MUSL", "linux_musl", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX", "Alpine Linux", "alpine linux", "ALPINE LINUX" -> ALPINE_LINUX;
+            case "-linux-musl", "-linux_musl", "Linux-Musl", "linux-musl", "Linux_Musl", "LINUX_MUSL", "linux_musl", "musl", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX", "Alpine Linux", "alpine linux", "ALPINE LINUX" -> ALPINE_LINUX;
             case "-solaris", "solaris", "SOLARIS", "Solaris" -> SOLARIS;
             case "-qnx", "qnx", "QNX" -> QNX;
             case "-aix", "aix", "AIX" -> AIX;
             case "darwin", "-darwin", "-macosx", "-MACOSX", "MacOS", "Mac OS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX", "macosx", "MACOSX", "Mac OSX", "mac osx" -> MACOS;
             case "-win", "windows", "Windows", "WINDOWS", "win", "Win", "WIN" -> WINDOWS;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

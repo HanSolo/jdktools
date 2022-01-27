@@ -70,7 +70,7 @@ public enum TermOfSupport implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -89,6 +89,7 @@ public enum TermOfSupport implements Api {
             case "long_term_stable", "LongTermStable", "lts", "LTS", "Lts" -> LTS;
             case "mid_term_stable", "MidTermStable", "mts", "MTS", "Mts" -> MTS;
             case "short_term_stable", "ShortTermStable", "sts", "STS", "Sts" -> STS;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

@@ -25,6 +25,8 @@ import eu.hansolo.jdktools.versioning.VersionNumber;
 
 public class Helper {
 
+    private Helper(){}
+
     public static final String trimPrefix(final String text, final String prefix) {
         return text.replaceFirst(prefix, "");
     }
@@ -45,11 +47,10 @@ public class Helper {
     }
     public static final boolean isSTS(final int featureVersion) {
         if (featureVersion < 9) { return false; }
-        switch(featureVersion) {
-            case 9 :
-            case 10: return true;
-            default: return !isLTS(featureVersion);
-        }
+        return switch (featureVersion) {
+            case 9, 10 -> true;
+            default -> !isLTS(featureVersion);
+        };
     }
     public static final boolean isMTS(final int featureVersion) {
         if (featureVersion < 13) { return false; }
@@ -65,12 +66,11 @@ public class Helper {
 
     public static final TermOfSupport getTermOfSupport(final VersionNumber versionNumber, final boolean isZulu) {
         TermOfSupport termOfSupport = getTermOfSupport(versionNumber);
-        switch(termOfSupport) {
-            case LTS:
-            case STS: return termOfSupport;
-            case MTS: return isZulu ? termOfSupport : TermOfSupport.STS;
-            default : return TermOfSupport.NOT_FOUND;
-        }
+        return switch (termOfSupport) {
+            case LTS, STS -> termOfSupport;
+            case MTS -> isZulu ? termOfSupport : TermOfSupport.STS;
+            default -> TermOfSupport.NOT_FOUND;
+        };
     }
     public static final TermOfSupport getTermOfSupport(final VersionNumber versionNumber) {
         if (!versionNumber.getFeature().isPresent() || versionNumber.getFeature().isEmpty()) {

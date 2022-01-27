@@ -74,6 +74,7 @@ public enum OperatingMode implements Api {
         return switch (text) {
             case "native", "NATIVE", "Native" -> NATIVE;
             case "emulated", "EMULATED", "Emulated" -> EMULATED;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }
@@ -92,7 +93,7 @@ public enum OperatingMode implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)

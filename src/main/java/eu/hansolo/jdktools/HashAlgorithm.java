@@ -74,7 +74,7 @@ public enum HashAlgorithm implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -97,6 +97,7 @@ public enum HashAlgorithm implements Api {
             case "sha384", "SHA384", "sha_384", "SHA_384", "sha-384", "SHA-384" -> SHA384;
             case "sha512", "SHA512", "sha_512", "SHA_512", "sha-512", "SHA-512" -> SHA512;
             case "sha3_256", "SHA3_256", "sha-3-256", "SHA-3-256", "sha_3_256", "SHA_3_256" -> SHA3_256;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

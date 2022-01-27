@@ -70,7 +70,7 @@ public enum FPU implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -86,9 +86,10 @@ public enum FPU implements Api {
     public static FPU fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         return switch (text) {
-            case "hard_float", "HARD_FLOAT", "hard-float", "HARD-FLOAT", "hardfloat", "HARDFLOAT", "hflt", "HFLT" -> HARD_FLOAT;
-            case "soft_float", "SOFT_FLOAT", "soft-float", "SOFT-FLOAT", "softfloat", "SOFTFLOAT", "sflt", "SFLT" -> SOFT_FLOAT;
+            case "hard_float", "HARD_FLOAT", "hard-float", "HARD-FLOAT", "hardfloat", "HARDFLOAT", "hfl", "hflt", "HFLT" -> HARD_FLOAT;
+            case "soft_float", "SOFT_FLOAT", "soft-float", "SOFT-FLOAT", "softfloat", "SOFTFLOAT", "sfl", "sflt", "SFLT" -> SOFT_FLOAT;
             case "unknown", "UNKNOWN" -> UNKNOWN;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

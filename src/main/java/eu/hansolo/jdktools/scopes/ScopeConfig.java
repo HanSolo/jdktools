@@ -21,6 +21,15 @@ package eu.hansolo.jdktools.scopes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static eu.hansolo.jdktools.Constants.COLON;
+import static eu.hansolo.jdktools.Constants.COMMA;
+import static eu.hansolo.jdktools.Constants.CURLY_BRACKET_OPEN;
+import static eu.hansolo.jdktools.Constants.EMPTY_SQUARE_BRACKETS;
+import static eu.hansolo.jdktools.Constants.QUOTES;
+import static eu.hansolo.jdktools.Constants.QUOTES_COMMA_QUOTES;
+import static eu.hansolo.jdktools.Constants.SQUARE_BRACKET_CLOSE_QUOTES;
+import static eu.hansolo.jdktools.Constants.SQUARE_BRACKET_OPEN_QUOTES;
+
 
 public class ScopeConfig {
     private String       name;
@@ -107,27 +116,27 @@ public class ScopeConfig {
 
     @Override public String toString() {
         StringBuilder msgBuilder = new StringBuilder();
-        msgBuilder.append("{")
-                  .append("\"").append("name").append("\"").append(":").append("\"").append(getName()).append("\"").append(",")
-                  .append("\"").append("distribution").append("\"").append(":").append(getDistributions().isEmpty() ? "[]" : getDistributions().stream().collect(Collectors.joining("\",\"", "[\"", "\"]"))).append(",")
-                  .append("\"").append("basic_scope").append("\"").append(":").append(getBasicScopes().isEmpty() ? "[]" : getBasicScopes().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("build_scope").append("\"").append(":").append(getBuildScopes().isEmpty() ? "[]" : getBuildScopes().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("download_scope").append("\"").append(":").append(getDownloadScopes().isEmpty() ? "[]" : getDownloadScopes().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("usage_scope").append("\"").append(":").append(getUsageScopes().isEmpty() ? "[]" : getUsageScopes().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("match").append("\"").append(":").append("\"").append(getMatch()).append("\"").append(",")
-                  .append("\"").append("version").append("\"").append(":").append("\"").append(getVersion()).append("\"").append(",")
-                  .append("\"").append("architecture").append("\"").append(":").append(getArchitectures().isEmpty() ? "[]" : getArchitectures().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("archive_type").append("\"").append(":").append(getArchiveTypes().isEmpty() ? "[]" : getArchiveTypes().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("package_type").append("\"").append(":").append(getPackageTypes().isEmpty() ? "[]" : getPackageTypes().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("operating_system").append("\"").append(":").append(getOperatingSystems().isEmpty() ? "[]" : getOperatingSystems().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("lib_c_type").append("\"").append(":").append(getLibcTypes().isEmpty() ? "[]" : getLibcTypes().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("release_status").append("\"").append(":").append(getReleaseStatus().isEmpty() ? "[]" : getReleaseStatus().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("term_of_support").append("\"").append(":").append(getTermsOfSupport().isEmpty() ? "[]" : getTermsOfSupport().stream().collect(Collectors.joining("\",\"","[\"","\"]"))).append(",")
-                  .append("\"").append("bitness").append("\"").append(":").append("\"").append(getBitness()).append("\"").append(",")
-                  .append("\"").append("javafx_bundled").append("\"").append(":").append("\"").append(getJavafxBundled()).append("\"").append(",")
-                  .append("\"").append("directly_downloadable").append("\"").append(":").append("\"").append(getDirectlyDownloadable()).append("\"").append(",")
-                  .append("\"").append("signature_available").append("\"").append(":").append("\"").append(getSignatureAvailable()).append("\"").append(",")
-                  .append("\"").append("latest").append("\"").append(":").append("\"").append(getLatest()).append("\"").append("")
+        msgBuilder.append(CURLY_BRACKET_OPEN)
+                  .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(getName()).append(QUOTES).append(COMMA)
+                  .append(QUOTES).append("distribution").append(QUOTES).append(COLON).append(getDistributions().isEmpty() ? EMPTY_SQUARE_BRACKETS : getDistributions().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES, SQUARE_BRACKET_OPEN_QUOTES, SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("basic_scope").append(QUOTES).append(COLON).append(getBasicScopes().isEmpty() ? EMPTY_SQUARE_BRACKETS : getBasicScopes().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("build_scope").append(QUOTES).append(COLON).append(getBuildScopes().isEmpty() ? EMPTY_SQUARE_BRACKETS : getBuildScopes().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("download_scope").append(QUOTES).append(COLON).append(getDownloadScopes().isEmpty() ? EMPTY_SQUARE_BRACKETS : getDownloadScopes().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("usage_scope").append(QUOTES).append(COLON).append(getUsageScopes().isEmpty() ? EMPTY_SQUARE_BRACKETS : getUsageScopes().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("match").append(QUOTES).append(COLON).append(QUOTES).append(getMatch()).append(QUOTES).append(COMMA)
+                  .append(QUOTES).append("version").append(QUOTES).append(COLON).append(QUOTES).append(getVersion()).append(QUOTES).append(COMMA)
+                  .append(QUOTES).append("architecture").append(QUOTES).append(COLON).append(getArchitectures().isEmpty() ? EMPTY_SQUARE_BRACKETS : getArchitectures().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("archive_type").append(QUOTES).append(COLON).append(getArchiveTypes().isEmpty() ? EMPTY_SQUARE_BRACKETS : getArchiveTypes().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("package_type").append(QUOTES).append(COLON).append(getPackageTypes().isEmpty() ? EMPTY_SQUARE_BRACKETS : getPackageTypes().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("operating_system").append(QUOTES).append(COLON).append(getOperatingSystems().isEmpty() ? EMPTY_SQUARE_BRACKETS : getOperatingSystems().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("lib_c_type").append(QUOTES).append(COLON).append(getLibcTypes().isEmpty() ? EMPTY_SQUARE_BRACKETS : getLibcTypes().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("release_status").append(QUOTES).append(COLON).append(getReleaseStatus().isEmpty() ? EMPTY_SQUARE_BRACKETS : getReleaseStatus().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("term_of_support").append(QUOTES).append(COLON).append(getTermsOfSupport().isEmpty() ? EMPTY_SQUARE_BRACKETS : getTermsOfSupport().stream().collect(Collectors.joining(QUOTES_COMMA_QUOTES,SQUARE_BRACKET_OPEN_QUOTES,SQUARE_BRACKET_CLOSE_QUOTES))).append(COMMA)
+                  .append(QUOTES).append("bitness").append(QUOTES).append(COLON).append(QUOTES).append(getBitness()).append(QUOTES).append(COMMA)
+                  .append(QUOTES).append("javafx_bundled").append(QUOTES).append(COLON).append(QUOTES).append(getJavafxBundled()).append(QUOTES).append(COMMA)
+                  .append(QUOTES).append("directly_downloadable").append(QUOTES).append(COLON).append(QUOTES).append(getDirectlyDownloadable()).append(QUOTES).append(COMMA)
+                  .append(QUOTES).append("signature_available").append(QUOTES).append(COLON).append(QUOTES).append(getSignatureAvailable()).append(QUOTES).append(COMMA)
+                  .append(QUOTES).append("latest").append(QUOTES).append(COLON).append(QUOTES).append(getLatest()).append(QUOTES)
                   .append("}");
         return msgBuilder.toString();
     }

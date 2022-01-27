@@ -73,7 +73,7 @@ public enum Latest implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -87,12 +87,14 @@ public enum Latest implements Api {
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
     public static Latest fromText(final String text) {
+        if (null == text) { return NOT_FOUND; }
         return switch (text) {
             case "per_distro", "per-distro", "per-distribution", "per_distribution", "perdistro", "PER_DISTRO", "PER-DISTRO", "PER_DISTRIBUTION", "PER-DISTRIBUTION", "PERDISTRO" -> PER_DISTRIBUTION;
             case "overall", "OVERALL", "in_general", "in-general", "IN_GENERAL", "IN-GENERAL" -> OVERALL;
             case "per_version", "per-version", "perversion", "PER_VERSION", "PER-VERSION", "PERVERSION" -> PER_VERSION;
             case "available", "AVAILABLE", "Available" -> AVAILABLE;
             case "all_of_version", "ALL_OF_VERSION" -> ALL_OF_VERSION;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

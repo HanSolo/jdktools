@@ -84,7 +84,7 @@ public enum ArchiveType implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -105,15 +105,17 @@ public enum ArchiveType implements Api {
             case "cab", ".cab", "CAB" -> CAB;
             case "deb", ".deb", "DEB" -> DEB;
             case "dmg", ".dmg", "DMG" -> DMG;
+            case "exe", ".exe", "EXE" -> EXE;
             case "msi", ".msi", "MSI" -> MSI;
             case "pkg", ".pkg", "PKG" -> PKG;
             case "rpm", ".rpm", "RPM" -> RPM;
             case "src.tar.gz", ".src.tar.gz", "source.tar.gz", "SRC.TAR.GZ", "src_tar", "SRC_TAR" -> SRC_TAR;
-            case "tar.Z", ".tar.Z", "TAR.Z" -> TAR_Z;
+            case "tar.z", "tar.Z", ".tar.Z", "TAR.Z" -> TAR_Z;
             case "tar.gz", ".tar.gz", "TAR.GZ" -> TAR_GZ;
             case "tgz", ".tgz", "TGZ" -> TGZ;
             case "tar", ".tar", "TAR" -> TAR;
             case "zip", ".zip", "ZIP" -> ZIP;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

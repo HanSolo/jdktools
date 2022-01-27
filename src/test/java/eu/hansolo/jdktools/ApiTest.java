@@ -31,17 +31,17 @@ public class ApiTest {
         assert Architecture.fromText("arm") == Architecture.ARM;
         assert Architecture.fromText("armv6") == Architecture.ARM;
         assert Architecture.fromText("armv7") == Architecture.ARM;
-        assert Architecture.fromText("aarch32") == Architecture.AARCH32;
+        assert Architecture.fromText("aarch32") == Architecture.ARM;
         assert Architecture.fromText("aarch64") == Architecture.AARCH64;
         assert Architecture.fromText("amd64") == Architecture.AMD64;
-        assert Architecture.fromText("arm32") == Architecture.ARM32;
+        assert Architecture.fromText("arm32") == Architecture.ARM;
         assert Architecture.fromText("arm64") == Architecture.ARM64;
         assert Architecture.fromText("armv8") == Architecture.ARM64;
         assert Architecture.fromText("armel") == Architecture.ARMEL;
         assert Architecture.fromText("armhf") == Architecture.ARMHF;
-        assert Architecture.fromText("i386") == Architecture.I386;
-        assert Architecture.fromText("i586") == Architecture.I586;
-        assert Architecture.fromText("i686") == Architecture.I686;
+        assert Architecture.fromText("i386") == Architecture.X86;
+        assert Architecture.fromText("i586") == Architecture.X86;
+        assert Architecture.fromText("i686") == Architecture.X86;
         assert Architecture.fromText("ia64") == Architecture.IA64;
         assert Architecture.fromText("mips") == Architecture.MIPS;
         assert Architecture.fromText("mipsel") == Architecture.MIPSEL;
@@ -53,7 +53,7 @@ public class ApiTest {
         assert Architecture.fromText("s390") == Architecture.S390X;
         assert Architecture.fromText("sparc") == Architecture.SPARC;
         assert Architecture.fromText("sparcv9") == Architecture.SPARCV9;
-        assert Architecture.fromText("x32") == Architecture.X32;
+        assert Architecture.fromText("x32") == Architecture.X86;
         assert Architecture.fromText("x64") == Architecture.X64;
         assert Architecture.fromText("x86lx64") == Architecture.X64;
         assert Architecture.fromText("x86-64") == Architecture.X64;
@@ -61,7 +61,7 @@ public class ApiTest {
         assert Architecture.fromText("i486") == Architecture.X86;
         assert Architecture.fromText("286") == Architecture.X86;
         assert Architecture.fromText("386") == Architecture.X86;
-        assert Architecture.fromText("x86_64") == Architecture.X86_64;
+        assert Architecture.fromText("x86_64") == Architecture.X64;
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ApiTest {
         assert ArchiveType.fromText("msi") == ArchiveType.MSI;
         assert ArchiveType.fromText("pkg") == ArchiveType.PKG;
         assert ArchiveType.fromText("rpm") == ArchiveType.RPM;
-        assert ArchiveType.fromText("src.tar") == ArchiveType.SRC_TAR;
+        assert ArchiveType.fromText("src.tar.gz") == ArchiveType.SRC_TAR;
         assert ArchiveType.fromText("tar") == ArchiveType.TAR;
         assert ArchiveType.fromText("tar.gz") == ArchiveType.TAR_GZ;
         assert ArchiveType.fromText("tgz") == ArchiveType.TGZ;
@@ -147,8 +147,8 @@ public class ApiTest {
 
     @Test
     public void matchFromTextTest() {
-        assert Match.fromText(null) == Match.NOT_FOUND;
-        assert Match.fromText("") == Match.NONE;
+        assert Match.fromText(null) == Match.ANY;
+        assert Match.fromText("") == Match.ANY;
         assert Match.fromText("any") == Match.ANY;
         assert Match.fromText("all") == Match.ALL;
     }
@@ -170,7 +170,7 @@ public class ApiTest {
         assert OperatingSystem.fromText("osx") == OperatingSystem.MACOS;
         assert OperatingSystem.fromText("macos") == OperatingSystem.MACOS;
         assert OperatingSystem.fromText("linux") == OperatingSystem.LINUX;
-        assert OperatingSystem.fromText("musl") == OperatingSystem.LINUX_MUSL;
+        assert OperatingSystem.fromText("musl") == OperatingSystem.ALPINE_LINUX;
         assert OperatingSystem.fromText("qnx") == OperatingSystem.QNX;
         assert OperatingSystem.fromText("solaris") == OperatingSystem.SOLARIS;
         assert OperatingSystem.fromText("windows") == OperatingSystem.WINDOWS;

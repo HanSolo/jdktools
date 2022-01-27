@@ -71,7 +71,7 @@ public enum LibCType implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -91,6 +91,7 @@ public enum LibCType implements Api {
             case "glibc", "GLIBC", "linux", "Linux", "LINUX" -> GLIBC;
             case "c_std_lib", "C_STD_LIB", "c-std-lib", "C-STD-LIB", "windows", "Windows", "win", "Win" -> C_STD_LIB;
             case "libc", "LIBC", "macos", "MACOS", "macosx", "MACOSX", "aix", "AIX", "qnx", "QNX", "solaris", "SOLARIS", "darwin", "DARWIN" -> LIBC;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

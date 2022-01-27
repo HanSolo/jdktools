@@ -72,7 +72,7 @@ public enum Bitness implements Api {
                           .append(INDENTED_QUOTES).append("bits").append(QUOTES).append(COLON).append(bits).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
+            default -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -95,6 +95,7 @@ public enum Bitness implements Api {
         return switch (text) {
             case "32", "32bit", "32Bit", "32BIT" -> BIT_32;
             case "64", "64bit", "64Bit", "64BIT" -> BIT_64;
+            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }
