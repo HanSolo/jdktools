@@ -42,6 +42,7 @@ public enum QualityScope implements Scope {
 
 
     public static Scope fromText(final String text) {
+        if (null == text) { return NOT_FOUND; }
         switch(text) {
             case "tck_tested"      :
             case "TCK_TESTED"      : 

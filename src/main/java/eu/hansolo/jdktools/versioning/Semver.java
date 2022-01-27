@@ -83,7 +83,7 @@ public class Semver implements Comparable<Semver> {
         if (null != this.pre) {
             final Matcher           eaMatcher = EA_PATTERN.matcher(this.pre);
             final List<MatchResult> eaResults = eaMatcher.results().collect(Collectors.toList());
-            if (eaResults.size() > 0) {
+            if (!eaResults.isEmpty()) {
                 final MatchResult eaResult = eaResults.get(0);
                 if (null != eaResult.group(1)) {
                     this.versionNumber.setReleaseStatus(ReleaseStatus.EA);
@@ -116,7 +116,7 @@ public class Semver implements Comparable<Semver> {
         if (null != this.metadata) {
             final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
             final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
-            if (buildNumberResults.size() > 0) {
+            if (!buildNumberResults.isEmpty()) {
                 final MatchResult buildNumberResult = buildNumberResults.get(0);
                 if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
                     Integer build = Integer.parseInt(buildNumberResult.group(2));
@@ -163,7 +163,7 @@ public class Semver implements Comparable<Semver> {
             }
         }
         this.pre           = null == pre ? "" : pre;
-        this.releaseStatus = (null == this.pre || this.pre.isEmpty()) ? ReleaseStatus.GA : ReleaseStatus.EA;
+        this.releaseStatus = this.pre.isEmpty() ? ReleaseStatus.GA : ReleaseStatus.EA;
     }
 
     public String getPreBuild() { return preBuild; }

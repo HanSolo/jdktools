@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 
 
 public class VersionNumber implements Comparable<VersionNumber> {
-    public static final Pattern                 VERSION_NO_PATTERN      = Pattern.compile("([1-9]\\d*)((u(\\d+))|(\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.(\\d+)))?((_|b)(\\d+))?((-|\\+|\\.)([a-zA-Z0-9\\-\\+]+)(\\.[0-9]+)?)?");
-    public static final Pattern                 EA_PATTERN              = Pattern.compile("(ea|EA)((\\.|\\+|\\-)([0-9]+))?");
+    public static final Pattern                 VERSION_NO_PATTERN      = Pattern.compile("([1-9]\\d*)((u(\\d+))|(\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.(\\d+)))?(([_b])(\\d+))?(([-+.])([a-zA-Z0-9\\-\\+]+)(\\.[0-9]+)?)?");
+    public static final Pattern                 EA_PATTERN              = Pattern.compile("(ea|EA)(([.+\\-])([0-9]+))?");
     public static final Pattern                 EA_BUILD_NUMBER_PATTERN = Pattern.compile("(\\.?)([0-9]+)");
     public static final Pattern                 BUILD_NUMBER_PATTERN    = Pattern.compile("\\+?([bB])([0-9]+)");
     public static final Pattern                 LEADING_INT_PATTERN     = Pattern.compile("^[0-9]*");
@@ -547,9 +547,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                     if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
                     if (update.isPresent())  { versionBuilder.append(".").append(update.getAsInt()); }
                     if (patch.isPresent())   { versionBuilder.append(".").append(patch.getAsInt()); }
-                    if (!javaFormat) {
-                        if (fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
-                    }
+                    if (!javaFormat && fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
                 } else if (patch.isPresent() && patch.getAsInt() != 0) {
