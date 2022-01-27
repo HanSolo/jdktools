@@ -89,7 +89,6 @@ public enum FPU implements Api {
             case "hard_float", "HARD_FLOAT", "hard-float", "HARD-FLOAT", "hardfloat", "HARDFLOAT", "hfl", "hflt", "HFLT" -> HARD_FLOAT;
             case "soft_float", "SOFT_FLOAT", "soft-float", "SOFT-FLOAT", "softfloat", "SOFTFLOAT", "sfl", "sflt", "SFLT" -> SOFT_FLOAT;
             case "unknown", "UNKNOWN" -> UNKNOWN;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

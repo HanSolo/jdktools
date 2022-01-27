@@ -27,7 +27,7 @@ public class ApiTest {
     @Test
     public void architectureFromTextTest() {
         assert Architecture.fromText(null) == Architecture.NOT_FOUND;
-        assert Architecture.fromText("") == Architecture.NONE;
+        assert Architecture.fromText("") == Architecture.NOT_FOUND;
         assert Architecture.fromText("arm") == Architecture.ARM;
         assert Architecture.fromText("armv6") == Architecture.ARM;
         assert Architecture.fromText("armv7") == Architecture.ARM;
@@ -67,7 +67,7 @@ public class ApiTest {
     @Test
     public void archiveTypeFromTextTest() {
         assert ArchiveType.fromText(null) == ArchiveType.NOT_FOUND;
-        assert ArchiveType.fromText("") == ArchiveType.NONE;
+        assert ArchiveType.fromText("") == ArchiveType.NOT_FOUND;
         assert ArchiveType.fromText("apk") == ArchiveType.APK;
         assert ArchiveType.fromText("bin") == ArchiveType.BIN;
         assert ArchiveType.fromText("cab") == ArchiveType.CAB;
@@ -88,7 +88,7 @@ public class ApiTest {
     @Test
     public void bitnessFromTextTest() {
         assert Bitness.fromText(null) == Bitness.NOT_FOUND;
-        assert Bitness.fromText("") == Bitness.NONE;
+        assert Bitness.fromText("") == Bitness.NOT_FOUND;
         assert Bitness.fromText("32") == Bitness.BIT_32;
         assert Bitness.fromText("32bit") == Bitness.BIT_32;
         assert Bitness.fromText("64") == Bitness.BIT_64;
@@ -98,7 +98,7 @@ public class ApiTest {
     @Test
     public void fpuFromTextTest() {
         assert FPU.fromText(null) == FPU.NOT_FOUND;
-        assert FPU.fromText("") == FPU.NONE;
+        assert FPU.fromText("") == FPU.NOT_FOUND;
         assert FPU.fromText("hfl") == FPU.HARD_FLOAT;
         assert FPU.fromText("hardfloat") == FPU.HARD_FLOAT;
         assert FPU.fromText("hard_float") == FPU.HARD_FLOAT;
@@ -110,7 +110,7 @@ public class ApiTest {
     @Test
     public void hashAlgorithmFromTextTest() {
         assert HashAlgorithm.fromText(null) == HashAlgorithm.NOT_FOUND;
-        assert HashAlgorithm.fromText("") == HashAlgorithm.NONE;
+        assert HashAlgorithm.fromText("") == HashAlgorithm.NOT_FOUND;
         assert HashAlgorithm.fromText("md5") == HashAlgorithm.MD5;
         assert HashAlgorithm.fromText("sha1") == HashAlgorithm.SHA1;
         assert HashAlgorithm.fromText("sha3_256") == HashAlgorithm.SHA3_256;
@@ -127,7 +127,7 @@ public class ApiTest {
     @Test
     public void latestFromTextTest() {
         assert Latest.fromText(null) == Latest.NOT_FOUND;
-        assert Latest.fromText("") == Latest.NONE;
+        assert Latest.fromText("") == Latest.NOT_FOUND;
         assert Latest.fromText("all_of_version") == Latest.ALL_OF_VERSION;
         assert Latest.fromText("available") == Latest.AVAILABLE;
         assert Latest.fromText("overall") == Latest.OVERALL;
@@ -138,7 +138,7 @@ public class ApiTest {
     @Test
     public void libCTypeFromTextTest() {
         assert LibCType.fromText(null) == LibCType.NOT_FOUND;
-        assert LibCType.fromText("") == LibCType.NONE;
+        assert LibCType.fromText("") == LibCType.NOT_FOUND;
         assert LibCType.fromText("libc") == LibCType.LIBC;
         assert LibCType.fromText("glibc") == LibCType.GLIBC;
         assert LibCType.fromText("musl") == LibCType.MUSL;
@@ -156,7 +156,7 @@ public class ApiTest {
     @Test
     public void operatingModeFromTextTest() {
         assert OperatingMode.fromText(null) == OperatingMode.NOT_FOUND;
-        assert OperatingMode.fromText("") == OperatingMode.NONE;
+        assert OperatingMode.fromText("") == OperatingMode.NOT_FOUND;
         assert OperatingMode.fromText("native") == OperatingMode.NATIVE;
         assert OperatingMode.fromText("emulated") == OperatingMode.EMULATED;
     }
@@ -164,7 +164,7 @@ public class ApiTest {
     @Test
     public void operatingSystemFromTextTest() {
         assert OperatingSystem.fromText(null) == OperatingSystem.NOT_FOUND;
-        assert OperatingSystem.fromText("") == OperatingSystem.NONE;
+        assert OperatingSystem.fromText("") == OperatingSystem.NOT_FOUND;
         assert OperatingSystem.fromText("aix") == OperatingSystem.AIX;
         assert OperatingSystem.fromText("alpine") == OperatingSystem.ALPINE_LINUX;
         assert OperatingSystem.fromText("osx") == OperatingSystem.MACOS;
@@ -180,7 +180,7 @@ public class ApiTest {
     @Test
     public void packageTypeFromTextTest() {
         assert PackageType.fromText(null) == PackageType.NOT_FOUND;
-        assert PackageType.fromText("") == PackageType.NONE;
+        assert PackageType.fromText("") == PackageType.NOT_FOUND;
         assert PackageType.fromText("jdk") == PackageType.JDK;
         assert PackageType.fromText("jre") == PackageType.JRE;
     }
@@ -188,7 +188,7 @@ public class ApiTest {
     @Test
     public void releaseStatusFromTextTest() {
         assert ReleaseStatus.fromText(null) == ReleaseStatus.NOT_FOUND;
-        assert ReleaseStatus.fromText("") == ReleaseStatus.NONE;
+        assert ReleaseStatus.fromText("") == ReleaseStatus.NOT_FOUND;
         assert ReleaseStatus.fromText("ea") == ReleaseStatus.EA;
         assert ReleaseStatus.fromText("ga") == ReleaseStatus.GA;
     }
@@ -196,7 +196,7 @@ public class ApiTest {
     @Test
     public void severityFromTextTest() {
         assert Severity.fromText(null) == Severity.NOT_FOUND;
-        assert Severity.fromText("") == Severity.NONE;
+        assert Severity.fromText("") == Severity.NOT_FOUND;
         assert Severity.fromText("low") == Severity.LOW;
         assert Severity.fromText("medium") == Severity.MEDIUM;
         assert Severity.fromText("high") == Severity.HIGH;
@@ -206,7 +206,7 @@ public class ApiTest {
     @Test
     public void signatureTypeFromTextTest() {
         assert SignatureType.fromText(null) == SignatureType.NOT_FOUND;
-        assert SignatureType.fromText("") == SignatureType.NONE;
+        assert SignatureType.fromText("") == SignatureType.NOT_FOUND;
         assert SignatureType.fromText("dsa") == SignatureType.DSA;
         assert SignatureType.fromText("ecdsa") == SignatureType.ECDSA;
         assert SignatureType.fromText("rsa") == SignatureType.RSA;
@@ -216,7 +216,7 @@ public class ApiTest {
     @Test
     public void termOfSupportFromTextTest() {
         assert TermOfSupport.fromText(null) == TermOfSupport.NOT_FOUND;
-        assert TermOfSupport.fromText("") == TermOfSupport.NONE;
+        assert TermOfSupport.fromText("") == TermOfSupport.NOT_FOUND;
         assert TermOfSupport.fromText("lts") == TermOfSupport.LTS;
         assert TermOfSupport.fromText("mts") == TermOfSupport.MTS;
         assert TermOfSupport.fromText("sts") == TermOfSupport.STS;
@@ -225,7 +225,7 @@ public class ApiTest {
     @Test
     public void verificationFromTextTest() {
         assert Verification.fromText(null) == Verification.NOT_FOUND;
-        assert Verification.fromText("") == Verification.NONE;
+        assert Verification.fromText("") == Verification.NOT_FOUND;
         assert Verification.fromText("yes") == Verification.YES;
         assert Verification.fromText("no") == Verification.NO;
         assert Verification.fromText("true") == Verification.YES;

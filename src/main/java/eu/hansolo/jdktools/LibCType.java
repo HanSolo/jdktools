@@ -91,7 +91,6 @@ public enum LibCType implements Api {
             case "glibc", "GLIBC", "linux", "Linux", "LINUX" -> GLIBC;
             case "c_std_lib", "C_STD_LIB", "c-std-lib", "C-STD-LIB", "windows", "Windows", "win", "Win" -> C_STD_LIB;
             case "libc", "LIBC", "macos", "MACOS", "macosx", "MACOSX", "aix", "AIX", "qnx", "QNX", "solaris", "SOLARIS", "darwin", "DARWIN" -> LIBC;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

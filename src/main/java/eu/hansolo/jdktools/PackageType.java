@@ -87,7 +87,6 @@ public enum PackageType implements Api {
         return switch (text) {
             case "-jdk", "JDK", "jdk", "jdk+fx", "JDK+FX" -> JDK;
             case "-jre", "JRE", "jre", "jre+fx", "JRE+FX" -> JRE;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

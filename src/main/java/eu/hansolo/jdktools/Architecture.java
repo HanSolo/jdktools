@@ -186,7 +186,6 @@ public enum Architecture implements Api {
             case "x64", "X64", "x86-64", "X86-64", "x86_64", "X86_64", "x86lx64", "X86LX64" -> X64;
             case "x32", "x86", "X86", "286", "386", "486", "586", "686", "i386", "i486", "i586", "i686", "x86-32", "x86lx32", "X86LX32" -> X86;
             case "ia64", "IA64", "ia-64", "IA-64" -> IA64;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

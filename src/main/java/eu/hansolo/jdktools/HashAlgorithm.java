@@ -97,7 +97,6 @@ public enum HashAlgorithm implements Api {
             case "sha384", "SHA384", "sha_384", "SHA_384", "sha-384", "SHA-384" -> SHA384;
             case "sha512", "SHA512", "sha_512", "SHA_512", "sha-512", "SHA-512" -> SHA512;
             case "sha3_256", "SHA3_256", "sha-3-256", "SHA-3-256", "sha_3_256", "SHA_3_256" -> SHA3_256;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

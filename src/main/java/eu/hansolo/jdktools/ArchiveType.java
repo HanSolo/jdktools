@@ -115,7 +115,6 @@ public enum ArchiveType implements Api {
             case "tgz", ".tgz", "TGZ" -> TGZ;
             case "tar", ".tar", "TAR" -> TAR;
             case "zip", ".zip", "ZIP" -> ZIP;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

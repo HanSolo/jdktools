@@ -95,7 +95,6 @@ public enum Bitness implements Api {
         return switch (text) {
             case "32", "32bit", "32Bit", "32BIT" -> BIT_32;
             case "64", "64bit", "64Bit", "64BIT" -> BIT_64;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

@@ -24,6 +24,7 @@ import eu.hansolo.jdktools.util.Helper;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +82,7 @@ public class Semver implements Comparable<Semver> {
         if (null != this.pre) {
             final Matcher           eaMatcher = EA_PATTERN.matcher(this.pre);
             final List<MatchResult> eaResults = eaMatcher.results().toList();
-            if (eaResults.size() > 0) {
+            if (!eaResults.isEmpty()) {
                 final MatchResult eaResult = eaResults.get(0);
                 if (null != eaResult.group(1)) {
                     this.versionNumber.setReleaseStatus(ReleaseStatus.EA);
@@ -114,7 +115,7 @@ public class Semver implements Comparable<Semver> {
         if (null != this.metadata) {
             final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
             final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
-            if (buildNumberResults.size() > 0) {
+            if (!buildNumberResults.isEmpty()) {
                 final MatchResult buildNumberResult = buildNumberResults.get(0);
                 if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
                     Integer build = Integer.parseInt(buildNumberResult.group(2));
@@ -161,7 +162,7 @@ public class Semver implements Comparable<Semver> {
             }
         }
         this.pre           = null == pre ? "" : pre;
-        this.releaseStatus = (null == this.pre || this.pre.isEmpty()) ? ReleaseStatus.GA : ReleaseStatus.EA;
+        this.releaseStatus = this.pre.isEmpty() ? ReleaseStatus.GA : ReleaseStatus.EA;
     }
 
     public String getPreBuild() { return preBuild; }
@@ -482,4 +483,18 @@ public class Semver implements Comparable<Semver> {
     @Override public String toString() {
         return toString(true);
     }
+
+    @Override public boolean equals(final Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        Semver semver = (Semver) o;
+        return Objects.equals(versionNumber, semver.versionNumber) &&
+               releaseStatus == semver.releaseStatus &&
+               Objects.equals(pre, semver.pre) &&
+               Objects.equals(preBuild, semver.preBuild) &&
+               Objects.equals(metadata, semver.metadata) &&
+               comparison == semver.comparison;
+    }
+
+    @Override public int hashCode() { return Objects.hash(versionNumber, releaseStatus, pre, preBuild, metadata, comparison); }
 }

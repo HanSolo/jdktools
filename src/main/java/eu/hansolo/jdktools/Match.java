@@ -87,7 +87,6 @@ public enum Match implements Api {
         return switch (text) {
             case "any", "ANY", "Any" -> ANY;
             case "all", "ALL", "All" -> ALL;
-            case "" -> ANY;
             default -> ANY;
         };
     }

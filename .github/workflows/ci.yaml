@@ -30,7 +30,7 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_KEY }}
           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean test build
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

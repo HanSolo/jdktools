@@ -74,7 +74,6 @@ public enum OperatingMode implements Api {
         return switch (text) {
             case "native", "NATIVE", "Native" -> NATIVE;
             case "emulated", "EMULATED", "Emulated" -> EMULATED;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

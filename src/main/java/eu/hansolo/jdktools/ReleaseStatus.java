@@ -91,7 +91,6 @@ public enum ReleaseStatus implements Api {
         return switch (text) {
             case "-ea", "-EA", "_ea", "_EA", "ea", "EA", "ea_", "EA_" -> EA;
             case "-ga", "-GA", "_ga", "_GA", "ga", "GA", "ga_", "GA_" -> GA;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

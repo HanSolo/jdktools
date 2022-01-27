@@ -89,7 +89,6 @@ public enum TermOfSupport implements Api {
             case "long_term_stable", "LongTermStable", "lts", "LTS", "Lts" -> LTS;
             case "mid_term_stable", "MidTermStable", "mts", "MTS", "Mts" -> MTS;
             case "short_term_stable", "ShortTermStable", "sts", "STS", "Sts" -> STS;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

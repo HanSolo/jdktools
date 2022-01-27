@@ -26,12 +26,14 @@ import java.util.function.Predicate;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 public class SemverParser {
     private static final Pattern
     SEM_VER_PATTERN = Pattern.compile("^(<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?((<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?)?$");
+
+
+    private SemverParser() {}
 
 
     public static SemverParsingResult fromText(final String text) {
@@ -49,7 +51,7 @@ public class SemverParser {
         }
 
         final Matcher           semverMatcher = SEM_VER_PATTERN.matcher(versionText1);
-        final List<MatchResult> results       = semverMatcher.results().collect(Collectors.toList());
+        final List<MatchResult> results       = semverMatcher.results().toList();
 
         if (results.isEmpty()) {
             parsingResult.setError1(new Error("Invalid semver: " + versionText1));

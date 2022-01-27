@@ -40,7 +40,7 @@ public enum Latest implements Api {
     PER_VERSION("per version", "per_version"),
     AVAILABLE("available", "available"),
     NONE("-", ""),
-    NOT_FOUND("", "");;
+    NOT_FOUND("", "");
 
     private final String uiString;
     private final String apiString;
@@ -94,7 +94,6 @@ public enum Latest implements Api {
             case "per_version", "per-version", "perversion", "PER_VERSION", "PER-VERSION", "PERVERSION" -> PER_VERSION;
             case "available", "AVAILABLE", "Available" -> AVAILABLE;
             case "all_of_version", "ALL_OF_VERSION" -> ALL_OF_VERSION;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

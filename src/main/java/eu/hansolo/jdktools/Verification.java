@@ -97,7 +97,6 @@ public enum Verification implements Api {
             case "yes", "YES", "Yes", "y", "Y", "true", "TRUE" -> YES;
             case "no", "NO", "No", "n", "N", "false", "FALSE" -> NO;
             case "unknown", "UNKNOWN", "Unknown" -> UNKNOWN;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

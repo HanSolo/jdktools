@@ -122,7 +122,6 @@ public enum OperatingSystem implements Api {
             case "-aix", "aix", "AIX" -> AIX;
             case "darwin", "-darwin", "-macosx", "-MACOSX", "MacOS", "Mac OS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX", "macosx", "MACOSX", "Mac OSX", "mac osx" -> MACOS;
             case "-win", "windows", "Windows", "WINDOWS", "win", "Win", "WIN" -> WINDOWS;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

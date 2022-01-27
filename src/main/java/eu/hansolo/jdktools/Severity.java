@@ -91,7 +91,6 @@ public enum Severity implements Api {
             case "medium", "MEDIUM", "Medium" -> MEDIUM;
             case "high", "HIGH", "High" -> HIGH;
             case "critical", "CRITICAL", "Critical" -> CRITICAL;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

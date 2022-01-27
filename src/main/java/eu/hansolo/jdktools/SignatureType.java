@@ -91,7 +91,6 @@ public enum SignatureType implements Api {
             case "dsa", "DSA" -> DSA;
             case "ecdsa", "ECDSA" -> ECDSA;
             case "eddsa", "EdDSA", "EDDSA" -> EDDSA;
-            case "" -> NONE;
             default -> NOT_FOUND;
         };
     }

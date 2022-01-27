@@ -42,6 +42,7 @@ public enum SignatureScope implements Scope {
 
 
     public static Scope fromText(final String text) {
+        if (null == text) { return NOT_FOUND; }
         return switch (text) {
             case "signature_available", "SIGNATURE_AVAILABLE", "signatureAvailable" -> SIGNATURE_AVAILABLE;
             case "signature_not_available", "SIGNATURE_NOT_AVAILABLE", "signatureNotAvailable" -> SIGNATURE_NOT_AVAILABLE;
