@@ -71,18 +71,11 @@ public enum OperatingMode implements Api {
 
     public static OperatingMode fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        switch (text) {
-            case "native":
-            case "NATIVE":
-            case "Native":
-                return NATIVE;
-            case "emulated":
-            case "EMULATED":
-            case "Emulated":
-                return EMULATED;
-            default:
-                return NOT_FOUND;
-        }
+        return switch (text) {
+            case "native", "NATIVE", "Native" -> NATIVE;
+            case "emulated", "EMULATED", "Emulated" -> EMULATED;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<OperatingMode> getAsList() {
@@ -99,7 +92,7 @@ public enum OperatingMode implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED -> {
+            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)

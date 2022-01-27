@@ -42,11 +42,11 @@ public enum QualityScope implements Scope {
 
 
     public static Scope fromText(final String text) {
-        switch(text) {
-            case "tck_tested", "TCK_TESTED", "tckTested"                  : return TCK_TESTED;
-            case "aqavit_certified", "AQAVIT_CERTIFIED", "aqavitCertified": return AQAVIT_CERTIFIED;
-            default                                                       : return NOT_FOUND;
-        }
+        return switch (text) {
+            case "tck_tested", "TCK_TESTED", "tckTested" -> TCK_TESTED;
+            case "aqavit_certified", "AQAVIT_CERTIFIED", "aqavitCertified" -> AQAVIT_CERTIFIED;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<QualityScope> getAsList() { return Arrays.asList(values()); }

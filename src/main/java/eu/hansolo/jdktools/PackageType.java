@@ -69,7 +69,7 @@ public enum PackageType implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED -> {
+            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -84,22 +84,11 @@ public enum PackageType implements Api {
 
     public static PackageType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        switch (text) {
-            case "-jdk":
-            case "JDK":
-            case "jdk":
-            case "jdk+fx":
-            case "JDK+FX":
-                return JDK;
-            case "-jre":
-            case "JRE":
-            case "jre":
-            case "jre+fx":
-            case "JRE+FX":
-                return JRE;
-            default:
-                return NOT_FOUND;
-        }
+        return switch (text) {
+            case "-jdk", "JDK", "jdk", "jdk+fx", "JDK+FX" -> JDK;
+            case "-jre", "JRE", "jre", "jre+fx", "JRE+FX" -> JRE;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<PackageType> getAsList() { return Arrays.asList(values()); }

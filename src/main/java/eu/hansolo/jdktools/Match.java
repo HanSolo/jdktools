@@ -69,7 +69,7 @@ public enum Match implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED -> {
+            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -84,18 +84,11 @@ public enum Match implements Api {
 
     public static Match fromText(final String text) {
         if (null == text) { return ANY; }
-        switch (text) {
-            case "any":
-            case "ANY":
-            case "Any":
-                return ANY;
-            case "all":
-            case "ALL":
-            case "All":
-                return ALL;
-            default:
-                return ANY;
-        }
+        return switch (text) {
+            case "any", "ANY", "Any" -> ANY;
+            case "all", "ALL", "All" -> ALL;
+            default -> ANY;
+        };
     }
 
     public static List<Match> getAsList() { return Arrays.asList(values()); }

@@ -70,7 +70,7 @@ public enum TermOfSupport implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED -> {
+            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -85,28 +85,12 @@ public enum TermOfSupport implements Api {
 
     public static TermOfSupport fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        switch(text) {
-            case "long_term_stable":
-            case "LongTermStable":
-            case "lts":
-            case "LTS":
-            case "Lts":
-                return LTS;
-            case "mid_term_stable":
-            case "MidTermStable":
-            case "mts":
-            case "MTS":
-            case "Mts":
-                return MTS;
-            case "short_term_stable":
-            case "ShortTermStable":
-            case "sts":
-            case "STS":
-            case "Sts":
-                return STS;
-            default: return NOT_FOUND;
-
-        }
+        return switch (text) {
+            case "long_term_stable", "LongTermStable", "lts", "LTS", "Lts" -> LTS;
+            case "mid_term_stable", "MidTermStable", "mts", "MTS", "Mts" -> MTS;
+            case "short_term_stable", "ShortTermStable", "sts", "STS", "Sts" -> STS;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<TermOfSupport> getAsList() { return Arrays.asList(values()); }

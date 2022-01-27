@@ -42,11 +42,11 @@ public enum SignatureScope implements Scope {
 
 
     public static Scope fromText(final String text) {
-        switch(text) {
-            case "signature_available", "SIGNATURE_AVAILABLE", "signatureAvailable"           : return SIGNATURE_AVAILABLE;
-            case "signature_not_available", "SIGNATURE_NOT_AVAILABLE", "signatureNotAvailable": return SIGNATURE_NOT_AVAILABLE;
-            default                                                                           : return NOT_FOUND;
-        }
+        return switch (text) {
+            case "signature_available", "SIGNATURE_AVAILABLE", "signatureAvailable" -> SIGNATURE_AVAILABLE;
+            case "signature_not_available", "SIGNATURE_NOT_AVAILABLE", "signatureNotAvailable" -> SIGNATURE_NOT_AVAILABLE;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<SignatureScope> getAsList() { return Arrays.asList(values()); }

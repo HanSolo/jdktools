@@ -70,7 +70,7 @@ public enum Verification implements Api {
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED -> {
+            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -93,32 +93,13 @@ public enum Verification implements Api {
 
     public static Verification fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        switch (text) {
-            case "yes":
-            case "YES":
-            case "Yes":
-            case "y"  :
-            case "Y"  :
-            case "true":
-            case "TRUE":
-                return YES;
-            case "no":
-            case "NO":
-            case "No":
-            case "n" :
-            case "N" :
-            case "false":
-            case "FALSE":
-                return NO;
-            case "unknown":
-            case "UNKNOWN":
-            case "Unknown":
-                return UNKNOWN;
-            case "":
-                return NONE;
-            default:
-                return NOT_FOUND;
-        }
+        return switch (text) {
+            case "yes", "YES", "Yes", "y", "Y", "true", "TRUE" -> YES;
+            case "no", "NO", "No", "n", "N", "false", "FALSE" -> NO;
+            case "unknown", "UNKNOWN", "Unknown" -> UNKNOWN;
+            case "" -> NONE;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<Verification> getAsList() { return Arrays.asList(values()); }

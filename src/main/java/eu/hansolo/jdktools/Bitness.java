@@ -72,7 +72,7 @@ public enum Bitness implements Api {
                           .append(INDENTED_QUOTES).append("bits").append(QUOTES).append(COLON).append(bits).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
             }
-            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED -> {
+            case FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED -> {
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
@@ -92,28 +92,19 @@ public enum Bitness implements Api {
 
     public static Bitness fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        switch (text) {
-            case "32":
-            case "32bit":
-            case "32Bit":
-            case "32BIT":
-                return BIT_32;
-            case "64":
-            case "64bit":
-            case "64Bit":
-            case "64BIT":
-                return BIT_64;
-            default:
-                return NOT_FOUND;
-        }
+        return switch (text) {
+            case "32", "32bit", "32Bit", "32BIT" -> BIT_32;
+            case "64", "64bit", "64Bit", "64BIT" -> BIT_64;
+            default -> NOT_FOUND;
+        };
     }
 
     public static Bitness fromInt(final Integer bits) {
-        switch (bits) {
-            case 32: return BIT_32;
-            case 64: return BIT_64;
-            default: return NOT_FOUND;
-        }
+        return switch (bits) {
+            case 32 -> BIT_32;
+            case 64 -> BIT_64;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<Bitness> getAsList() { return Arrays.asList(values()); }

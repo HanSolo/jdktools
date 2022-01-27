@@ -83,10 +83,10 @@ public enum BasicScope implements Scope, Api {
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
     public static Scope fromText(final String text) {
-        switch(text) {
-            case "public", "Public": return PUBLIC;
-            default                : return NOT_FOUND;
-        }
+        return switch (text) {
+            case "public", "Public" -> PUBLIC;
+            default -> NOT_FOUND;
+        };
     }
 
     public static List<BasicScope> getAsList() { return Arrays.asList(values()); }
