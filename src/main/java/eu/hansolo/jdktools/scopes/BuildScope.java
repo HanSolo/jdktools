@@ -43,8 +43,8 @@ public enum BuildScope implements Scope {
 
     public static Scope fromText(final String text) {
         switch(text) {
-            case "build_of_openjdk": return BUILD_OF_OPEN_JDK;
-            case "build_of_graalvm": return BUILD_OF_GRAALVM;
+            case "build_of_openjdk", "BuildOfOpenJDK", "buildofopenjdk", "BUILD_OF_OPENJDK": return BUILD_OF_OPEN_JDK;
+            case "build_of_graalvm", "BuildOfGraalVM", "buildofgraalvm", "BUILD_OF_GRAALVM": return BUILD_OF_GRAALVM;
             default                : return NOT_FOUND;
         }
     }

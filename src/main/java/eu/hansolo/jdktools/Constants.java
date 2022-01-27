@@ -35,5 +35,5 @@ public class Constants {
     public static final String COMMA_NEW_LINE       = ",\n";
     public static final String INDENT               = "  ";
 
-    public static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
+    public static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\+?\\d+");
 }

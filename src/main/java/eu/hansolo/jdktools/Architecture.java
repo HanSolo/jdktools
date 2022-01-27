@@ -240,6 +240,7 @@ public enum Architecture implements Api {
                 return X64;
             case "x86":
             case "X86":
+            case "286":
             case "i386":
             case "i486":
             case "i586":

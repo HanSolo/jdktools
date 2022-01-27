@@ -84,11 +84,8 @@ public enum BasicScope implements Scope, Api {
 
     public static Scope fromText(final String text) {
         switch(text) {
-            case "public":
-            case "Public":
-                return PUBLIC;
-            default:
-                return NOT_FOUND;
+            case "public", "Public": return PUBLIC;
+            default                : return NOT_FOUND;
         }
     }
 
