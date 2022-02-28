@@ -406,7 +406,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
         if (null == text || text.isEmpty()) { return -1; }
         Matcher matcher = LEADING_INT_PATTERN.matcher(text);
         if (matcher.find()) {
-            return matcher.group(0).isEmpty() ? -1 : Integer.valueOf(matcher.group(0));
+            return matcher.group(0).isEmpty() ? -1 : Integer.parseInt(matcher.group(0));
         } else {
             //LOGGER.debug("Given text {} did not start with integer. Full text to parse was: {}", text, fullTextToParse);
             return -1;
@@ -445,8 +445,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
 
     @Override public boolean equals(final Object obj) {
         if (obj == VersionNumber.this) { return true; }
-        if (!(obj instanceof VersionNumber)) { return false; }
-        VersionNumber other = (VersionNumber) obj;
+        if (!(obj instanceof VersionNumber other)) { return false; }
         boolean isEqual;
         if (feature.getAsInt() == other.getFeature().getAsInt()) {
             if (interim.isPresent()) {
@@ -641,13 +640,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                                                             int thisBuild = build.isPresent()                          ? build.getAsInt()                         : 0;
                                                             int otherBuild = otherVersionNumber.getBuild().isPresent() ? otherVersionNumber.getBuild().getAsInt() : 0;
 
-                                                            if (thisBuild > otherBuild) {
-                                                                ret = largerThan;
-                                                            } else if (thisBuild < otherBuild) {
-                                                                ret = smallerThan;
-                                                            } else {
-                                                                ret = equal;
-                                                            }
+                                                            ret = Integer.compare(thisBuild, otherBuild);
                                                         } else {
                                                             ret = equal;
                                                         }
@@ -704,13 +697,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isPresent()) {
                 int buildNumber      = getBuild().getAsInt();
                 int otherBuildNumber = otherVersionNumber.getBuild().getAsInt();
-                if (buildNumber > otherBuildNumber) {
-                    ret = largerThan;
-                } else if (buildNumber < otherBuildNumber) {
-                    ret = smallerThan;
-                } else {
-                    ret = equal;
-                }
+                ret = Integer.compare(buildNumber, otherBuildNumber);
             } else if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isPresent() && otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isEmpty()) {
                 ret = largerThan;
             } else if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isEmpty() &&

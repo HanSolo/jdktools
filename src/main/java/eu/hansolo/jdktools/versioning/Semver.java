@@ -380,13 +380,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     private int compareSegment(final int s1, final int s2) {
-        if (s1 < s2) {
-            return -1;
-        } else if (s1 > s2) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return Integer.compare(s1, s2);
     }
 
     private int comparePrerelease(final String pre1, final String pre2) {

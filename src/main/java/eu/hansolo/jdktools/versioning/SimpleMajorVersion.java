@@ -70,24 +70,21 @@ public class SimpleMajorVersion {
     public void setReleaseStatus(final ReleaseStatus releaseStatus) { this.releaseStatus = releaseStatus; }
 
     public String toString(final OutputFormat outputFormat) {
-        switch(outputFormat) {
-            case FULL_COMPRESSED -> {
-                return new StringBuilder().append(CURLY_BRACKET_OPEN)
-                                          .append(QUOTES).append(FIELD_MAJOR_VERSION).append(QUOTES).append(COLON).append(featureVersion).append(COMMA)
-                                          .append(QUOTES).append(FIELD_TERM_OF_SUPPORT).append(QUOTES).append(COLON).append(QUOTES).append(termOfSupport.getApiString()).append(QUOTES).append(COMMA)
-                                          .append(QUOTES).append(FIELD_RELEASE_STATUS).append(QUOTES).append(COLON).append(releaseStatus.getApiString())
-                                          .append(CURLY_BRACKET_CLOSE)
-                                          .toString();
-            }
-            default -> {
-                return new StringBuilder().append(CURLY_BRACKET_OPEN)
-                                          .append(NEW_LINE)
-                                          .append(INDENTED_QUOTES).append(FIELD_MAJOR_VERSION).append(QUOTES).append(COLON).append(featureVersion).append(COMMA_NEW_LINE)
-                                          .append(INDENTED_QUOTES).append(FIELD_TERM_OF_SUPPORT).append(QUOTES).append(COLON).append(QUOTES).append(termOfSupport.getApiString()).append(QUOTES).append(COMMA_NEW_LINE)
-                                          .append(INDENTED_QUOTES).append(FIELD_RELEASE_STATUS).append(QUOTES).append(COLON).append(releaseStatus.getApiString()).append(NEW_LINE)
-                                          .append(CURLY_BRACKET_CLOSE)
-                                          .toString();
-            }
+        if (OutputFormat.FULL_COMPRESSED == outputFormat) {
+            return new StringBuilder().append(CURLY_BRACKET_OPEN)
+                                      .append(QUOTES).append(FIELD_MAJOR_VERSION).append(QUOTES).append(COLON).append(featureVersion).append(COMMA)
+                                      .append(QUOTES).append(FIELD_TERM_OF_SUPPORT).append(QUOTES).append(COLON).append(QUOTES).append(termOfSupport.getApiString()).append(QUOTES).append(COMMA)
+                                      .append(QUOTES).append(FIELD_RELEASE_STATUS).append(QUOTES).append(COLON).append(releaseStatus.getApiString())
+                                      .append(CURLY_BRACKET_CLOSE)
+                                      .toString();
+        } else {
+            return new StringBuilder().append(CURLY_BRACKET_OPEN)
+                                      .append(NEW_LINE)
+                                      .append(INDENTED_QUOTES).append(FIELD_MAJOR_VERSION).append(QUOTES).append(COLON).append(featureVersion).append(COMMA_NEW_LINE)
+                                      .append(INDENTED_QUOTES).append(FIELD_TERM_OF_SUPPORT).append(QUOTES).append(COLON).append(QUOTES).append(termOfSupport.getApiString()).append(QUOTES).append(COMMA_NEW_LINE)
+                                      .append(INDENTED_QUOTES).append(FIELD_RELEASE_STATUS).append(QUOTES).append(COLON).append(releaseStatus.getApiString()).append(NEW_LINE)
+                                      .append(CURLY_BRACKET_CLOSE)
+                                      .toString();
         }
     }
 
