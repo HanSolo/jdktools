@@ -63,18 +63,22 @@ public enum Verification implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED ->
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED:
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-            default ->
+                break;
+            default:
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
+                break;
         }
         return msgBuilder.toString();
     }
@@ -82,21 +86,39 @@ public enum Verification implements Api {
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
     public Boolean getAsBoolean() {
-        return switch (Verification.this) {
-            case YES -> Boolean.TRUE;
-            case NO  -> Boolean.FALSE;
-            default  -> null;
-        };
+        switch (Verification.this) {
+            case YES: return Boolean.TRUE;
+            case NO : return Boolean.FALSE;
+            default : return null;
+        }
     }
 
     public static Verification fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "yes", "YES", "Yes", "y", "Y", "true", "TRUE" -> YES;
-            case "no", "NO", "No", "n", "N", "false", "FALSE" -> NO;
-            case "unknown", "UNKNOWN", "Unknown" -> UNKNOWN;
-            default -> NOT_FOUND;
-        };
+        switch (text) {
+            case "yes":
+            case "YES":
+            case "Yes":
+            case "y"  :
+            case "Y"  :
+            case "true":
+            case "TRUE":
+                return YES;
+            case "no":
+            case "NO":
+            case "No":
+            case "n" :
+            case "N" :
+            case "false":
+            case "FALSE":
+                return NO;
+            case "unknown":
+            case "UNKNOWN":
+            case "Unknown":
+                return UNKNOWN;
+            default:
+                return NOT_FOUND;
+        }
     }
 
     public static List<Verification> getAsList() { return Arrays.asList(values()); }

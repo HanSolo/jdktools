@@ -64,20 +64,24 @@ public enum Bitness implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED ->
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED:
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("bits").append(QUOTES).append(COLON).append(bits).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-            default ->
+                break;
+            default:
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("bits").append(QUOTES).append(COLON).append(bits)
                           .append(CURLY_BRACKET_CLOSE);
+                break;
         }
         return msgBuilder.toString();
     }
@@ -90,19 +94,28 @@ public enum Bitness implements Api {
 
     public static Bitness fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "32", "32bit", "32Bit", "32BIT" -> BIT_32;
-            case "64", "64bit", "64Bit", "64BIT" -> BIT_64;
-            default -> NOT_FOUND;
-        };
+        switch (text) {
+            case "32":
+            case "32bit":
+            case "32Bit":
+            case "32BIT":
+                return BIT_32;
+            case "64":
+            case "64bit":
+            case "64Bit":
+            case "64BIT":
+                return BIT_64;
+            default:
+                return NOT_FOUND;
+        }
     }
 
     public static Bitness fromInt(final Integer bits) {
-        return switch (bits) {
-            case 32 -> BIT_32;
-            case 64 -> BIT_64;
-            default -> NOT_FOUND;
-        };
+        switch (bits) {
+            case 32: return BIT_32;
+            case 64: return BIT_64;
+            default: return NOT_FOUND;
+        }
     }
 
     public static List<Bitness> getAsList() { return Arrays.asList(values()); }

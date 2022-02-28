@@ -61,19 +61,20 @@ public class Helper {
 
 
     public static final boolean isReleaseTermOfSupport(final int featureVersion, final TermOfSupport termOfSupport) {
-        return switch(termOfSupport) {
-            case LTS -> isLTS(featureVersion);
-            case MTS -> isMTS(featureVersion);
-            case STS -> isSTS(featureVersion);
-            default  -> false;
-        };
+        switch(termOfSupport) {
+            case LTS: return isLTS(featureVersion);
+            case MTS: return isMTS(featureVersion);
+            case STS: return isSTS(featureVersion);
+            default : return false;
+        }
     }
     public static final boolean isSTS(final int featureVersion) {
         if (featureVersion < 9) { return false; }
-        return switch (featureVersion) {
-            case 9, 10 -> true;
-            default    -> !isLTS(featureVersion);
-        };
+        switch(featureVersion) {
+            case 9 :
+            case 10: return true;
+            default: return !isLTS(featureVersion);
+        }
     }
     public static final boolean isMTS(final int featureVersion) {
         if (featureVersion < 13) { return false; }
@@ -89,11 +90,12 @@ public class Helper {
 
     public static final TermOfSupport getTermOfSupport(final VersionNumber versionNumber, final boolean isZulu) {
         TermOfSupport termOfSupport = getTermOfSupport(versionNumber);
-        return switch (termOfSupport) {
-            case LTS, STS -> termOfSupport;
-            case MTS      -> isZulu ? termOfSupport : TermOfSupport.STS;
-            default       -> TermOfSupport.NOT_FOUND;
-        };
+        switch(termOfSupport) {
+            case LTS:
+            case STS: return termOfSupport;
+            case MTS: return isZulu ? termOfSupport : TermOfSupport.STS;
+            default : return TermOfSupport.NOT_FOUND;
+        }
     }
     public static final TermOfSupport getTermOfSupport(final VersionNumber versionNumber) {
         if (!versionNumber.getFeature().isPresent() || versionNumber.getFeature().isEmpty()) {
@@ -157,9 +159,9 @@ public class Helper {
             final Process        process        = processBuilder.start();
             final String         result         = new BufferedReader(new InputStreamReader(process.getInputStream())).lines().collect(Collectors.joining("\n"));
             switch(operatingSystem) {
-                case WINDOWS -> {
+                case WINDOWS:
                     ARCHITECTURE_MATCHER.reset(result);
-                    final List<MatchResult> results     = ARCHITECTURE_MATCHER.results().toList();
+                    final List<MatchResult> results     = ARCHITECTURE_MATCHER.results().collect(Collectors.toList());
                     final int               noOfResults = results.size();
                     if (noOfResults > 0) {
                         final MatchResult   res = results.get(0);
@@ -167,18 +169,15 @@ public class Helper {
                     } else {
                         return new OsArcMode(operatingSystem, Architecture.NOT_FOUND, OperatingMode.NOT_FOUND);
                     }
-                }
-                case MACOS -> {
+                case MACOS:
                     Architecture architecture = Architecture.fromText(result);
                     final ProcessBuilder processBuilder1 = new ProcessBuilder(MAC_DETECT_ROSETTA2_CMDS);
                     final Process        process1        = processBuilder1.start();
                     final String         result1         = new BufferedReader(new InputStreamReader(process1.getInputStream())).lines().collect(Collectors.joining("\n"));
                     return new OsArcMode(operatingSystem, architecture, result1.equals("1") ? OperatingMode.EMULATED : OperatingMode.NATIVE);
-                }
-                case LINUX -> {
+                case LINUX:
                     return new OsArcMode(operatingSystem, Architecture.fromText(result), OperatingMode.NATIVE);
                 }
-            }
 
             // If not found yet try via system property
             final String arch = System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);

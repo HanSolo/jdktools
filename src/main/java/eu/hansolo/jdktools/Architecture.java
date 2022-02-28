@@ -143,20 +143,24 @@ public enum Architecture implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED ->
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED:
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("bitness").append(QUOTES).append(COLON).append(QUOTES).append(bitness.getApiString()).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-            default ->
+                break;
+            default:
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("bitness").append(QUOTES).append(COLON).append(QUOTES).append(bitness.getApiString()).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
+                break;
         }
         return msgBuilder.toString();
     }
@@ -165,27 +169,101 @@ public enum Architecture implements Api {
 
     public static Architecture fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "aarch64", "AARCH64" -> AARCH64;
-            case "amd64", "AMD64", "_amd64" -> AMD64;
-            case "aarch32", "AARCH32", "arm32", "ARM32", "armv6", "ARMV6", "armv7l", "ARMV7L", "armv7", "ARMV7", "arm", "ARM" -> ARM;
-            case "armel", "ARMEL" -> ARMEL;
-            case "armhf", "ARMHF" -> ARMHF;
-            case "arm64", "ARM64", "armv8", "ARMV8" -> ARM64;
-            case "mips", "MIPS" -> MIPS;
-            case "mipsel", "MIPSEL" -> MIPSEL;
-            case "ppc", "PPC" -> PPC;
-            case "ppc64el", "PPC64EL", "ppc64le", "PPC64LE" -> PPC64LE;
-            case "ppc64", "PPC64" -> PPC64;
-            case "riscv64", "RISCV64" -> RISCV64;
-            case "s390", "s390x", "S390X" -> S390X;
-            case "sparc", "SPARC" -> SPARC;
-            case "sparcv9", "SPARCV9" -> SPARCV9;
-            case "x64", "X64", "x86-64", "X86-64", "x86_64", "X86_64", "x86lx64", "X86LX64" -> X64;
-            case "x32", "x86", "X86", "286", "386", "486", "586", "686", "i386", "i486", "i586", "i686", "x86-32", "x86lx32", "X86LX32" -> X86;
-            case "ia64", "IA64", "ia-64", "IA-64" -> IA64;
-            default -> NOT_FOUND;
-        };
+        switch (text) {
+            case "aarch64":
+            case "AARCH64":
+                return AARCH64;
+            case "amd64":
+            case "AMD64":
+            case "_amd64":
+                return AMD64;
+            case "aarch32":
+            case "AARCH32":
+            case "arm32":
+            case "ARM32":
+            case "armv6":
+            case "ARMV6":
+            case "armv7l":
+            case "ARMV7L":
+            case "armv7":
+            case "ARMV7":
+            case "arm":
+            case "ARM":
+                return ARM;
+            case "armel":
+            case "ARMEL":
+                return ARMEL;
+            case "armhf":
+            case "ARMHF":
+                return ARMHF;
+            case "arm64":
+            case "ARM64":
+            case "armv8":
+            case "ARMV8":
+                return ARM64;
+            case "mips":
+            case "MIPS":
+                return MIPS;
+            case "mipsel":
+            case "MIPSEL":
+                return MIPSEL;
+            case "ppc":
+            case "PPC":
+                return PPC;
+            case "ppc64el":
+            case "PPC64EL":
+            case "ppc64le":
+            case "PPC64LE":
+                return PPC64LE;
+            case "ppc64":
+            case "PPC64":
+                return PPC64;
+            case "riscv64":
+            case "RISCV64":
+                return RISCV64;
+            case "s390" :
+            case "s390x":
+            case "S390X":
+                return S390X;
+            case "sparc":
+            case "SPARC":
+                return SPARC;
+            case "sparcv9":
+            case "SPARCV9":
+                return SPARCV9;
+            case "x64":
+            case "X64":
+            case "x86-64":
+            case "X86-64":
+            case "x86_64":
+            case "X86_64":
+            case "x86lx64":
+            case "X86LX64":
+                return X64;
+            case "x32":
+            case "x86":
+            case "X86":
+            case "286":
+            case "386":
+            case "486":
+            case "586":
+            case "686":
+            case "i386":
+            case "i486":
+            case "i586":
+            case "i686":
+            case "x86-32":
+            case "x86lx32":
+            case "X86LX32":
+                return X86;
+            case "ia64":
+            case "IA64":
+            case "ia-64":
+            case "IA-64":
+                return IA64;
+            default:
+                return NOT_FOUND;
+        }
     }
 
     public Bitness getBitness() { return bitness; }

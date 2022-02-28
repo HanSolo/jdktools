@@ -64,18 +64,22 @@ public enum LibCType implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED ->
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED:
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-            default ->
+                break;
+            default:
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
+                break;
         }
         return msgBuilder.toString();
     }
@@ -84,13 +88,48 @@ public enum LibCType implements Api {
 
     public static LibCType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "musl", "MUSL", "linux_musl", "linux-musl", "alpine_linux", "alpine", "alpine-linux" -> MUSL;
-            case "glibc", "GLIBC", "linux", "Linux", "LINUX" -> GLIBC;
-            case "c_std_lib", "C_STD_LIB", "c-std-lib", "C-STD-LIB", "windows", "Windows", "win", "Win" -> C_STD_LIB;
-            case "libc", "LIBC", "macos", "MACOS", "macosx", "MACOSX", "aix", "AIX", "qnx", "QNX", "solaris", "SOLARIS", "darwin", "DARWIN" -> LIBC;
-            default -> NOT_FOUND;
-        };
+        switch (text) {
+            case "musl":
+            case "MUSL":
+            case "linux_musl":
+            case "linux-musl":
+            case "alpine_linux":
+            case "alpine":
+            case "alpine-linux":
+                return MUSL;
+            case "glibc":
+            case "GLIBC":
+            case "linux":
+            case "Linux":
+            case "LINUX":
+                return GLIBC;
+            case "c_std_lib":
+            case "C_STD_LIB":
+            case "c-std-lib":
+            case "C-STD-LIB":
+            case "windows":
+            case "Windows":
+            case "win":
+            case "Win":
+                return C_STD_LIB;
+            case "libc":
+            case "LIBC":
+            case "macos":
+            case "MACOS":
+            case "macosx":
+            case "MACOSX":
+            case "aix":
+            case "AIX":
+            case "qnx":
+            case "QNX":
+            case "solaris":
+            case "SOLARIS":
+            case "darwin":
+            case "DARWIN":
+                return LIBC;
+            default:
+                return NOT_FOUND;
+        }
     }
 
     public static List<LibCType> getAsList() { return Arrays.asList(values()); }

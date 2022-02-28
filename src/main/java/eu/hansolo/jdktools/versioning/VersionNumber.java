@@ -31,6 +31,7 @@ import java.util.OptionalInt;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class VersionNumber implements Comparable<VersionNumber> {
@@ -208,7 +209,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
         String version = text.startsWith("1.") ? text.replace("1.", "") : text;
 
         final Matcher           versionNoMatcher = VERSION_NO_PATTERN.matcher(version);
-        final List<MatchResult> results          = versionNoMatcher.results().toList();
+        final List<MatchResult> results          = versionNoMatcher.results().collect(Collectors.toList());
         final int               noOfResults      = results.size();
         final int               resultToTake     = noOfResults > resultToMatch ? resultToMatch : 0;
         List<VersionNumber>     numbersFound     = new ArrayList<>();
@@ -312,7 +313,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
             // Extract early access preBuild
             if (null != result.group(16)) {
                 final Matcher           eaMatcher = EA_PATTERN.matcher(result.group(16));
-                final List<MatchResult> eaResults = eaMatcher.results().toList();
+                final List<MatchResult> eaResults = eaMatcher.results().collect(Collectors.toList());
                 if (!eaResults.isEmpty()) {
                     final MatchResult eaResult = eaResults.get(0);
                     if (null != eaResult.group(1)) {
@@ -320,7 +321,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                         if (null == eaResult.group(4)) {
                             if (null != result.group(17)) {
                                 final Matcher           eaBuildNumberMatcher = EA_BUILD_NUMBER_PATTERN.matcher(result.group(17));
-                                final List<MatchResult> eaBuildNumberResults = eaBuildNumberMatcher.results().toList();
+                                final List<MatchResult> eaBuildNumberResults = eaBuildNumberMatcher.results().collect(Collectors.toList());
                                 if (!eaBuildNumberResults.isEmpty()) {
                                     final MatchResult eaBuildNumberResult = eaBuildNumberResults.get(0);
                                     versionNumber.setBuild(Integer.parseInt(eaBuildNumberResult.group(2)));
@@ -337,7 +338,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
 
             // Extract build number
             final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(version);
-            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
+            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
             if (!buildNumberResults.isEmpty()) {
                 final MatchResult buildNumberResult = buildNumberResults.get(0);
                 if (null != buildNumberResult.group(2)) {
@@ -519,8 +520,9 @@ public class VersionNumber implements Comparable<VersionNumber> {
         String build = (this.build.isPresent() && this.build.getAsInt() > 0) ? ("+" + this.build.getAsInt()) : "";
 
         StringBuilder versionBuilder = new StringBuilder();
-        switch (outputFormat) {
-            case REDUCED, REDUCED_COMPRESSED -> {
+        switch(outputFormat) {
+            case REDUCED:
+            case REDUCED_COMPRESSED:
                 if (feature.isPresent()) { versionBuilder.append(feature.getAsInt()); }
                 if (sixth.isPresent() && sixth.getAsInt() != 0) {
                     if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
@@ -558,8 +560,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
                 }
-            }
-            default -> {
+            default:
                 if (feature.isPresent()) { versionBuilder.append(feature.getAsInt()); }
                 if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
                 if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
@@ -572,7 +573,6 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 return versionBuilder.toString();
             }
         }
-    }
 
     @Override public String toString() {
         return toString(OutputFormat.FULL, true, true);

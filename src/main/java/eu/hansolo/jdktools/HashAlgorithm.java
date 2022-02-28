@@ -67,18 +67,22 @@ public enum HashAlgorithm implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED ->
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED:
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-            default ->
+                break;
+            default:
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
+                break;
         }
         return msgBuilder.toString();
     }
@@ -87,16 +91,59 @@ public enum HashAlgorithm implements Api {
 
     public static HashAlgorithm fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "md5", "MD5", "md-5", "md_5", "MD-5", "MD_5" -> MD5;
-            case "sha1", "SHA1", "sha-1", "SHA-1", "sha_1", "SHA_1" -> SHA1;
-            case "sha256", "SHA256", "sha_256", "SHA_256", "sha-256", "SHA-256" -> SHA256;
-            case "sha224", "SHA224", "sha_224", "SHA_224", "sha-224", "SHA-224" -> SHA224;
-            case "sha384", "SHA384", "sha_384", "SHA_384", "sha-384", "SHA-384" -> SHA384;
-            case "sha512", "SHA512", "sha_512", "SHA_512", "sha-512", "SHA-512" -> SHA512;
-            case "sha3_256", "SHA3_256", "sha-3-256", "SHA-3-256", "sha_3_256", "SHA_3_256" -> SHA3_256;
-            default -> NOT_FOUND;
-        };
+        switch(text) {
+            case "md5":
+            case "MD5":
+            case "md-5":
+            case "md_5":
+            case "MD-5":
+            case "MD_5":
+                return MD5;
+            case "sha1":
+            case "SHA1":
+            case "sha-1":
+            case "SHA-1":
+            case "sha_1":
+            case "SHA_1":
+                return SHA1;
+            case "sha256":
+            case "SHA256":
+            case "sha_256":
+            case "SHA_256":
+            case "sha-256":
+            case "SHA-256":
+                return SHA256;
+            case "sha224":
+            case "SHA224":
+            case "sha_224":
+            case "SHA_224":
+            case "sha-224":
+            case "SHA-224":
+                return SHA224;
+            case "sha384":
+            case "SHA384":
+            case "sha_384":
+            case "SHA_384":
+            case "sha-384":
+            case "SHA-384":
+                return SHA384;
+            case "sha512":
+            case "SHA512":
+            case "sha_512":
+            case "SHA_512":
+            case "sha-512":
+            case "SHA-512":
+                return SHA512;
+            case "sha3_256":
+            case "SHA3_256":
+            case "sha-3-256":
+            case "SHA-3-256":
+            case "sha_3_256":
+            case "SHA_3_256":
+                return SHA3_256;
+            default:
+                return NOT_FOUND;
+        }
     }
 
     public static List<HashAlgorithm> getAsList() { return Arrays.asList(values()); }

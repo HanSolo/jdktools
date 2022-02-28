@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class Semver implements Comparable<Semver> {
@@ -81,7 +82,7 @@ public class Semver implements Comparable<Semver> {
         // Extract early access preBuild
         if (null != this.pre) {
             final Matcher           eaMatcher = EA_PATTERN.matcher(this.pre);
-            final List<MatchResult> eaResults = eaMatcher.results().toList();
+            final List<MatchResult> eaResults = eaMatcher.results().collect(Collectors.toList());
             if (!eaResults.isEmpty()) {
                 final MatchResult eaResult = eaResults.get(0);
                 if (null != eaResult.group(1)) {
@@ -114,7 +115,7 @@ public class Semver implements Comparable<Semver> {
         // Extract metadata e.g. build number
         if (null != this.metadata) {
             final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
-            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
+            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
             if (!buildNumberResults.isEmpty()) {
                 final MatchResult buildNumberResult = buildNumberResults.get(0);
                 if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
@@ -474,10 +475,6 @@ public class Semver implements Comparable<Semver> {
         return versionBuilder.toString();
     }
 
-    @Override public String toString() {
-        return toString(true);
-    }
-
     @Override public boolean equals(final Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
@@ -491,4 +488,8 @@ public class Semver implements Comparable<Semver> {
     }
 
     @Override public int hashCode() { return Objects.hash(versionNumber, releaseStatus, pre, preBuild, metadata, comparison); }
+
+    @Override public String toString() {
+        return toString(true);
+    }
 }

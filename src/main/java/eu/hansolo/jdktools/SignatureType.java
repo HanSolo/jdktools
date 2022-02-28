@@ -64,18 +64,22 @@ public enum SignatureType implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED ->
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED:
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-            default ->
+                break;
+            default:
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
+                break;
         }
         return msgBuilder.toString();
     }
@@ -84,13 +88,23 @@ public enum SignatureType implements Api {
 
     public static SignatureType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "rsa", "RSA" -> RSA;
-            case "dsa", "DSA" -> DSA;
-            case "ecdsa", "ECDSA" -> ECDSA;
-            case "eddsa", "EdDSA", "EDDSA" -> EDDSA;
-            default -> NOT_FOUND;
-        };
+        switch (text) {
+            case "rsa":
+            case "RSA":
+                return RSA;
+            case "dsa":
+            case "DSA":
+                return DSA;
+            case "ecdsa":
+            case "ECDSA":
+                return ECDSA;
+            case "eddsa":
+            case "EdDSA":
+            case "EDDSA":
+                return EDDSA;
+            default:
+                return NOT_FOUND;
+        }
     }
 
     public static List<SignatureType> getAsList() { return Arrays.asList(values()); }

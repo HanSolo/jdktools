@@ -66,18 +66,22 @@ public enum Latest implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL, REDUCED, REDUCED_ENRICHED ->
+            case FULL:
+            case REDUCED:
+            case REDUCED_ENRICHED:
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-            default ->
+                break;
+            default:
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
+                break;
         }
         return msgBuilder.toString();
     }
@@ -86,14 +90,42 @@ public enum Latest implements Api {
 
     public static Latest fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "per_distro", "per-distro", "per-distribution", "per_distribution", "perdistro", "PER_DISTRO", "PER-DISTRO", "PER_DISTRIBUTION", "PER-DISTRIBUTION", "PERDISTRO" -> PER_DISTRIBUTION;
-            case "overall", "OVERALL", "in_general", "in-general", "IN_GENERAL", "IN-GENERAL" -> OVERALL;
-            case "per_version", "per-version", "perversion", "PER_VERSION", "PER-VERSION", "PERVERSION" -> PER_VERSION;
-            case "available", "AVAILABLE", "Available" -> AVAILABLE;
-            case "all_of_version", "ALL_OF_VERSION" -> ALL_OF_VERSION;
-            default -> NOT_FOUND;
-        };
+        switch (text) {
+            case "per_distro":
+            case "per-distro":
+            case "per-distribution":
+            case "per_distribution":
+            case "perdistro":
+            case "PER_DISTRO":
+            case "PER-DISTRO":
+            case "PER_DISTRIBUTION":
+            case "PER-DISTRIBUTION":
+            case "PERDISTRO":
+                return PER_DISTRIBUTION;
+            case "overall":
+            case "OVERALL":
+            case "in_general":
+            case "in-general":
+            case "IN_GENERAL":
+            case "IN-GENERAL":
+                return OVERALL;
+            case "per_version":
+            case "per-version":
+            case "perversion":
+            case "PER_VERSION":
+            case "PER-VERSION":
+            case "PERVERSION":
+                return PER_VERSION;
+            case "available":
+            case "AVAILABLE":
+            case "Available":
+                return AVAILABLE;
+            case "all_of_version":
+            case "ALL_OF_VERSION":
+                return ALL_OF_VERSION;
+            default:
+                return NOT_FOUND;
+        }
     }
 
     public static List<Latest> getAsList() { return Arrays.asList(values()); }
