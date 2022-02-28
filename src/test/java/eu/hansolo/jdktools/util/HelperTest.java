@@ -23,16 +23,16 @@ import eu.hansolo.jdktools.versioning.VersionNumber;
 import org.junit.jupiter.api.Test;
 
 
-public class HelperTest {
+class HelperTest {
 
     @Test
-    public void trimPrefixTest() {
+    void trimPrefixTest() {
         assert Helper.trimPrefix("BlaBlaBlaHanSolo", "BlaBlaBla").equals("HanSolo");
         assert Helper.trimPrefix("BlaBlaBlaHanSolo", "Bla").equals("BlaBlaHanSolo");
     }
 
     @Test
-    public void isPositiveIntegerTest() {
+    void isPositiveIntegerTest() {
         assert Helper.isPositiveInteger("1");
         assert Helper.isPositiveInteger("+10");
         assert !Helper.isPositiveInteger("11.2");
@@ -41,7 +41,7 @@ public class HelperTest {
 
 
     @Test
-    public void releaseTermOfSupportTest() {
+    void releaseTermOfSupportTest() {
         assert Helper.isReleaseTermOfSupport(17, TermOfSupport.LTS);
         assert Helper.isReleaseTermOfSupport(15, TermOfSupport.MTS);
         assert Helper.isReleaseTermOfSupport(12, TermOfSupport.STS);
@@ -49,7 +49,7 @@ public class HelperTest {
     }
 
     @Test
-    public void termOfSupportTest() {
+    void termOfSupportTest() {
         assert TermOfSupport.LTS == Helper.getTermOfSupport(new VersionNumber(17, 0, 2));
         assert TermOfSupport.MTS == Helper.getTermOfSupport(new VersionNumber(13, 0, 5, 1));
         assert TermOfSupport.STS == Helper.getTermOfSupport(new VersionNumber(16, 0, 2));
@@ -61,7 +61,7 @@ public class HelperTest {
     }
 
     @Test
-    public void isLTSTest() {
+    void isLTSTest() {
         assert Helper.isLTS(7);
         assert Helper.isLTS(8);
         assert !Helper.isLTS(9);
@@ -70,7 +70,7 @@ public class HelperTest {
     }
 
     @Test
-    public void isMTSTest() {
+    void isMTSTest() {
         assert Helper.isMTS(13);
         assert Helper.isMTS(15);
         assert Helper.isMTS(23);
@@ -78,7 +78,7 @@ public class HelperTest {
     }
 
     @Test
-    public void isSTSTest() {
+    void isSTSTest() {
         assert Helper.isSTS(9);
         assert Helper.isSTS(10);
         assert Helper.isSTS(18);

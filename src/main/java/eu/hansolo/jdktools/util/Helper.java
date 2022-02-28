@@ -117,11 +117,11 @@ public class Helper {
 
     public static final OperatingSystem getOperatingSystem() {
         String os = System.getProperty("os.name").toLowerCase();
-        if (os.indexOf("win") >= 0) {
+        if (os.contains("win")) {
             return OperatingSystem.WINDOWS;
-        } else if (os.indexOf("apple") >= 0 || os.indexOf("mac") >= 0) {
+        } else if (os.contains("apple") || os.contains("mac")) {
             return OperatingSystem.MACOS;
-        } else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0) {
+        } else if (os.contains("nix") || os.contains("nux")) {
             try {
                 final ProcessBuilder processBuilder = new ProcessBuilder(DETECT_ALPINE_CMDS);
                 final Process        process        = processBuilder.start();
@@ -131,7 +131,7 @@ public class Helper {
                 e.printStackTrace();
                 return OperatingSystem.LINUX;
             }
-        } else if (os.indexOf("sunos") >= 0) {
+        } else if (os.contains("sunos")) {
             return OperatingSystem.SOLARIS;
         } else {
             return OperatingSystem.NOT_FOUND;

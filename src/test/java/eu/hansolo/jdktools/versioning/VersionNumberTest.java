@@ -32,9 +32,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-public class VersionNumberTest {
+class VersionNumberTest {
     @Test
-    public void versionNumberSmallerThanOtherVersionNumber() {
+    void versionNumberSmallerThanOtherVersionNumber() {
         VersionNumber versionNumber1 = new VersionNumber(8, 0, 0, 0);
         VersionNumber versionNumber2 = new VersionNumber(8, 0, 0, 1);
         assert versionNumber1.compareTo(versionNumber2) == -1;
@@ -61,7 +61,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void versionNumberEqualsOtherVersionNumber() {
+    void versionNumberEqualsOtherVersionNumber() {
         VersionNumber versionNumber1 = new VersionNumber(8, 0, 0, 0);
         VersionNumber versionNumber2 = new VersionNumber(8, 0, 0, 0);
         assert versionNumber1.compareTo(versionNumber2) == 0;
@@ -102,7 +102,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void versionNumberEqualsOtherVersionNumber2() {
+    void versionNumberEqualsOtherVersionNumber2() {
         final VersionNumber versionNumber1  = new VersionNumber(1);
         final VersionNumber versionNumber2  = new VersionNumber(1);
         final VersionNumber versionNumber3  = new VersionNumber(1, 2);
@@ -139,7 +139,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void versionNumberLargerThanOtherVersioNumber() {
+    void versionNumberLargerThanOtherVersioNumber() {
         VersionNumber versionNumber1 = new VersionNumber(8, 0, 0, 1);
         VersionNumber versionNumber2 = new VersionNumber(8, 0, 0, 0);
         assert versionNumber1.compareTo(versionNumber2) == 1;
@@ -158,7 +158,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void versionNumberFromString() {
+    void versionNumberFromString() {
         final String versionNumber1String  = "8";                                 // 8
         final String versionNumber2String  = "8.2";                               // 8.2
         final String versionNumber3String  = "1.2.3";                             // 1.2.3
@@ -287,7 +287,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void compareIncludingBuildNumber() {
+    void compareIncludingBuildNumber() {
         final String versionNumber1String = "1.8.0_275.b01-x86.rpm";     // 8.0.275 build 1
         final String versionNumber2String = "8u272b09_ea.tar.gz";        // 8.0.272 build 9
         final String versionNumber3String = "1.7.0_25-b15";              // 7.0.25 build 15
@@ -308,7 +308,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void zeroBuildNumber() {
+    void zeroBuildNumber() {
         VersionNumber versionNumber1 = VersionNumber.fromText("8.0.202+0");
         Semver        semVer1        = new Semver(versionNumber1);
         Semver        semVer2        = Semver.fromText("8.0.202+0").getSemver1();
@@ -321,7 +321,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void sortNumbersRelatedToReleaseStatus() {
+    void sortNumbersRelatedToReleaseStatus() {
         VersionNumber vn1 = new VersionNumber(8,0,302);
         VersionNumber vn2 = new VersionNumber(8,0,302,0,10);
         VersionNumber vn3 = new VersionNumber(8,0,302,0,11);
@@ -374,7 +374,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void normalizedVersionNumber() {
+    void normalizedVersionNumber() {
         final String versionNumber1String = "8";
         final String versionNumber2String = "11.2";
         final String versionNumber3String = "11.2.3";
@@ -389,7 +389,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void shortenedVersionNumber() {
+    void shortenedVersionNumber() {
         VersionNumber v1 = new VersionNumber(1,2,3,4);
         VersionNumber v2 = new VersionNumber(1,2,3,0);
         VersionNumber v3 = new VersionNumber(1,2,0,4);
@@ -408,7 +408,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void sortingVersionNumbers() {
+    void sortingVersionNumbers() {
         VersionNumber vn1 = new VersionNumber(11,0,10, null, null, null, 2, ReleaseStatus.GA);
         VersionNumber vn2 = new VersionNumber(11,0,10, null, null, null, 3, ReleaseStatus.GA);
         VersionNumber vn3 = new VersionNumber(11,0,10, null, null, null, 4, ReleaseStatus.GA);
@@ -496,7 +496,7 @@ public class VersionNumberTest {
     }
 
     @Test
-    public void latestPerUpdate() {
+    void latestPerUpdate() {
         List<Semver> semvers = new ArrayList<>();
         semvers.add(new Semver(VersionNumberBuilder.create(8).updateNumber(42).buildNumber(1).build()));
         semvers.add(new Semver(VersionNumberBuilder.create(8).updateNumber(42).buildNumber(2).build()));

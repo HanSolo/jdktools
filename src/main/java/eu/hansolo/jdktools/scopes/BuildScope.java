@@ -47,12 +47,15 @@ public enum BuildScope implements Scope {
             case "build_of_openjdk":
             case "BuildOfOpenJDK":
             case "buildofopenjdk":
-            case "BUILD_OF_OPENJDK": return BUILD_OF_OPEN_JDK;
+            case "BUILD_OF_OPENJDK":
+                return BUILD_OF_OPEN_JDK;
             case "build_of_graalvm":
             case "BuildOfGraalVM":
             case "buildofgraalvm":
-            case "BUILD_OF_GRAALVM": return BUILD_OF_GRAALVM;
-            default                : return NOT_FOUND;
+            case "BUILD_OF_GRAALVM":
+                return BUILD_OF_GRAALVM;
+            default:
+                return NOT_FOUND;
         }
     }
 

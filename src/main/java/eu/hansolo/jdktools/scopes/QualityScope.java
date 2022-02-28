@@ -46,7 +46,7 @@ public enum QualityScope implements Scope {
         switch(text) {
             case "tck_tested"      :
             case "TCK_TESTED"      : 
-            case "tckTested"       :return TCK_TESTED;
+            case "tckTested"       : return TCK_TESTED;
             case "aqavit_certified":
             case "AQAVIT_CERTIFIED":
             case "aqavitCertified" : return AQAVIT_CERTIFIED;

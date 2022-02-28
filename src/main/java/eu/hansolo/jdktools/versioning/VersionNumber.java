@@ -277,11 +277,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 //System.out.println("match: 1, 2, 5, 6, 10, 14, 15, 16");
                 versionNumber.setInterim(getPositiveIntFromText(result.group(6), version));
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(10), version));
-            } */else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(6) && null != result.group(10) && null != result.group(14) && null != result.group(15) && null != result.group(16)) {
-                //System.out.println("match: 1, 2, 5, 6, 10, 14, 15, 16");
-                versionNumber.setInterim(getPositiveIntFromText(result.group(6)));
-                versionNumber.setUpdate(getPositiveIntFromText(result.group(10)));
-            } else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(10) && null != result.group(11) && null != result.group(12) && null != result.group(13)) {
+            } */else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(10) && null != result.group(11) && null != result.group(12) && null != result.group(13)) {
                 //System.out.println("match: 1, 2, 5, 10, 11, 12, 13");
                 versionNumber.setInterim(0);
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(13)));
@@ -290,10 +286,6 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 versionNumber.setInterim(getPositiveIntFromText(result.group(6)));
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(7)));
                 versionNumber.setPatch(getPositiveIntFromText(result.group(10)));
-            } else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(6) && null != result.group(10)) {
-                //System.out.println("match: 1, 2, 5, 6, 10");
-                versionNumber.setInterim(getPositiveIntFromText(result.group(6)));
-                versionNumber.setUpdate(getPositiveIntFromText(result.group(10)));
             } else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(6) && null != result.group(10)) {
                 //System.out.println("match: 1, 2, 5, 6, 10");
                 versionNumber.setInterim(getPositiveIntFromText(result.group(6)));
@@ -407,7 +399,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
         if (null == text || text.isEmpty()) { return -1; }
         Matcher matcher = LEADING_INT_PATTERN.matcher(text);
         if (matcher.find()) {
-            return matcher.group(0).isEmpty() ? -1 : Integer.valueOf(matcher.group(0));
+            return matcher.group(0).isEmpty() ? -1 : Integer.parseInt(matcher.group(0));
         } else {
             //LOGGER.debug("Given text {} did not start with integer. Full text to parse was: {}", text, fullTextToParse);
             return -1;
@@ -641,13 +633,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                                                             int thisBuild = build.isPresent()                          ? build.getAsInt()                         : 0;
                                                             int otherBuild = otherVersionNumber.getBuild().isPresent() ? otherVersionNumber.getBuild().getAsInt() : 0;
 
-                                                            if (thisBuild > otherBuild) {
-                                                                ret = largerThan;
-                                                            } else if (thisBuild < otherBuild) {
-                                                                ret = smallerThan;
-                                                            } else {
-                                                                ret = equal;
-                                                            }
+                                                            ret = Integer.compare(thisBuild, otherBuild);
                                                         } else {
                                                             ret = equal;
                                                         }
@@ -704,13 +690,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isPresent()) {
                 int buildNumber      = getBuild().getAsInt();
                 int otherBuildNumber = otherVersionNumber.getBuild().getAsInt();
-                if (buildNumber > otherBuildNumber) {
-                    ret = largerThan;
-                } else if (buildNumber < otherBuildNumber) {
-                    ret = smallerThan;
-                } else {
-                    ret = equal;
-                }
+                ret = Integer.compare(buildNumber, otherBuildNumber);
             } else if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isPresent() && otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isEmpty()) {
                 ret = largerThan;
             } else if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isEmpty() &&
