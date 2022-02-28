@@ -38,17 +38,17 @@ public enum Comparison {
     public String getOperator() { return operator; }
 
     public static Comparison fromText(final String text) {
-        switch (text) {
-            case "<"   -> { return LESS_THAN; }
-            case "<="  -> { return LESS_THAN_OR_EQUAL; }
-            case "="   -> { return EQUAL; }
-            case ">="  -> { return GREATER_THAN_OR_EQUAL; }
-            case ">"   -> { return GREATER_THAN; }
-            case "..." -> { return RANGE_INCLUDING; }
-            case "..<" -> { return RANGE_EXCLUDING_TO; }
-            case ">.." -> { return RANGE_EXCLUDING_FROM; }
-            case ">.<" -> { return RANGE_EXCLUDING; }
-            default    -> { return EQUAL; }
-        }
+        return switch (text) {
+            case "<"   -> LESS_THAN;
+            case "<="  -> LESS_THAN_OR_EQUAL;
+            case "="   -> EQUAL;
+            case ">="  -> GREATER_THAN_OR_EQUAL;
+            case ">"   -> GREATER_THAN;
+            case "..." -> RANGE_INCLUDING;
+            case "..<" -> RANGE_EXCLUDING_TO;
+            case ">.." -> RANGE_EXCLUDING_FROM;
+            case ">.<" -> RANGE_EXCLUDING;
+            default    -> EQUAL;
+        };
     }
 }

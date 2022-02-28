@@ -61,18 +61,18 @@ public class Helper {
 
 
     public static final boolean isReleaseTermOfSupport(final int featureVersion, final TermOfSupport termOfSupport) {
-        switch(termOfSupport) {
-            case LTS -> { return isLTS(featureVersion); }
-            case MTS -> { return isMTS(featureVersion); }
-            case STS -> { return isSTS(featureVersion); }
-            default  -> { return false; }
-        }
+        return switch(termOfSupport) {
+            case LTS -> isLTS(featureVersion);
+            case MTS -> isMTS(featureVersion);
+            case STS -> isSTS(featureVersion);
+            default  -> false;
+        };
     }
     public static final boolean isSTS(final int featureVersion) {
         if (featureVersion < 9) { return false; }
         return switch (featureVersion) {
             case 9, 10 -> true;
-            default -> !isLTS(featureVersion);
+            default    -> !isLTS(featureVersion);
         };
     }
     public static final boolean isMTS(final int featureVersion) {
@@ -91,8 +91,8 @@ public class Helper {
         TermOfSupport termOfSupport = getTermOfSupport(versionNumber);
         return switch (termOfSupport) {
             case LTS, STS -> termOfSupport;
-            case MTS -> isZulu ? termOfSupport : TermOfSupport.STS;
-            default -> TermOfSupport.NOT_FOUND;
+            case MTS      -> isZulu ? termOfSupport : TermOfSupport.STS;
+            default       -> TermOfSupport.NOT_FOUND;
         };
     }
     public static final TermOfSupport getTermOfSupport(final VersionNumber versionNumber) {

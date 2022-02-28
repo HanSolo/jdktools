@@ -344,7 +344,7 @@ public class SemverParser {
 
         // Define filter
         switch(comparison1) {
-            case LESS_THAN             ->  filter = semVer -> semVer.lessThan(semVer1);
+            case LESS_THAN             -> filter = semVer -> semVer.lessThan(semVer1);
             case LESS_THAN_OR_EQUAL    -> filter = semVer -> (semVer.lessThan(semVer1) || semVer.equalTo(semVer1));
             case GREATER_THAN          -> filter = semVer -> semVer.greaterThan(semVer1);
             case GREATER_THAN_OR_EQUAL -> filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1));
