@@ -1,5 +1,4 @@
 module eu.hansolo.jdktools {
-    requires java.base;
 
     exports eu.hansolo.jdktools.scopes;
     exports eu.hansolo.jdktools.util;

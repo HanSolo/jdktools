@@ -128,7 +128,7 @@ public class VersionNumberTest {
         List<VersionNumber> versionNumbers = new ArrayList<>();
         versionNumbers.addAll(Arrays.asList(new VersionNumber[]{ versionNumber1, versionNumber2, versionNumber3, versionNumber4, versionNumber5, versionNumber6, versionNumber7, versionNumber8, versionNumber9, versionNumber10, versionNumber11, versionNumber12, versionNumber13 }));
 
-        Collections.sort(versionNumbers, Comparator.comparing(VersionNumber::new));
+        versionNumbers.sort(Comparator.comparing(VersionNumber::new));
         Collections.reverse(versionNumbers);
 
         List<String> correctVersionNumbers = List.of("8.0.282+8", "8.0.282", "8.0.282-ea+7", "8.0.282-ea+5", "8.0.282-ea+3", "1.2.3.4", "1.2.3.4", "1.2.3", "1.2.3", "1.2", "1.2", "1", "1");
@@ -331,7 +331,7 @@ public class VersionNumberTest {
         vns.add(vn2);
         vns.add(vn3);
 
-        Collections.sort(vns, Comparator.comparing(VersionNumber::new));
+        vns.sort(Comparator.comparing(VersionNumber::new));
         Collections.reverse(vns);
 
         assert vns.get(2).equals(vn1);
@@ -348,7 +348,7 @@ public class VersionNumberTest {
         vnsEa.add(vn2ea);
         vnsEa.add(vn3ea);
 
-        Collections.sort(vnsEa, Comparator.comparing(VersionNumber::new));
+        vnsEa.sort(Comparator.comparing(VersionNumber::new));
         Collections.reverse(vnsEa);
 
         assert vnsEa.get(0).equals(vn3ea);
@@ -363,7 +363,7 @@ public class VersionNumberTest {
         mixed.add(vn2ea);
         mixed.add(vn3);
 
-        Collections.sort(mixed, Comparator.comparing(VersionNumber::new));
+        mixed.sort(Comparator.comparing(VersionNumber::new));
         Collections.reverse(mixed);
 
         assert mixed.get(0).equals(vn3);
@@ -536,7 +536,7 @@ public class VersionNumberTest {
                                        Semver.fromText("9.0.1+b2").getSemver1(),
                                        Semver.fromText("8.0.42+b4").getSemver1());
 
-        List<String> correctSemverStrings = correct.stream().map(semver -> semver.toString()).collect(Collectors.toList());
+        List<String> correctSemverStrings = correct.stream().map(Semver::toString).collect(Collectors.toList());
 
         assert correct.size() == maxSemverPerUpdate.size();
         maxSemverPerUpdate.forEach(semver -> { assert(correctSemverStrings.contains(semver.toString(true))); });
