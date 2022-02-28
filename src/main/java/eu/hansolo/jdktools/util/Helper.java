@@ -159,7 +159,7 @@ public class Helper {
             switch(operatingSystem) {
                 case WINDOWS -> {
                     ARCHITECTURE_MATCHER.reset(result);
-                    final List<MatchResult> results     = ARCHITECTURE_MATCHER.results().collect(Collectors.toList());
+                    final List<MatchResult> results     = ARCHITECTURE_MATCHER.results().toList();
                     final int               noOfResults = results.size();
                     if (noOfResults > 0) {
                         final MatchResult   res = results.get(0);

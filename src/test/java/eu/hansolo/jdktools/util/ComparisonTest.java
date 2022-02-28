@@ -21,9 +21,9 @@ package eu.hansolo.jdktools.util;
 import org.junit.jupiter.api.Test;
 
 
-public class ComparisonTest {
+class ComparisonTest {
     @Test
-    public void comparisonFormTextTest() {
+    void comparisonFormTextTest() {
         Comparison comparison = Comparison.fromText("<");
         assert comparison.getOperator().equals(Comparison.LESS_THAN.getOperator());
 

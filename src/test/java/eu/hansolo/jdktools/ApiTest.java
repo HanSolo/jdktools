@@ -22,10 +22,10 @@ package eu.hansolo.jdktools;
 import org.junit.jupiter.api.Test;
 
 
-public class ApiTest {
+class ApiTest {
 
     @Test
-    public void architectureFromTextTest() {
+    void architectureFromTextTest() {
         assert Architecture.fromText(null) == Architecture.NOT_FOUND;
         assert Architecture.fromText("") == Architecture.NOT_FOUND;
         assert Architecture.fromText("arm") == Architecture.ARM;
@@ -65,7 +65,7 @@ public class ApiTest {
     }
 
     @Test
-    public void archiveTypeFromTextTest() {
+    void archiveTypeFromTextTest() {
         assert ArchiveType.fromText(null) == ArchiveType.NOT_FOUND;
         assert ArchiveType.fromText("") == ArchiveType.NOT_FOUND;
         assert ArchiveType.fromText("apk") == ArchiveType.APK;
@@ -86,7 +86,7 @@ public class ApiTest {
     }
 
     @Test
-    public void bitnessFromTextTest() {
+    void bitnessFromTextTest() {
         assert Bitness.fromText(null) == Bitness.NOT_FOUND;
         assert Bitness.fromText("") == Bitness.NOT_FOUND;
         assert Bitness.fromText("32") == Bitness.BIT_32;
@@ -96,7 +96,7 @@ public class ApiTest {
     }
 
     @Test
-    public void fpuFromTextTest() {
+    void fpuFromTextTest() {
         assert FPU.fromText(null) == FPU.NOT_FOUND;
         assert FPU.fromText("") == FPU.NOT_FOUND;
         assert FPU.fromText("hfl") == FPU.HARD_FLOAT;
@@ -108,7 +108,7 @@ public class ApiTest {
     }
 
     @Test
-    public void hashAlgorithmFromTextTest() {
+    void hashAlgorithmFromTextTest() {
         assert HashAlgorithm.fromText(null) == HashAlgorithm.NOT_FOUND;
         assert HashAlgorithm.fromText("") == HashAlgorithm.NOT_FOUND;
         assert HashAlgorithm.fromText("md5") == HashAlgorithm.MD5;
@@ -125,7 +125,7 @@ public class ApiTest {
     }
 
     @Test
-    public void latestFromTextTest() {
+    void latestFromTextTest() {
         assert Latest.fromText(null) == Latest.NOT_FOUND;
         assert Latest.fromText("") == Latest.NOT_FOUND;
         assert Latest.fromText("all_of_version") == Latest.ALL_OF_VERSION;
@@ -136,7 +136,7 @@ public class ApiTest {
     }
 
     @Test
-    public void libCTypeFromTextTest() {
+    void libCTypeFromTextTest() {
         assert LibCType.fromText(null) == LibCType.NOT_FOUND;
         assert LibCType.fromText("") == LibCType.NOT_FOUND;
         assert LibCType.fromText("libc") == LibCType.LIBC;
@@ -146,7 +146,7 @@ public class ApiTest {
     }
 
     @Test
-    public void matchFromTextTest() {
+    void matchFromTextTest() {
         assert Match.fromText(null) == Match.ANY;
         assert Match.fromText("") == Match.ANY;
         assert Match.fromText("any") == Match.ANY;
@@ -154,7 +154,7 @@ public class ApiTest {
     }
 
     @Test
-    public void operatingModeFromTextTest() {
+    void operatingModeFromTextTest() {
         assert OperatingMode.fromText(null) == OperatingMode.NOT_FOUND;
         assert OperatingMode.fromText("") == OperatingMode.NOT_FOUND;
         assert OperatingMode.fromText("native") == OperatingMode.NATIVE;
@@ -162,7 +162,7 @@ public class ApiTest {
     }
 
     @Test
-    public void operatingSystemFromTextTest() {
+    void operatingSystemFromTextTest() {
         assert OperatingSystem.fromText(null) == OperatingSystem.NOT_FOUND;
         assert OperatingSystem.fromText("") == OperatingSystem.NOT_FOUND;
         assert OperatingSystem.fromText("aix") == OperatingSystem.AIX;
@@ -178,7 +178,7 @@ public class ApiTest {
     }
 
     @Test
-    public void packageTypeFromTextTest() {
+    void packageTypeFromTextTest() {
         assert PackageType.fromText(null) == PackageType.NOT_FOUND;
         assert PackageType.fromText("") == PackageType.NOT_FOUND;
         assert PackageType.fromText("jdk") == PackageType.JDK;
@@ -186,7 +186,7 @@ public class ApiTest {
     }
 
     @Test
-    public void releaseStatusFromTextTest() {
+    void releaseStatusFromTextTest() {
         assert ReleaseStatus.fromText(null) == ReleaseStatus.NOT_FOUND;
         assert ReleaseStatus.fromText("") == ReleaseStatus.NOT_FOUND;
         assert ReleaseStatus.fromText("ea") == ReleaseStatus.EA;
@@ -194,7 +194,7 @@ public class ApiTest {
     }
 
     @Test
-    public void severityFromTextTest() {
+    void severityFromTextTest() {
         assert Severity.fromText(null) == Severity.NOT_FOUND;
         assert Severity.fromText("") == Severity.NOT_FOUND;
         assert Severity.fromText("low") == Severity.LOW;
@@ -204,7 +204,7 @@ public class ApiTest {
     }
 
     @Test
-    public void signatureTypeFromTextTest() {
+    void signatureTypeFromTextTest() {
         assert SignatureType.fromText(null) == SignatureType.NOT_FOUND;
         assert SignatureType.fromText("") == SignatureType.NOT_FOUND;
         assert SignatureType.fromText("dsa") == SignatureType.DSA;
@@ -214,7 +214,7 @@ public class ApiTest {
     }
 
     @Test
-    public void termOfSupportFromTextTest() {
+    void termOfSupportFromTextTest() {
         assert TermOfSupport.fromText(null) == TermOfSupport.NOT_FOUND;
         assert TermOfSupport.fromText("") == TermOfSupport.NOT_FOUND;
         assert TermOfSupport.fromText("lts") == TermOfSupport.LTS;
@@ -223,7 +223,7 @@ public class ApiTest {
     }
 
     @Test
-    public void verificationFromTextTest() {
+    void verificationFromTextTest() {
         assert Verification.fromText(null) == Verification.NOT_FOUND;
         assert Verification.fromText("") == Verification.NOT_FOUND;
         assert Verification.fromText("yes") == Verification.YES;

@@ -21,9 +21,9 @@ package eu.hansolo.jdktools.scopes;
 import org.junit.jupiter.api.Test;
 
 
-public class ScopeTest {
+class ScopeTest {
     @Test
-    public void scopeFromTextTest() {
+    void scopeFromTextTest() {
         Scope scope = BasicScope.fromText("public");
         assert scope instanceof BasicScope;
 
