@@ -74,7 +74,7 @@ jar {
 
 // start the demo from gradle
 task Demo(type: JavaExec) {
-    main = "eu.hansolo.jdktools/Demo"
+    mainClass = "eu.hansolo.jdktools/Demo"
     classpath = sourceSets.main.runtimeClasspath
 }
 
