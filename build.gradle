@@ -97,9 +97,9 @@ signing {
 publishing {
     publications {
         mavenCustom(MavenPublication) {
-            group = 'eu.hansolo'
+            group      = 'eu.hansolo'
             artifactId = 'jdktools'
-            version = "${version}"
+            version    = "${version}"
 
             from components.java
             artifact sourcesJar
@@ -114,26 +114,26 @@ publishing {
             }
 
             pom {
-                name = 'JDKTools'
+                name        = 'JDKTools'
                 description = '\'JDKTools is a library that contains tools related to system info and versioning\''
-                url = "https://github.com/HanSolo/jdktools/wiki"
+                url         = "https://github.com/HanSolo/jdktools/wiki"
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        url  = "http://www.apache.org/licenses/LICENSE-2.0.txt"
                     }
                 }
                 developers {
                     developer {
-                        id = "HanSolo"
-                        name = "Gerrit Grunwald"
+                        id    = "HanSolo"
+                        name  = "Gerrit Grunwald"
                         email = "han.solo@mac.com"
                     }
                 }
                 scm {
-                    connection = "scm:git:https://HanSolo/jdktools"
+                    connection          = "scm:git:https://HanSolo/jdktools"
                     developerConnection = "scm:git:https://HanSolo/jdktools"
-                    url = "https://github.com/HanSolo/jdktools"
+                    url                 = "https://github.com/HanSolo/jdktools"
                 }
             }
         }
@@ -142,7 +142,7 @@ publishing {
     repositories {
         maven {
             name = "OSSRH"
-            url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            url  = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
             credentials {
                 username = null == ciOssrhUsername ? ossrhUsername : ciOssrhUsername
                 password = null == ciOssrhPassword ? ossrhPassword : ciOssrhPassword
@@ -150,7 +150,7 @@ publishing {
         }
         maven {
             name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/HanSolo/jdktools"
+            url  = "https://maven.pkg.github.com/HanSolo/jdktools"
             credentials {
                 username = null == ciGHUser  ? ghUser  : ciGHUser
                 password = null == ciGHToken ? ghToken : ciGHToken
