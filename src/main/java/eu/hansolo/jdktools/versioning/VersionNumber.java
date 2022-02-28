@@ -438,7 +438,8 @@ public class VersionNumber implements Comparable<VersionNumber> {
 
     @Override public boolean equals(final Object obj) {
         if (obj == VersionNumber.this) { return true; }
-        if (!(obj instanceof VersionNumber other)) { return false; }
+        if (!(obj instanceof VersionNumber)) { return false; }
+        VersionNumber other = (VersionNumber) obj;
         boolean isEqual;
         if (feature.getAsInt() == other.getFeature().getAsInt()) {
             if (interim.isPresent()) {
