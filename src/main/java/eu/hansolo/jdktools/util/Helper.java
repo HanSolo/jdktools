@@ -22,7 +22,6 @@ import eu.hansolo.jdktools.Architecture;
 import eu.hansolo.jdktools.Constants;
 import eu.hansolo.jdktools.OperatingMode;
 import eu.hansolo.jdktools.OperatingSystem;
-import eu.hansolo.jdktools.OsArcMode;
 import eu.hansolo.jdktools.TermOfSupport;
 import eu.hansolo.jdktools.versioning.VersionNumber;
 
@@ -46,7 +45,7 @@ public class Helper {
     private static final Pattern  ARCHITECTURE_PATTERN     = Pattern.compile("(PROCESSOR_ARCHITECTURE)=([a-zA-Z0-9_\\-]+)");
     private static final Matcher  ARCHITECTURE_MATCHER     = ARCHITECTURE_PATTERN.matcher("");
 
-    //public record OsArcMode(OperatingSystem operatingSystem, Architecture architecture, OperatingMode operatingMode) {}
+    public record OsArcMode(OperatingSystem operatingSystem, Architecture architecture, OperatingMode operatingMode) {}
 
 
     private Helper(){}
