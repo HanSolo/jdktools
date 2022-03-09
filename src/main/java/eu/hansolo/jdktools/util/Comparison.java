@@ -44,16 +44,16 @@ public enum Comparison {
      */
     public static Comparison fromText(final String text) {
         switch (text) {
-            case "<"  : return LESS_THAN;
-            case "<=" : return LESS_THAN_OR_EQUAL;
-            case "="  : return EQUAL;
-            case ">=" : return GREATER_THAN_OR_EQUAL;
-            case ">"  : return GREATER_THAN;
-            case "...": return RANGE_INCLUDING;
-            case "..<": return RANGE_EXCLUDING_TO;
-            case ">..": return RANGE_EXCLUDING_FROM;
-            case ">.<": return RANGE_EXCLUDING;
-            default   : return EQUAL;
+            case "\u003c"       : return LESS_THAN;
+            case "\u003c\u003d" : return LESS_THAN_OR_EQUAL;
+            case "\u003d"       : return EQUAL;
+            case "\u003e\u003d" : return GREATER_THAN_OR_EQUAL;
+            case "\u003e"       : return GREATER_THAN;
+            case "..."          : return RANGE_INCLUDING;
+            case "..\u003c"     : return RANGE_EXCLUDING_TO;
+            case "\u003e.."     : return RANGE_EXCLUDING_FROM;
+            case "\u003e.\u003c": return RANGE_EXCLUDING;
+            default             : return EQUAL;
         }
     }
 }
