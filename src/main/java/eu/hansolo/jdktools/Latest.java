@@ -88,6 +88,12 @@ public enum Latest implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
+    /**
+     * Returns Latest parsed from a given text
+     * @param text Name of the latest to parse usually the api_string of a latest e.g. 'available'
+     * @return Latest parsed from a given text
+     */
     public static Latest fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -128,5 +134,9 @@ public enum Latest implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<Latest> getAsList() { return Arrays.asList(values()); }
 }

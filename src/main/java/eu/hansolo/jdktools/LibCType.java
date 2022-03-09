@@ -86,6 +86,12 @@ public enum LibCType implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
+    /**
+     * Returns LibCType parsed from a given text
+     * @param text Name of the lib c type to parse usually the api_string of a lib c type e.g. 'glibc'
+     * @return LibCType parsed from a given text
+     */
     public static LibCType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -132,5 +138,9 @@ public enum LibCType implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<LibCType> getAsList() { return Arrays.asList(values()); }
 }

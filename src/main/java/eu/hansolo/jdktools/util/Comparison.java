@@ -37,6 +37,11 @@ public enum Comparison {
 
     public String getOperator() { return operator; }
 
+    /**
+     * Returns Comparison parsed from a given text
+     * @param text Name of the comparison to parse usually the api_string of a comparison e.g. '...'
+     * @return Comparison parsed from a given text
+     */
     public static Comparison fromText(final String text) {
         switch (text) {
             case "<"  : return LESS_THAN;

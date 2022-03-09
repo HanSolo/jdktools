@@ -85,6 +85,12 @@ public enum TermOfSupport implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
+    /**
+     * Returns TermOfSupport parsed from a given text
+     * @param text Name of the term of support to parse usually the api_string of a term of support e.g. 'lts'
+     * @return TermOfSupport parsed from a given text
+     */
     public static TermOfSupport fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch(text) {
@@ -111,5 +117,9 @@ public enum TermOfSupport implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<TermOfSupport> getAsList() { return Arrays.asList(values()); }
 }

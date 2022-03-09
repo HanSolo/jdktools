@@ -69,6 +69,12 @@ public enum OperatingMode implements Api {
         return values();
     }
 
+
+    /**
+     * Returns OperatingMode parsed from a given text
+     * @param text Name of the operating mode to parse usually the api_string of a operating mode e.g. 'emulated'
+     * @return OperatingMode parsed from a given text
+     */
     public static OperatingMode fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -85,6 +91,10 @@ public enum OperatingMode implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<OperatingMode> getAsList() {
         return Arrays.asList(values());
     }

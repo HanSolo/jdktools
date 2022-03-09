@@ -84,6 +84,11 @@ public enum BasicScope implements Scope, Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+    /**
+     * Return Scope parsed from given text
+     * @param text Name of the scope to parse usually the api_string of a scope e.g. 'public'
+     * @return Scope parsed from given text
+     */
     public static Scope fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch(text) {
@@ -95,5 +100,9 @@ public enum BasicScope implements Scope, Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<BasicScope> getAsList() { return Arrays.asList(values()); }
 }

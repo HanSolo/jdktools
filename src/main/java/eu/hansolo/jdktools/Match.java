@@ -84,6 +84,12 @@ public enum Match implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
+    /**
+     * Returns Match parsed from a given text
+     * @param text Name of the match to parse usually the api_string of a match e.g. 'any'
+     * @return Match parsed from a given text
+     */
     public static Match fromText(final String text) {
         if (null == text) { return ANY; }
         switch (text) {
@@ -100,5 +106,9 @@ public enum Match implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<Match> getAsList() { return Arrays.asList(values()); }
 }

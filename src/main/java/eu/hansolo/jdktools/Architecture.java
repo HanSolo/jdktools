@@ -167,6 +167,11 @@ public enum Architecture implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+    /**
+     * Returns Architecture parsed from a given text
+     * @param text Name of the architecture to parse usually the api_string of an architecture e.g. 'x64'
+     * @return Architecture parsed from a given text
+     */
     public static Architecture fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -270,6 +275,10 @@ public enum Architecture implements Api {
 
     public boolean isStandard() { return standard; }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<Architecture> getAsList() { return Arrays.asList(values()); }
 
     public abstract List<Architecture> getSynonyms();

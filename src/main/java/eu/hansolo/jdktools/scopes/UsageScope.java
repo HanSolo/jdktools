@@ -41,6 +41,11 @@ public enum UsageScope implements Scope {
     @Override public String getApiString() { return apiString; }
 
 
+    /**
+     * Return Scope parsed from given text
+     * @param text Name of the scope to parse usually the api_string of a scope e.g. 'free_to_use_in_production'
+     * @return Scope parsed from given text
+     */
     public static Scope fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch(text) {
@@ -57,5 +62,9 @@ public enum UsageScope implements Scope {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<UsageScope> getAsList() { return Arrays.asList(values()); }
 }

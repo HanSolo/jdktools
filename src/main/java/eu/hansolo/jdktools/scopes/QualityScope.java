@@ -41,6 +41,11 @@ public enum QualityScope implements Scope {
     @Override public String getApiString() { return apiString; }
 
 
+    /**
+     * Return Scope parsed from given text
+     * @param text Name of the scope to parse usually the api_string of a scope e.g. 'tck_tested'
+     * @return Scope parsed from given text
+     */
     public static Scope fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch(text) {
@@ -54,5 +59,9 @@ public enum QualityScope implements Scope {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<QualityScope> getAsList() { return Arrays.asList(values()); }
 }

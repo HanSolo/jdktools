@@ -93,6 +93,11 @@ public enum Verification implements Api {
         }
     }
 
+    /**
+     * Returns Verification parsed from a given text
+     * @param text Name of the verification to parse usually the api_string of a verification e.g. 'yes'
+     * @return Verification parsed from a given text
+     */
     public static Verification fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -121,5 +126,9 @@ public enum Verification implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<Verification> getAsList() { return Arrays.asList(values()); }
 }
