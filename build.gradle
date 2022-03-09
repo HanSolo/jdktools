@@ -60,7 +60,7 @@ jar {
                 'Bundle-Description'    : description,
                 'Bundle-SymbolicName'   : 'eu.hansolo.jdktools',
                 'Export-Package'        : 'eu.hansolo.jdktools,eu.hansolo.jdktools.scopes,eu.hansolo.jdktools.util,eu.hansolo.jdktools.versioning',
-                'Class-Path'            : '${project.name}-${project.version}.jar'
+                'Class-Path'            : configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
         )
     }
 }
