@@ -84,6 +84,12 @@ public enum PackageType implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
+    /**
+     * Returns PackageType parsed from a given text
+     * @param text Name of the package type to parse usually the api_string of a package type e.g. 'jdk'
+     * @return PackageType parsed from a given text
+     */
     public static PackageType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -104,5 +110,9 @@ public enum PackageType implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<PackageType> getAsList() { return Arrays.asList(values()); }
 }

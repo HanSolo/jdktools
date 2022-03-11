@@ -88,6 +88,12 @@ public enum ReleaseStatus implements Api {
 
     public String getPreReleaseId() { return preReleaseId; }
 
+
+    /**
+     * Returns ReleaseStatus parsed from a given text
+     * @param text Name of the release status to parse usually the api_string of a release status e.g. 'ga'
+     * @return ReleaseStatus parsed from a given text
+     */
     public static ReleaseStatus fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -114,5 +120,9 @@ public enum ReleaseStatus implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<ReleaseStatus> getAsList() { return Arrays.asList(values()); }
 }

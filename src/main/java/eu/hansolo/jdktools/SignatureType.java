@@ -86,6 +86,11 @@ public enum SignatureType implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+    /**
+     * Returns SignatureType parsed from a given text
+     * @param text Name of the signature type to parse usually the api_string of a signature type e.g. 'rsa'
+     * @return SignatureType parsed from a given text
+     */
     public static SignatureType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -107,5 +112,9 @@ public enum SignatureType implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<SignatureType> getAsList() { return Arrays.asList(values()); }
 }

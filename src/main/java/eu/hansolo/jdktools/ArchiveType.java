@@ -99,6 +99,11 @@ public enum ArchiveType implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+    /**
+     * Returns ArchiveType parsed from a given text
+     * @param text Name of the archive type to parse usually the api_string of an archive type e.g. 'tar.gz'
+     * @return ArchiveType parsed from a given text
+     */
     public static ArchiveType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -173,15 +178,24 @@ public enum ArchiveType implements Api {
 
     public List<String> getFileEndings() { return fileEndings; }
 
-    public static ArchiveType getFromFileName(final String fileName) {
-        if (null == fileName || fileName.isEmpty()) { return ArchiveType.NONE; }
+    /**
+     * Returns ArchiveType parsed from a given filename
+     * @param filename Filename from which the archive type should be parsed e.g. 'zulu-18.jdk.tar.gz'
+     * @return ArchiveType parsed from a given filename
+     */
+    public static ArchiveType getFromFileName(final String filename) {
+        if (null == filename || filename.isEmpty()) { return ArchiveType.NONE; }
         for (ArchiveType archiveType : values()) {
             for (String ending : archiveType.getFileEndings()) {
-                if (fileName.toLowerCase().endsWith(ending)) { return archiveType; }
+                if (filename.toLowerCase().endsWith(ending)) { return archiveType; }
             }
         }
         return ArchiveType.NONE;
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<ArchiveType> getAsList() { return Arrays.asList(values()); }
 }

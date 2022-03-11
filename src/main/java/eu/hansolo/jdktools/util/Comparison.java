@@ -37,17 +37,22 @@ public enum Comparison {
 
     public String getOperator() { return operator; }
 
+    /**
+     * Returns Comparison parsed from a given text
+     * @param text Name of the comparison to parse usually the api_string of a comparison e.g. '...'
+     * @return Comparison parsed from a given text
+     */
     public static Comparison fromText(final String text) {
         switch (text) {
-            case "<"  : return LESS_THAN;
-            case "<=" : return LESS_THAN_OR_EQUAL;
-            case "="  : return EQUAL;
-            case ">=" : return GREATER_THAN_OR_EQUAL;
-            case ">"  : return GREATER_THAN;
-            case "...": return RANGE_INCLUDING;
-            case "..<": return RANGE_EXCLUDING_TO;
-            case ">..": return RANGE_EXCLUDING_FROM;
-            case ">.<": return RANGE_EXCLUDING;
+            case "\u003c"       : return LESS_THAN;
+            case "\u003c\u003d" : return LESS_THAN_OR_EQUAL;
+            case "\u003d"       : return EQUAL;
+            case "\u003e\u003d" : return GREATER_THAN_OR_EQUAL;
+            case "\u003e"       : return GREATER_THAN;
+            case "..."          : return RANGE_INCLUDING;
+            case "..\u003c"     : return RANGE_EXCLUDING_TO;
+            case "\u003e.."     : return RANGE_EXCLUDING_FROM;
+            case "\u003e.\u003c": return RANGE_EXCLUDING;
             default   : return EQUAL;
         }
     }

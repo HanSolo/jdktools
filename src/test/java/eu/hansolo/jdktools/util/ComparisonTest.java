@@ -24,31 +24,31 @@ import org.junit.jupiter.api.Test;
 class ComparisonTest {
     @Test
     void comparisonFormTextTest() {
-        Comparison comparison = Comparison.fromText("<");
+        Comparison comparison = Comparison.fromText("\u003c");
         assert comparison.getOperator().equals(Comparison.LESS_THAN.getOperator());
 
-        comparison = Comparison.fromText("<=");
+        comparison = Comparison.fromText("\u003c\u003d");
         assert comparison.getOperator().equals(Comparison.LESS_THAN_OR_EQUAL.getOperator());
 
-        comparison = Comparison.fromText("=");
+        comparison = Comparison.fromText("\u003d");
         assert comparison.getOperator().equals(Comparison.EQUAL.getOperator());
 
-        comparison = Comparison.fromText(">=");
+        comparison = Comparison.fromText("\u003e\u003d");
         assert comparison.getOperator().equals(Comparison.GREATER_THAN_OR_EQUAL.getOperator());
 
-        comparison = Comparison.fromText(">");
+        comparison = Comparison.fromText("\u003e");
         assert comparison.getOperator().equals(Comparison.GREATER_THAN.getOperator());
 
         comparison = Comparison.fromText("...");
         assert comparison.getOperator().equals(Comparison.RANGE_INCLUDING.getOperator());
 
-        comparison = Comparison.fromText("..<");
+        comparison = Comparison.fromText("..\u003c");
         assert comparison.getOperator().equals(Comparison.RANGE_EXCLUDING_TO.getOperator());
 
-        comparison = Comparison.fromText(">..");
+        comparison = Comparison.fromText("\u003e..");
         assert comparison.getOperator().equals(Comparison.RANGE_EXCLUDING_FROM.getOperator());
 
-        comparison = Comparison.fromText(">.<");
+        comparison = Comparison.fromText("\u003e.\u003c");
         assert comparison.getOperator().equals(Comparison.RANGE_EXCLUDING.getOperator());
     }
 }

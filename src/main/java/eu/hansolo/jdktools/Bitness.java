@@ -88,10 +88,24 @@ public enum Bitness implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+    /**
+     * Returns the current bitness as int
+     * @return the current bitness as int
+     */
     public int getAsInt() { return bits; }
 
+    /**
+     * Returns the current bitness as String
+     * @return the current bitness as String
+     */
     public String getAsString() { return Integer.toString(bits); }
 
+
+    /**
+     * Returns Bitness parsed from a given text
+     * @param text Name of the bitness to parse usually the api_string of a bitness e.g. '32bit'
+     * @return Bitness parsed from a given text
+     */
     public static Bitness fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -110,6 +124,11 @@ public enum Bitness implements Api {
         }
     }
 
+    /**
+     * Returns Bitness parsed from a given integer
+     * @param bits Integer from which the bitness should be parsed e.g. '32'
+     * @return Bitness parsed from a given integer
+     */
     public static Bitness fromInt(final Integer bits) {
         switch (bits) {
             case 32: return BIT_32;
@@ -118,5 +137,9 @@ public enum Bitness implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<Bitness> getAsList() { return Arrays.asList(values()); }
 }

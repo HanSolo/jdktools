@@ -46,6 +46,8 @@ class HelperTest {
         assert Helper.isReleaseTermOfSupport(15, TermOfSupport.MTS);
         assert Helper.isReleaseTermOfSupport(12, TermOfSupport.STS);
         assert !Helper.isReleaseTermOfSupport(18, TermOfSupport.MTS);
+        assert Helper.isReleaseTermOfSupport(21, TermOfSupport.LTS);
+        assert Helper.isReleaseTermOfSupport(22, TermOfSupport.STS);
     }
 
     @Test

@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 
 
 public class Helper {
+    private Helper(){}
 
     private static final String[] DETECT_ALPINE_CMDS       = { "/bin/sh", "-c", "cat /etc/os-release | grep 'NAME=' | grep -ic 'Alpine'" };
     private static final String[] UX_DETECT_ARCH_CMDS      = { "/bin/sh", "-c", "uname -m" };
@@ -47,7 +48,6 @@ public class Helper {
     private static final Matcher  ARCHITECTURE_MATCHER     = ARCHITECTURE_PATTERN.matcher("");
 
 
-    private Helper(){}
 
     public static final String trimPrefix(final String text, final String prefix) {
         return text.replaceFirst(prefix, "");
@@ -57,7 +57,6 @@ public class Helper {
         if (null == text || text.isEmpty()) { return false; }
         return Constants.POSITIVE_INTEGER_PATTERN.matcher(text).matches();
     }
-
 
     public static final boolean isReleaseTermOfSupport(final int featureVersion, final TermOfSupport termOfSupport) {
         switch(termOfSupport) {

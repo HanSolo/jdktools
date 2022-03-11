@@ -86,6 +86,12 @@ public enum Severity implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
+    /**
+     * Returns Severity parsed from a given text
+     * @param text Name of the severity to parse usually the api_string of a severity e.g. 'low'
+     * @return Severity parsed from a given text
+     */
     public static Severity fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
@@ -110,5 +116,9 @@ public enum Severity implements Api {
         }
     }
 
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
     public static List<Severity> getAsList() { return Arrays.asList(values()); }
 }
