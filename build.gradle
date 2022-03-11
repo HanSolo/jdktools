@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
 
@@ -60,8 +60,17 @@ jar {
                 'Bundle-Description'    : description,
                 'Bundle-SymbolicName'   : 'eu.hansolo.jdktools',
                 'Export-Package'        : 'eu.hansolo.jdktools,eu.hansolo.jdktools.scopes,eu.hansolo.jdktools.util,eu.hansolo.jdktools.versioning',
-                'Class-Path'            : '${project.name}-${project.version}.jar'
+                'Class-Path'            : configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
         )
+    }
+}
+
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
     }
 }
 
@@ -105,11 +114,13 @@ publishing {
             artifact javadocJar
 
             pom.withXml {
+                /*
                 asNode().dependencies.'*'.findAll {
                     it.groupId.text() == 'org.openjfx'
                 }.each {
                     it.remove(it.classifier)
                 }
+                */
             }
 
             pom {
@@ -119,7 +130,7 @@ publishing {
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
-                        url  = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        url  = "https://www.apache.org/licenses/LICENSE-2.0.txt"
                     }
                 }
                 developers {
