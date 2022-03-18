@@ -23,6 +23,8 @@ import eu.hansolo.jdktools.TermOfSupport;
 import eu.hansolo.jdktools.util.Helper;
 import eu.hansolo.jdktools.util.OutputFormat;
 
+import java.util.Objects;
+
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
 import static eu.hansolo.jdktools.Constants.COMMA_NEW_LINE;
@@ -33,7 +35,7 @@ import static eu.hansolo.jdktools.Constants.NEW_LINE;
 import static eu.hansolo.jdktools.Constants.QUOTES;
 
 
-public class SimpleMajorVersion {
+public class SimpleMajorVersion implements Comparable<SimpleMajorVersion> {
     public  static final String        FIELD_MAJOR_VERSION     = "major_version";
     public  static final String        FIELD_TERM_OF_SUPPORT   = "term_of_support";
     public  static final String        FIELD_MAINTAINED        = "maintained";
@@ -86,6 +88,21 @@ public class SimpleMajorVersion {
                                       .append(CURLY_BRACKET_CLOSE)
                                       .toString();
         }
+    }
+
+    @Override public int compareTo(final SimpleMajorVersion other) {
+        return Integer.compare(featureVersion, other.getAsInt());
+    }
+
+    @Override public boolean equals(final Object other) {
+        if (this == other) { return true; }
+        if (other == null || getClass() != other.getClass()) { return false; }
+        SimpleMajorVersion that = (SimpleMajorVersion) other;
+        return featureVersion == that.featureVersion;
+    }
+
+    @Override public int hashCode() {
+        return Objects.hash(featureVersion, termOfSupport, releaseStatus);
     }
 
     @Override public String toString() {
