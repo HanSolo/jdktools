@@ -45,6 +45,7 @@ public enum ArchiveType implements Api {
     SRC_TAR("src.tar.gz", "src_tar",".src.tar.gz", ".source.tar.gz", ".source.tar.gz"),
     TAR("tar", "tar", ".tar"),
     TAR_GZ("tar.gz", "tar.gz", ".tar.gz"),
+    TAR_XZ("tar.xz", "tar.xz", ".tar.xz"),
     TGZ("tgz", "tgz", ".tgz"),
     TAR_Z("tar.Z", "tar.z", ".tar.Z"),
     ZIP("zip", "zip", ".zip"),
@@ -159,6 +160,10 @@ public enum ArchiveType implements Api {
             case ".tar.gz":
             case "TAR.GZ":
                 return TAR_GZ;
+            case "tar.xz":
+            case ".tar.xz":
+            case "TAR.XZ":
+                return TAR_XZ;
             case "tgz":
             case ".tgz":
             case "TGZ":
