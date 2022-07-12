@@ -318,24 +318,22 @@ public class SemverParser {
 
             // Define filter
             switch(comparison1) {
-                case LESS_THAN:
-                    filter = semVer -> semVer.lessThan(semVer1); break;
-                case LESS_THAN_OR_EQUAL:
-                    filter = semVer -> (semVer.lessThan(semVer1) || semVer.equalTo(semVer1)); break;
-                case GREATER_THAN:
-                    switch(comparison2) {
-                        case LESS_THAN         : filter = semVer -> semVer.greaterThan(semVer1) && semVer.lessThan(semVer2); break;
-                        case LESS_THAN_OR_EQUAL: filter = semVer -> semVer.greaterThan(semVer1) && (semVer.lessThan(semVer2) || semVer.equalTo(semVer2)); break;
-                        default                : filter = semVer -> semVer.greaterThan(semVer1); break;
+                case LESS_THAN          -> filter = semVer -> semVer.lessThan(semVer1);
+                case LESS_THAN_OR_EQUAL -> filter = semVer -> (semVer.lessThan(semVer1) || semVer.equalTo(semVer1));
+                case GREATER_THAN -> {
+                    switch (comparison2) {
+                        case LESS_THAN -> filter = semVer -> semVer.greaterThan(semVer1) && semVer.lessThan(semVer2);
+                        case LESS_THAN_OR_EQUAL -> filter = semVer -> semVer.greaterThan(semVer1) && (semVer.lessThan(semVer2) || semVer.equalTo(semVer2));
+                        default -> filter = semVer -> semVer.greaterThan(semVer1);
                     }
-                    break;
-                case GREATER_THAN_OR_EQUAL:
-                    switch(comparison2) {
-                        case LESS_THAN         : filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)) && semVer.lessThan(semVer2); break;
-                        case LESS_THAN_OR_EQUAL: filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)) && (semVer.lessThan(semVer2) || semVer.equalTo(semVer2)); break;
-                        default                : filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)); break;
+                }
+                case GREATER_THAN_OR_EQUAL -> {
+                    switch (comparison2) {
+                        case LESS_THAN -> filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)) && semVer.lessThan(semVer2);
+                        case LESS_THAN_OR_EQUAL -> filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)) && (semVer.lessThan(semVer2) || semVer.equalTo(semVer2));
+                        default -> filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1));
                     }
-                    break;
+                }
             }
             parsingResult.setFilter(filter);
 
@@ -345,10 +343,10 @@ public class SemverParser {
 
         // Define filter
         switch(comparison1) {
-            case LESS_THAN            : filter = semVer -> semVer.lessThan(semVer1); break;
-            case LESS_THAN_OR_EQUAL   : filter = semVer -> (semVer.lessThan(semVer1) || semVer.equalTo(semVer1)); break;
-            case GREATER_THAN         : filter = semVer -> semVer.greaterThan(semVer1); break;
-            case GREATER_THAN_OR_EQUAL: filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)); break;
+            case LESS_THAN            -> filter = semVer -> semVer.lessThan(semVer1);
+            case LESS_THAN_OR_EQUAL   -> filter = semVer -> (semVer.lessThan(semVer1) || semVer.equalTo(semVer1));
+            case GREATER_THAN         -> filter = semVer -> semVer.greaterThan(semVer1);
+            case GREATER_THAN_OR_EQUAL-> filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1));
         }
         parsingResult.setFilter(filter);
 

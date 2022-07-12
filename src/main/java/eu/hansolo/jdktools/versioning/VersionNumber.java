@@ -108,7 +108,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
         if (null != sixth    && sixth.isPresent()    && 0 > sixth.getAsInt())    { throw new IllegalArgumentException("Sixth number cannot be smaller than 0"); }
         if (null != build    && build.isPresent()    && 0 > build.getAsInt())    { throw new IllegalArgumentException("Build number cannot be smaller than 0"); }
 
-        this.feature       = null == feature       ? OptionalInt.empty() : feature;
+        this.feature       = feature;
         this.interim       = null == interim       ? OptionalInt.of(0)   : interim;
         this.update        = null == update        ? OptionalInt.of(0)   : update;
         this.patch         = null == patch         ? OptionalInt.of(0)   : patch;
@@ -116,6 +116,8 @@ public class VersionNumber implements Comparable<VersionNumber> {
         this.sixth         = null == sixth         ? OptionalInt.of(0)   : sixth;
         this.build         = null == build         ? OptionalInt.empty() : build;
         this.releaseStatus = null == releaseStatus ? Optional.empty()    : releaseStatus;
+
+        if (null == this.feature) { this.feature = OptionalInt.empty(); }
     }
 
 

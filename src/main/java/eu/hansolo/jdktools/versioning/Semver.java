@@ -113,17 +113,15 @@ public class Semver implements Comparable<Semver> {
         if (ReleaseStatus.GA == this.releaseStatus && !this.pre.isEmpty() && this.pre.toLowerCase().startsWith("-ea")) { throw new IllegalArgumentException("ReleaseStatus and pre-release argument cannot be different"); }
 
         // Extract metadata e.g. build number
-        if (null != this.metadata) {
-            final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
-            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
-            if (!buildNumberResults.isEmpty()) {
-                final MatchResult buildNumberResult = buildNumberResults.get(0);
-                if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
-                    Integer build = Integer.parseInt(buildNumberResult.group(2));
-                    if (build > 0) {
-                        this.versionNumber.setBuild(build);
-                        this.preBuild = Integer.toString(build);
-                    }
+        final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
+        final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
+        if (!buildNumberResults.isEmpty()) {
+            final MatchResult buildNumberResult = buildNumberResults.get(0);
+            if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
+                Integer build = Integer.parseInt(buildNumberResult.group(2));
+                if (build > 0) {
+                    this.versionNumber.setBuild(build);
+                    this.preBuild = Integer.toString(build);
                 }
             }
         }
@@ -277,7 +275,7 @@ public class Semver implements Comparable<Semver> {
 
 
     private Error validatePrerelease(final String prerelease) {
-        String[] eparts = prerelease.split(".");
+        String[] eparts = prerelease.split("\\.");
         for (String p : eparts) {
             if (p.matches("[0-9]+")) {
                 if (p.length() > 1 && p.startsWith("0")) {
@@ -291,7 +289,7 @@ public class Semver implements Comparable<Semver> {
     }
 
     private Error validateMetadata(final String metadata) {
-        String[] eparts = metadata.split(".");
+        String[] eparts = metadata.split("\\.");
         for (String p : eparts) {
             if (!p.matches("[a-zA-Z-0-9]")) {
                 return new Error("Invalid metadata: " + metadata);
