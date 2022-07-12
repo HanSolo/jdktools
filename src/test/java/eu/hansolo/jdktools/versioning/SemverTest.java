@@ -32,7 +32,7 @@ class SemverTest {
     void semVerFromTextTest() {
         String t1 = ">=11.0.9.0-ea+b1";
         Semver semVer1 = SemverParser.fromText(t1).getSemver1();
-        assert semVer1.toString().equals(">=11.0.9-ea+1");
+        assert semVer1.toString().equals(">=11.0.9-ea+b1");
         assert semVer1.getVersionNumber().toString(OutputFormat.REDUCED, true, false).equals("11.0.9");
         assert ReleaseStatus.EA == semVer1.getReleaseStatus();
         assert semVer1.getPre().equals("-ea");
@@ -108,7 +108,8 @@ class SemverTest {
 
         assert ReleaseStatus.GA == semVer10.getReleaseStatus();
         assert semVer10.getPreBuild().equals("8");
-        assert semVer10.toString(true).equals("8.0.302+8");
+
+        assert semVer10.toString(true).equals("8.0.302+b8");
 
         String              t11                 = "17.0.1-beta+12.0.202111240007";
         SemverParsingResult resultt11           = SemverParser.fromText(t11);
@@ -116,13 +117,22 @@ class SemverTest {
 
         assert ReleaseStatus.EA == semVer11.getReleaseStatus();
         assert semVer11.toString(true).equals("17.0.1-ea+12.0.202111240007");
+
+        String              t12                 = "1.8.0.302+8";
+        SemverParsingResult result12            = SemverParser.fromText(t12);
+        Semver              semVer12            = result12.getSemver1();
+
+        assert ReleaseStatus.GA == semVer12.getReleaseStatus();
+        assert semVer12.getPreBuild().equals("8");
+        assert semVer12.toString(true).equals("8.0.302+8");
     }
 
     @Test
     void semVerToStringTest() {
         Semver semVer = new Semver(new VersionNumber(11, 0, 9, 1, 0, 5), ReleaseStatus.EA,"", "+b1");
-        assert "11.0.9.1-ea+1".equals(semVer.toString());
-        assert "11.0.9.1.0.5-ea+1".equals(semVer.toString(false));
+
+        assert "11.0.9.1-ea+b1".equals(semVer.toString());
+        assert "11.0.9.1.0.5-ea+b1".equals(semVer.toString(false));
 
         Semver semVer1 = Semver.fromText("14.0.0-ea.36").getSemver1();
 
@@ -154,5 +164,24 @@ class SemverTest {
         VersionNumber versionNumber = new VersionNumber(11, 0, 0, 0, 0, 0, 5, ReleaseStatus.EA);
         Semver        semver        = new Semver(versionNumber);
         assert versionNumber.toString(OutputFormat.REDUCED, true, true).equals(semver.toString(true));
+    }
+
+    @Test
+    void semverMetadataTest() {
+        final String   filename = "jbrsdk-11_0_11-windows-x86-b1504.12.tar.gz";
+        final String   withoutPrefix = filename.replace("jbrsdk-", "");
+        final String   withoutSuffix = withoutPrefix.replace(".tar.gz", "");
+        final String[] filenameParts = withoutSuffix.split("-");
+        final Semver   semver        = Semver.fromText(filenameParts[0].replaceAll("_", "\\.") +(filenameParts.length == 4 ? "+" + filenameParts[3] : "")).getSemver1();
+        final String   pre           = "ea";
+        final String   metadata      = "+b1504.12";
+
+        semver.setMetadata(metadata);
+        semver.setPre(pre);
+
+        assert semver.toString(true).equals("11.0.11-ea+b1504.12");
+
+        Semver semver1 = Semver.fromText("10.0.0-ea+001.2.3").getSemver1();
+        assert semver1.toString(true).equals("10-ea+001.2.3");
     }
 }

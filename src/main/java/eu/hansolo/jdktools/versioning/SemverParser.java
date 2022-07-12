@@ -360,7 +360,7 @@ public class SemverParser {
                 if (p.length() > 0 && p.startsWith("0")) {
                     return new Error("Segment starts with 0: " + p);
                 }
-            } else if (!p.matches("[a-zA-Z-0-9]+")) {
+            } else if (!p.matches("[0-9A-Za-z-]+")) {
                 return new Error("Invalid preRelease: " + preRelease);
             }
         }
@@ -370,7 +370,7 @@ public class SemverParser {
     private static Error validateMetadata(final String metadata) {
         String[] eparts = metadata.split("\\.");
         for (String p : eparts) {
-            if (!p.matches("[a-zA-Z-0-9]+")) {
+            if (!p.matches("[0-9A-Za-z-]+")) {
                 return new Error("Invalid metadata: " + metadata);
             }
         }
