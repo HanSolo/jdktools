@@ -32,7 +32,7 @@ class SemverTest {
     void semVerFromTextTest() {
         String t1 = ">=11.0.9.0-ea+b1";
         Semver semVer1 = SemverParser.fromText(t1).getSemver1();
-        assert semVer1.toString().equals(">=11.0.9-ea+1");
+        assert semVer1.toString().equals(">=11.0.9-ea+b1");
         assert semVer1.getVersionNumber().toString(OutputFormat.REDUCED, true, false).equals("11.0.9");
         assert ReleaseStatus.EA == semVer1.getReleaseStatus();
         assert semVer1.getPre().equals("-ea");
@@ -108,7 +108,7 @@ class SemverTest {
 
         assert ReleaseStatus.GA == semVer10.getReleaseStatus();
         assert semVer10.getPreBuild().equals("8");
-        assert semVer10.toString(true).equals("8.0.302+8");
+        assert semVer10.toString(true).equals("8.0.302+b8");
 
         String              t11                 = "17.0.1-beta+12.0.202111240007";
         SemverParsingResult resultt11           = SemverParser.fromText(t11);
@@ -121,8 +121,8 @@ class SemverTest {
     @Test
     void semVerToStringTest() {
         Semver semVer = new Semver(new VersionNumber(11, 0, 9, 1, 0, 5), ReleaseStatus.EA,"", "+b1");
-        assert "11.0.9.1-ea+1".equals(semVer.toString());
-        assert "11.0.9.1.0.5-ea+1".equals(semVer.toString(false));
+        assert "11.0.9.1-ea+b1".equals(semVer.toString());
+        assert "11.0.9.1.0.5-ea+b1".equals(semVer.toString(false));
 
         Semver semVer1 = Semver.fromText("14.0.0-ea.36").getSemver1();
 

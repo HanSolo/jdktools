@@ -41,7 +41,6 @@ public class SemverParser {
         SemverParsingResult parsingResult = new SemverParsingResult();
 
         // ******************** Parsing 1st Semver ****************************
-
         // Remove leading "1." to get correct version number e.g. 1.8u262 -> 8u262
         String versionText1 = text.startsWith("1.") ? text.replace("1.", "") : text;
         if (versionText1.contains("_")) {
@@ -155,9 +154,14 @@ public class SemverParser {
         Error err1;
         if (null != pre1 && !pre1.isEmpty()) {
             String[] eparts = pre1.split("\\.");
+            /*
             if (eparts.length > 0 && (eparts[0].equalsIgnoreCase("-ea") ||
                                       eparts[0].equalsIgnoreCase("ea")  ||
                                       eparts[0].equalsIgnoreCase("beta"))) {
+                pre1 = "ea";
+            }
+            */
+            if (eparts.length > 0 && (eparts[0].matches("[a-zA-Z]+") && eparts[0].length() > 0)) {
                 pre1 = "ea";
             }
             if (eparts.length > 1 && Helper.isPositiveInteger(eparts[1])) {
@@ -290,9 +294,14 @@ public class SemverParser {
             Error err2;
             if (null != pre2 && !pre2.isEmpty()) {
                 String[] eparts = pre2.split("\\.");
+                /*
                 if (eparts.length > 0 && (eparts[0].equalsIgnoreCase("-ea") ||
                                           eparts[0].equalsIgnoreCase("ea")  ||
                                           eparts[0].equalsIgnoreCase("beta"))) {
+                    pre2 = "ea";
+                }
+                */
+                if (eparts.length > 0 && (eparts[0].matches("[a-zA-Z]+") && eparts[0].length() > 0)) {
                     pre2 = "ea";
                 }
                 if (eparts.length > 1 && Helper.isPositiveInteger(eparts[1])) {
@@ -318,24 +327,24 @@ public class SemverParser {
 
             // Define filter
             switch(comparison1) {
-                case LESS_THAN:
-                    filter = semVer -> semVer.lessThan(semVer1); break;
-                case LESS_THAN_OR_EQUAL:
-                    filter = semVer -> (semVer.lessThan(semVer1) || semVer.equalTo(semVer1)); break;
-                case GREATER_THAN:
-                    switch(comparison2) {
+                case LESS_THAN            : filter = semVer -> semVer.lessThan(semVer1); break;
+                case LESS_THAN_OR_EQUAL   : filter = semVer -> (semVer.lessThan(semVer1) || semVer.equalTo(semVer1)); break;
+                case GREATER_THAN         : {
+                    switch (comparison2) {
                         case LESS_THAN         : filter = semVer -> semVer.greaterThan(semVer1) && semVer.lessThan(semVer2); break;
                         case LESS_THAN_OR_EQUAL: filter = semVer -> semVer.greaterThan(semVer1) && (semVer.lessThan(semVer2) || semVer.equalTo(semVer2)); break;
                         default                : filter = semVer -> semVer.greaterThan(semVer1); break;
                     }
-                    break;
-                case GREATER_THAN_OR_EQUAL:
-                    switch(comparison2) {
+                }
+                break;
+                case GREATER_THAN_OR_EQUAL: {
+                    switch (comparison2) {
                         case LESS_THAN         : filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)) && semVer.lessThan(semVer2); break;
                         case LESS_THAN_OR_EQUAL: filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)) && (semVer.lessThan(semVer2) || semVer.equalTo(semVer2)); break;
                         default                : filter = semVer -> (semVer.equalTo(semVer1) || semVer.greaterThan(semVer1)); break;
                     }
-                    break;
+                }
+                break;
             }
             parsingResult.setFilter(filter);
 
@@ -362,7 +371,7 @@ public class SemverParser {
                 if (p.length() > 0 && p.startsWith("0")) {
                     return new Error("Segment starts with 0: " + p);
                 }
-            } else if (!p.matches("[a-zA-Z-0-9]+")) {
+            } else if (!p.matches("[0-9A-Za-z-]+")) {
                 return new Error("Invalid preRelease: " + preRelease);
             }
         }
@@ -372,7 +381,7 @@ public class SemverParser {
     private static Error validateMetadata(final String metadata) {
         String[] eparts = metadata.split("\\.");
         for (String p : eparts) {
-            if (!p.matches("[a-zA-Z-0-9]+")) {
+            if (!p.matches("[0-9A-Za-z-]+")) {
                 return new Error("Invalid metadata: " + metadata);
             }
         }

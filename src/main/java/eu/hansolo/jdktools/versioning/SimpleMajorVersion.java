@@ -94,10 +94,10 @@ public class SimpleMajorVersion implements Comparable<SimpleMajorVersion> {
         return Integer.compare(featureVersion, other.getAsInt());
     }
 
-    @Override public boolean equals(final Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
-        SimpleMajorVersion that = (SimpleMajorVersion) o;
+    @Override public boolean equals(final Object other) {
+        if (this == other) { return true; }
+        if (other == null || getClass() != other.getClass()) { return false; }
+        SimpleMajorVersion that = (SimpleMajorVersion) other;
         return featureVersion == that.featureVersion;
     }
 

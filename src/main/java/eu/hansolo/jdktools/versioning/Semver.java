@@ -67,6 +67,13 @@ public class Semver implements Comparable<Semver> {
             this.preBuild = Integer.toString(versionNumber.getBuild().getAsInt());
         }
 
+        if (Helper.isPositiveInteger(this.metadata)) {
+            int meta = Integer.parseInt(metadata);
+            if (meta == 0) {
+                this.metadata = "";
+            }
+        }
+
         if (this.preBuild.isEmpty() && !metadata.isEmpty() && Helper.isPositiveInteger(this.metadata)) {
             this.preBuild = this.metadata;
             Integer build = Integer.valueOf(this.preBuild);
@@ -98,6 +105,10 @@ public class Semver implements Comparable<Semver> {
                     }
                 }
             }
+
+            if (this.pre.matches("[a-zA-Z]+") && this.pre.length() > 0) {
+                this.pre = "ea";
+            }
         }
 
         if (null != this.pre && !this.pre.isEmpty() && !this.pre.startsWith("+") && !this.pre.startsWith("-")) {
@@ -113,17 +124,15 @@ public class Semver implements Comparable<Semver> {
         if (ReleaseStatus.GA == this.releaseStatus && !this.pre.isEmpty() && this.pre.toLowerCase().startsWith("-ea")) { throw new IllegalArgumentException("ReleaseStatus and pre-release argument cannot be different"); }
 
         // Extract metadata e.g. build number
-        if (null != this.metadata) {
-            final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
-            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
-            if (!buildNumberResults.isEmpty()) {
-                final MatchResult buildNumberResult = buildNumberResults.get(0);
-                if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
-                    Integer build = Integer.parseInt(buildNumberResult.group(2));
-                    if (build > 0) {
-                        this.versionNumber.setBuild(build);
-                        this.preBuild = Integer.toString(build);
-                    }
+        final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
+        final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
+        if (!buildNumberResults.isEmpty()) {
+            final MatchResult buildNumberResult = buildNumberResults.get(0);
+            if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
+                Integer build = Integer.parseInt(buildNumberResult.group(2));
+                if (build > 0) {
+                    this.versionNumber.setBuild(build);
+                    this.preBuild = Integer.toString(build);
                 }
             }
         }
@@ -185,13 +194,14 @@ public class Semver implements Comparable<Semver> {
 
     public String getMetadata() { return metadata; }
     public void setMetadata(final String metadata) {
-        if (null != metadata && metadata.length() > 0) {
-            Error err = validateMetadata(metadata);
+        final String md = metadata.replaceFirst("\\+", "");
+        if (null != md && md.length() > 0) {
+            Error err = validateMetadata(md);
             if (null != err) {
                 throw new IllegalArgumentException(err.getMessage());
             }
         }
-        this.metadata = metadata;
+        this.metadata = md;
     }
 
     public Comparison getComparison() { return comparison; }
@@ -271,19 +281,22 @@ public class Semver implements Comparable<Semver> {
     }
 
 
-    public static SemverParsingResult fromText(final String text) {
+    public static SemverParsingResult fromText(final String text) throws IllegalArgumentException {
+        SemverParsingResult result = SemverParser.fromText(text);
+        if (null != result.getError1()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError1()); }
+        if (null != result.getError2()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError2()); }
         return SemverParser.fromText(text);
     }
 
 
     private Error validatePrerelease(final String prerelease) {
-        String[] eparts = prerelease.split(".");
+        String[] eparts = prerelease.split("\\.");
         for (String p : eparts) {
             if (p.matches("[0-9]+")) {
                 if (p.length() > 1 && p.startsWith("0")) {
                     return new Error("Segment starts with 0: " + p);
                 }
-            } else if (!p.matches("[a-zA-Z-0-9]+")) {
+            } else if (!p.matches("[0-9A-Za-z-]+")) {
                 return new Error("Invalid prerelease: " + prerelease);
             }
         }
@@ -291,9 +304,9 @@ public class Semver implements Comparable<Semver> {
     }
 
     private Error validateMetadata(final String metadata) {
-        String[] eparts = metadata.split(".");
+        String[] eparts = metadata.split("\\.");
         for (String p : eparts) {
-            if (!p.matches("[a-zA-Z-0-9]")) {
+            if (!p.matches("[0-9A-Za-z-]+")) {
                 return new Error("Invalid metadata: " + metadata);
             }
         }
@@ -459,16 +472,20 @@ public class Semver implements Comparable<Semver> {
                 versionBuilder.append(metadata.startsWith("+") ? metadata : ("+" + metadata));
             }
         } else {
-            if (preBuild.startsWith("+")) {
-                preBuild = preBuild.substring(1);
-            }
-            try {
-                Integer pb = Integer.valueOf(preBuild);
-                if (pb > 0) {
-                    versionBuilder.append("+").append(pb);
+            if (metadata.isEmpty()) {
+                if (preBuild.startsWith("+")) {
+                    preBuild = preBuild.substring(1);
                 }
-            } catch (NumberFormatException e) {
-                versionBuilder.append(preBuild.startsWith("+") ? preBuild : ("+" + preBuild));
+                try {
+                    Integer pb = Integer.valueOf(preBuild);
+                    if (pb > 0) {
+                        versionBuilder.append("+").append(pb);
+                    }
+                } catch (NumberFormatException e) {
+                    versionBuilder.append(preBuild.startsWith("+") ? preBuild : ("+" + preBuild));
+                }
+            } else {
+                versionBuilder.append(metadata.startsWith("+") ? metadata : ("+" + metadata));
             }
         }
 

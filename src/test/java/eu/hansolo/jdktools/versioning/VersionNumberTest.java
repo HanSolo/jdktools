@@ -529,12 +529,12 @@ class VersionNumberTest {
                                                  .sorted(Comparator.comparing(Semver::getVersionNumber).reversed())
                                                  .collect(Collectors.toList());
 
-        List<Semver> correct = List.of(Semver.fromText("11.0.5+b4").getSemver1(),
-                                       Semver.fromText("11.0.4+b3").getSemver1(),
-                                       Semver.fromText("11.0.2+b2").getSemver1(),
-                                       Semver.fromText("9.0.2+b4").getSemver1(),
-                                       Semver.fromText("9.0.1+b2").getSemver1(),
-                                       Semver.fromText("8.0.42+b4").getSemver1());
+        List<Semver> correct = List.of(Semver.fromText("11.0.5+4").getSemver1(),
+                                       Semver.fromText("11.0.4+3").getSemver1(),
+                                       Semver.fromText("11.0.2+2").getSemver1(),
+                                       Semver.fromText("9.0.2+4").getSemver1(),
+                                       Semver.fromText("9.0.1+2").getSemver1(),
+                                       Semver.fromText("8.0.42+4").getSemver1());
 
         List<String> correctSemverStrings = correct.stream().map(Semver::toString).collect(Collectors.toList());
 
