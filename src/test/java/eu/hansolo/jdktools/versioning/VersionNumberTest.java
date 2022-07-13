@@ -529,16 +529,58 @@ class VersionNumberTest {
                                                  .sorted(Comparator.comparing(Semver::getVersionNumber).reversed())
                                                  .collect(Collectors.toList());
 
-        List<Semver> correct = List.of(Semver.fromText("11.0.5+b4").getSemver1(),
-                                       Semver.fromText("11.0.4+b3").getSemver1(),
-                                       Semver.fromText("11.0.2+b2").getSemver1(),
-                                       Semver.fromText("9.0.2+b4").getSemver1(),
-                                       Semver.fromText("9.0.1+b2").getSemver1(),
-                                       Semver.fromText("8.0.42+b4").getSemver1());
+        List<Semver> correct = List.of(Semver.fromText("11.0.5+4").getSemver1(),
+                                       Semver.fromText("11.0.4+3").getSemver1(),
+                                       Semver.fromText("11.0.2+2").getSemver1(),
+                                       Semver.fromText("9.0.2+4").getSemver1(),
+                                       Semver.fromText("9.0.1+2").getSemver1(),
+                                       Semver.fromText("8.0.42+4").getSemver1());
 
         List<String> correctSemverStrings = correct.stream().map(Semver::toString).collect(Collectors.toList());
 
         assert correct.size() == maxSemverPerUpdate.size();
         maxSemverPerUpdate.forEach(semver -> { assert(correctSemverStrings.contains(semver.toString(true))); });
+    }
+
+    @Test
+    void toStringEqualsBetweenVersionNumberAndSemver() {
+        VersionNumber v1 = VersionNumberBuilder.create(8).updateNumber(42).buildNumber(1).build();
+        VersionNumber v2 = VersionNumberBuilder.create(8).updateNumber(42).buildNumber(2).build();
+        VersionNumber v3 = VersionNumberBuilder.create(8).updateNumber(42).buildNumber(3).build();
+        VersionNumber v4 = VersionNumberBuilder.create(8).updateNumber(42).buildNumber(3).build();
+        VersionNumber v5 = VersionNumberBuilder.create(8).updateNumber(42).buildNumber(4).build();
+        VersionNumber v6 = VersionNumberBuilder.create(9).updateNumber(1).buildNumber(1).build();
+        List<VersionNumber> versionNumbers = List.of(v1, v2, v3, v4, v5, v6);
+
+        Semver sv1 = new Semver(v1);
+        Semver sv2 = new Semver(v2);
+        Semver sv3 = new Semver(v3);
+        Semver sv4 = new Semver(v4);
+        Semver sv5 = new Semver(v5);
+        Semver sv6 = new Semver(v6);
+
+        List<Semver> semvers = List.of(sv1, sv2, sv3, sv4, sv5, sv6);
+
+        List<String> correctVersions      = new ArrayList<>(Arrays.asList("8.0.42+1", "8.0.42+2", "8.0.42+3", "8.0.42+3", "8.0.42+4", "9.0.1+1"));
+        List<String> versionNumberStrings = new ArrayList<>();
+        List<String> semverStrings        = new ArrayList<>();
+
+        versionNumbers.forEach(v -> versionNumberStrings.add(v.toString(OutputFormat.REDUCED_COMPRESSED, true, true)));
+        semvers.forEach(sv -> semverStrings.add(sv.toString(true)));
+
+        Collections.sort(correctVersions);
+        Collections.sort(versionNumberStrings);
+        Collections.sort(semverStrings);
+
+        assert correctVersions.equals(versionNumberStrings);
+        assert correctVersions.equals(semverStrings);
+
+        versionNumberStrings.removeAll(semverStrings);
+        assert versionNumberStrings.isEmpty();
+
+        sv6.setPre("ea-sdf.5.3");
+        sv6.setPreBuild("5");
+        sv6.setMetadata("b2.2.5");
+        assert sv6.toString(true).equals("9.0.1-ea+b2.2.5");
     }
 }

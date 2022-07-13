@@ -67,6 +67,13 @@ public class Semver implements Comparable<Semver> {
             this.preBuild = Integer.toString(versionNumber.getBuild().getAsInt());
         }
 
+        if (Helper.isPositiveInteger(this.metadata)) {
+            int meta = Integer.parseInt(metadata);
+            if (meta == 0) {
+                this.metadata = "";
+            }
+        }
+
         if (this.preBuild.isEmpty() && !metadata.isEmpty() && Helper.isPositiveInteger(this.metadata)) {
             this.preBuild = this.metadata;
             Integer build = Integer.valueOf(this.preBuild);
@@ -270,7 +277,10 @@ public class Semver implements Comparable<Semver> {
     }
 
 
-    public static SemverParsingResult fromText(final String text) {
+    public static SemverParsingResult fromText(final String text) throws IllegalArgumentException {
+        SemverParsingResult result = SemverParser.fromText(text);
+        if (null != result.getError1()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError1()); }
+        if (null != result.getError2()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError2()); }
         return SemverParser.fromText(text);
     }
 

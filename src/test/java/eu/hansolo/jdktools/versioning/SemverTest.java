@@ -184,4 +184,23 @@ class SemverTest {
         Semver semver1 = Semver.fromText("10.0.0-ea+001.2.3").getSemver1();
         assert semver1.toString(true).equals("10-ea+001.2.3");
     }
+
+    @Test
+    public void zeroBuildNumber() {
+        VersionNumber versionNumber1 = VersionNumber.fromText("8.0.202+0");
+        Semver        semver1        = new Semver(versionNumber1);
+        Semver        semver2        = Semver.fromText("8.0.202+0").getSemver1();
+        Semver        semver3        = new Semver(new VersionNumber(8,0,202), "", "+0");
+
+        String correctResult = "8.0.202";
+
+        System.out.println("semver1 (from version number): "+ semver1.toString(true));
+        System.out.println("semver2 (from text)          : " + semver2.toString(true));
+        System.out.println("semver3 (from constructor)   : " + semver3.toString(true));
+
+        assert versionNumber1.toString(OutputFormat.REDUCED_COMPRESSED, true, true).equals(correctResult);
+        assert semver1.toString(true).equals(correctResult);
+        assert semver2.toString(true).equals(correctResult);
+        assert semver3.toString(true).equals(correctResult);
+    }
 }
