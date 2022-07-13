@@ -41,7 +41,6 @@ public class SemverParser {
         SemverParsingResult parsingResult = new SemverParsingResult();
 
         // ******************** Parsing 1st Semver ****************************
-
         // Remove leading "1." to get correct version number e.g. 1.8u262 -> 8u262
         String versionText1 = text.startsWith("1.") ? text.replace("1.", "") : text;
         if (versionText1.contains("_")) {
@@ -155,9 +154,14 @@ public class SemverParser {
         Error err1;
         if (null != pre1 && !pre1.isEmpty()) {
             String[] eparts = pre1.split("\\.");
+            /*
             if (eparts.length > 0 && (eparts[0].equalsIgnoreCase("-ea") ||
                                       eparts[0].equalsIgnoreCase("ea")  ||
                                       eparts[0].equalsIgnoreCase("beta"))) {
+                pre1 = "ea";
+            }
+            */
+            if (eparts.length > 0 && (eparts[0].matches("[a-zA-Z]+") && eparts[0].length() > 0)) {
                 pre1 = "ea";
             }
             if (eparts.length > 1 && Helper.isPositiveInteger(eparts[1])) {
@@ -290,9 +294,14 @@ public class SemverParser {
             Error err2;
             if (null != pre2 && !pre2.isEmpty()) {
                 String[] eparts = pre2.split("\\.");
+                /*
                 if (eparts.length > 0 && (eparts[0].equalsIgnoreCase("-ea") ||
                                           eparts[0].equalsIgnoreCase("ea")  ||
                                           eparts[0].equalsIgnoreCase("beta"))) {
+                    pre2 = "ea";
+                }
+                */
+                if (eparts.length > 0 && (eparts[0].matches("[a-zA-Z]+") && eparts[0].length() > 0)) {
                     pre2 = "ea";
                 }
                 if (eparts.length > 1 && Helper.isPositiveInteger(eparts[1])) {

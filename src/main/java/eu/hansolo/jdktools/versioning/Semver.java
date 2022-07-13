@@ -105,6 +105,10 @@ public class Semver implements Comparable<Semver> {
                     }
                 }
             }
+
+            if (this.pre.matches("[a-zA-Z]+") && this.pre.length() > 0) {
+                this.pre = "ea";
+            }
         }
 
         if (null != this.pre && !this.pre.isEmpty() && !this.pre.startsWith("+") && !this.pre.startsWith("-")) {

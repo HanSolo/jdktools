@@ -125,6 +125,22 @@ class SemverTest {
         assert ReleaseStatus.GA == semVer12.getReleaseStatus();
         assert semVer12.getPreBuild().equals("8");
         assert semVer12.toString(true).equals("8.0.302+8");
+
+        String              t13                 = "17-ea+17";
+        SemverParsingResult result13            = SemverParser.fromText(t13);
+        Semver              semver13            = result13.getSemver1();
+
+        assert ReleaseStatus.EA == semver13.getReleaseStatus();
+        assert semver13.getPreBuild().equals("17");
+        assert semver13.toString(true).equals("17-ea+17");
+
+        String              t14                 = "17-loom+6-225";
+        SemverParsingResult result14            = SemverParser.fromText(t14);
+        Semver              semver14            = result14.getSemver1();
+
+        assert ReleaseStatus.EA == semver14.getReleaseStatus();
+        assert semver14.getPreBuild().isEmpty();
+        assert semver14.toString(true).equals("17-ea+6-225");
     }
 
     @Test
@@ -194,13 +210,16 @@ class SemverTest {
 
         String correctResult = "8.0.202";
 
-        System.out.println("semver1 (from version number): "+ semver1.toString(true));
-        System.out.println("semver2 (from text)          : " + semver2.toString(true));
-        System.out.println("semver3 (from constructor)   : " + semver3.toString(true));
-
         assert versionNumber1.toString(OutputFormat.REDUCED_COMPRESSED, true, true).equals(correctResult);
         assert semver1.toString(true).equals(correctResult);
         assert semver2.toString(true).equals(correctResult);
         assert semver3.toString(true).equals(correctResult);
+    }
+
+    @Test
+    public void emptyVersionNumberConstructor() {
+        VersionNumber versionNumber = new VersionNumber();
+        Semver        semver        = new Semver(versionNumber);
+        assert semver.toString(true).isEmpty();
     }
 }
