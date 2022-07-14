@@ -69,6 +69,7 @@ public enum ArchiveType implements Api {
 
     @Override public String getApiString() { return apiString; }
 
+
     @Override public ArchiveType getDefault() { return ArchiveType.NONE; }
 
     @Override public ArchiveType getNotFound() { return ArchiveType.NOT_FOUND; }
