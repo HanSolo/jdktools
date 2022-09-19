@@ -231,4 +231,40 @@ class ApiTest {
         assert Verification.fromText("true") == Verification.YES;
         assert Verification.fromText("false") == Verification.NO;
     }
+
+    @Test
+    void fileTypeFromTextTest() {
+        assert BinaryType.fromText(null) == BinaryType.NOT_FOUND;
+        assert BinaryType.fromText("") == BinaryType.NOT_FOUND;
+        assert BinaryType.fromText("package") == BinaryType.PACKAGE;
+        assert BinaryType.fromText("installer") == BinaryType.INSTALLER;
+    }
+
+    @Test
+    void binaryTypeFromArchiveType() {
+        assert BinaryType.getFromArchiveType(ArchiveType.APK) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.CAB) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.SRC_TAR) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.TAR) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.TAR_GZ) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.TAR_Z) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.TAR_XZ) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.TGZ) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.ZIP) == BinaryType.PACKAGE;
+        assert BinaryType.getFromArchiveType(ArchiveType.BIN) == BinaryType.INSTALLER;
+        assert BinaryType.getFromArchiveType(ArchiveType.PKG) == BinaryType.INSTALLER;
+        assert BinaryType.getFromArchiveType(ArchiveType.DMG) == BinaryType.INSTALLER;
+        assert BinaryType.getFromArchiveType(ArchiveType.EXE) == BinaryType.INSTALLER;
+        assert BinaryType.getFromArchiveType(ArchiveType.MSI) == BinaryType.INSTALLER;
+        assert BinaryType.getFromArchiveType(ArchiveType.DEB) == BinaryType.INSTALLER;
+        assert BinaryType.getFromArchiveType(ArchiveType.RPM) == BinaryType.INSTALLER;
+    }
+
+    @Test
+    void binaryTypeFromFileName() {
+        assert BinaryType.PACKAGE == BinaryType.getFromFileName("OpenJDK17U-jre_x64_linux_hotspot_17.0.3_7.tap.zip");
+        assert BinaryType.PACKAGE == BinaryType.getFromFileName("OpenJDK17U-jre_x64_linux_hotspot_17.0.3_7.tap.tar.gz");
+        assert BinaryType.INSTALLER == BinaryType.getFromFileName("OpenJDK17U-jre_x64_linux_hotspot_17.0.3_7.tap.msi");
+        assert BinaryType.INSTALLER == BinaryType.getFromFileName("OpenJDK17U-jre_x64_linux_hotspot_17.0.3_7.tap.pkg");
+    }
 }

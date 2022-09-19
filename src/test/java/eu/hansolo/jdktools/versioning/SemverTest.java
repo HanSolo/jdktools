@@ -116,11 +116,44 @@ class SemverTest {
 
         assert ReleaseStatus.EA == semVer11.getReleaseStatus();
         assert semVer11.toString(true).equals("17.0.1-ea+12.0.202111240007");
+
+        String              t12                 = "1.8.0.302+8";
+        SemverParsingResult result12            = SemverParser.fromText(t12);
+        Semver              semVer12            = result12.getSemver1();
+
+        assert ReleaseStatus.GA == semVer12.getReleaseStatus();
+        assert semVer12.getPreBuild().equals("8");
+        assert semVer12.toString(true).equals("8.0.302+8");
+
+        String              t13                 = "17-ea+17";
+        SemverParsingResult result13            = SemverParser.fromText(t13);
+        Semver              semver13            = result13.getSemver1();
+
+        assert ReleaseStatus.EA == semver13.getReleaseStatus();
+        assert semver13.getPreBuild().equals("17");
+        assert semver13.toString(true).equals("17-ea+17");
+
+        String              t14                 = "17-loom+6-225";
+        SemverParsingResult result14            = SemverParser.fromText(t14);
+        Semver              semver14            = result14.getSemver1();
+
+        assert ReleaseStatus.EA == semver14.getReleaseStatus();
+        assert semver14.getPreBuild().isEmpty();
+        assert semver14.toString(true).equals("17-ea+6-225");
+
+        String              t15                 = "17-ea+2-10";  // 17.0.2-crac+10
+        SemverParsingResult result15            = SemverParser.fromText(t15);
+        Semver              semver15            = result15.getSemver1();
+
+        assert ReleaseStatus.EA == semver15.getReleaseStatus();
+        assert semver15.getPreBuild().isEmpty();
+        assert semver15.toString(true).equals("17-ea+2-10");
     }
 
     @Test
     void semVerToStringTest() {
         Semver semVer = new Semver(new VersionNumber(11, 0, 9, 1, 0, 5), ReleaseStatus.EA,"", "+b1");
+
         assert "11.0.9.1-ea+b1".equals(semVer.toString());
         assert "11.0.9.1.0.5-ea+b1".equals(semVer.toString(false));
 
@@ -154,5 +187,46 @@ class SemverTest {
         VersionNumber versionNumber = new VersionNumber(11, 0, 0, 0, 0, 0, 5, ReleaseStatus.EA);
         Semver        semver        = new Semver(versionNumber);
         assert versionNumber.toString(OutputFormat.REDUCED, true, true).equals(semver.toString(true));
+    }
+
+    @Test
+    void semverMetadataTest() {
+        final String   filename = "jbrsdk-11_0_11-windows-x86-b1504.12.tar.gz";
+        final String   withoutPrefix = filename.replace("jbrsdk-", "");
+        final String   withoutSuffix = withoutPrefix.replace(".tar.gz", "");
+        final String[] filenameParts = withoutSuffix.split("-");
+        final Semver   semver        = Semver.fromText(filenameParts[0].replaceAll("_", "\\.") +(filenameParts.length == 4 ? "+" + filenameParts[3] : "")).getSemver1();
+        final String   pre           = "ea";
+        final String   metadata      = "+b1504.12";
+
+        semver.setMetadata(metadata);
+        semver.setPre(pre);
+
+        assert semver.toString(true).equals("11.0.11-ea+b1504.12");
+
+        Semver semver1 = Semver.fromText("10.0.0-ea+001.2.3").getSemver1();
+        assert semver1.toString(true).equals("10-ea+001.2.3");
+    }
+
+    @Test
+    public void zeroBuildNumber() {
+        VersionNumber versionNumber1 = VersionNumber.fromText("8.0.202+0");
+        Semver        semver1        = new Semver(versionNumber1);
+        Semver        semver2        = Semver.fromText("8.0.202+0").getSemver1();
+        Semver        semver3        = new Semver(new VersionNumber(8,0,202), "", "+0");
+
+        String correctResult = "8.0.202";
+
+        assert versionNumber1.toString(OutputFormat.REDUCED_COMPRESSED, true, true).equals(correctResult);
+        assert semver1.toString(true).equals(correctResult);
+        assert semver2.toString(true).equals(correctResult);
+        assert semver3.toString(true).equals(correctResult);
+    }
+
+    @Test
+    public void emptyVersionNumberConstructor() {
+        VersionNumber versionNumber = new VersionNumber();
+        Semver        semver        = new Semver(versionNumber);
+        assert semver.toString(true).isEmpty();
     }
 }
