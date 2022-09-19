@@ -108,7 +108,6 @@ class SemverTest {
 
         assert ReleaseStatus.GA == semVer10.getReleaseStatus();
         assert semVer10.getPreBuild().equals("8");
-
         assert semVer10.toString(true).equals("8.0.302+b8");
 
         String              t11                 = "17.0.1-beta+12.0.202111240007";
