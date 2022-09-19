@@ -4,8 +4,8 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-    id 'org.javamodularity.moduleplugin' version '1.8.10'
-    id 'net.nemerosa.versioning'         version '2.15.1'
+    id 'org.javamodularity.moduleplugin' version '1.8.12'
+    id 'net.nemerosa.versioning'         version '3.0.0'
 }
 
 apply plugin: 'maven-publish'

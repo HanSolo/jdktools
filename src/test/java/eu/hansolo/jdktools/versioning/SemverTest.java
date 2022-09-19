@@ -141,6 +141,14 @@ class SemverTest {
         assert ReleaseStatus.EA == semver14.getReleaseStatus();
         assert semver14.getPreBuild().isEmpty();
         assert semver14.toString(true).equals("17-ea+6-225");
+
+        String              t15                 = "17-ea+2-10";  // 17.0.2-crac+10
+        SemverParsingResult result15            = SemverParser.fromText(t15);
+        Semver              semver15            = result15.getSemver1();
+
+        assert ReleaseStatus.EA == semver15.getReleaseStatus();
+        assert semver15.getPreBuild().isEmpty();
+        assert semver15.toString(true).equals("17-ea+2-10");
     }
 
     @Test

@@ -200,6 +200,7 @@ class VersionNumberTest {
         final String versionNumber39String = "17-ea+5_linux-x64-musl_bin.tar.gz"; // 17-ea preBuild 5
         final String versionNumber40String = "17.0.0-ea.2";                       // 17-ea prebuild 2
 
+
         final VersionNumber versionNumber1  = new VersionNumber(8);
         final VersionNumber versionNumber2  = new VersionNumber(8, 2);
         final VersionNumber versionNumber3  = new VersionNumber(2, 3);
