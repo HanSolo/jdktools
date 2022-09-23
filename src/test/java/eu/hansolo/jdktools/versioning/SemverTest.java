@@ -229,4 +229,35 @@ class SemverTest {
         Semver        semver        = new Semver(versionNumber);
         assert semver.toString(true).isEmpty();
     }
+
+    @Test
+    public void versionStringParserTest() {
+        String versionString1 = "11.0.5.1-ea+13-LTS";
+        String versionString2 = "11.0.5.1+13-LTS";
+        String versionString3 = "11.0.5.1-LTS";
+        String versionString4 = "11.0.5.1+13.5";
+        String versionString5 = "11.0.5.1+13.5-LTS";
+
+        Semver semver1 = SemverParser.fromText(versionString1).getSemver1();
+        Semver semver2 = SemverParser.fromText(versionString2).getSemver1();
+        Semver semver3 = SemverParser.fromText(versionString3).getSemver1();
+        Semver semver4 = SemverParser.fromText(versionString4).getSemver1();
+        Semver semver5 = SemverParser.fromText(versionString5).getSemver1();
+
+        assert semver1.getPre().equals("-ea");
+        assert semver1.getBuild().equals("13");
+        assert semver1.getOpt().equals("LTS");
+
+        assert semver2.getBuild().equals("13");
+        assert semver2.getOpt().equals("LTS");
+
+        assert semver3.getBuild().equals("");
+        assert semver3.getOpt().equals("LTS");
+
+        assert semver4.getBuild().equals("13.5");
+        assert semver4.getOpt().equals("");
+
+        assert semver5.getBuild().equals("13.5");
+        assert semver5.getOpt().equals("LTS");
+    }
 }

@@ -30,9 +30,8 @@ import java.util.stream.Collectors;
 
 
 public class SemverParser {
-    private static final Pattern
-    SEM_VER_PATTERN = Pattern.compile("^(<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?((<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?)?$");
-
+    private static final Pattern SEM_VER_PATTERN = Pattern.compile("^(<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?((<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?)?$");
+    private static final Pattern OPT_PATTERN     = Pattern.compile("(([0-9]+(\\.[0-9]+)?))?(\\-([a-zA-Z0-9\\-]*))?");
 
     private SemverParser() {}
 
@@ -62,6 +61,17 @@ public class SemverParser {
 
         String metadata1 = null != result.group(12) ? result.group(12) : "";
         String pre1      = null != result.group(9)  ? result.group(9)  : "";
+
+        final Matcher           optMatcher = OPT_PATTERN.matcher(metadata1);
+        final List<MatchResult> optResults = optMatcher.results().collect(Collectors.toList());
+
+        String build1 = "";
+        String opt1   = "";
+        if (!optResults.isEmpty()) {
+            MatchResult optResult = optResults.get(0);
+            build1 = null != optResult.group(2) ? optResult.group(2) : "";
+            opt1   = null != optResult.group(5) ? optResult.group(5) : "";
+        }
 
         if (pre1.equals("ea.0")) { pre1 = "ea"; }
         if (pre1.startsWith("b") && metadata1.isEmpty()) {
@@ -163,6 +173,7 @@ public class SemverParser {
             */
             if (eparts.length > 0 && (eparts[0].matches("[a-zA-Z]+") && eparts[0].length() > 0)) {
                 pre1 = "ea";
+                opt1 = eparts[0].equals("ea") ? opt1 : eparts[0];
             }
             if (eparts.length > 1 && Helper.isPositiveInteger(eparts[1])) {
                 metadata1 = eparts[1];
@@ -183,6 +194,8 @@ public class SemverParser {
             }
         }
         Semver semVer1 = new Semver(versionNumber1, pre1, metadata1);
+        semVer1.setBuild(build1);
+        semVer1.setOpt(opt1);
         semVer1.setComparison(comparison1);
         parsingResult.setSemver1(semVer1);
 
@@ -192,6 +205,18 @@ public class SemverParser {
         if (result.groupCount() == 27 && null != result.group(14)) {
             String metadata2 = null != result.group(26) ? result.group(26) : "";
             String pre2      = null != result.group(23) ? result.group(23) : "";
+
+            optMatcher.reset(metadata2);
+            optResults.clear();
+            optResults.addAll(optMatcher.results().collect(Collectors.toList()));
+
+            String build2 = "";
+            String opt2   = "";
+            if (!optResults.isEmpty()) {
+                MatchResult optResult = optResults.get(0);
+                build2 = null != optResult.group(2) ? optResult.group(2) : "";
+                opt2   = null != optResult.group(5) ? optResult.group(5) : "";
+            }
 
             if (pre2.equals("ea.0")) { pre2 = "ea"; }
             if (pre2.startsWith("b") && metadata2.isEmpty()) {
@@ -303,6 +328,7 @@ public class SemverParser {
                 */
                 if (eparts.length > 0 && (eparts[0].matches("[a-zA-Z]+") && eparts[0].length() > 0)) {
                     pre2 = "ea";
+                    opt2 = eparts[0].equals("ea") ? opt2 : eparts[0];
                 }
                 if (eparts.length > 1 && Helper.isPositiveInteger(eparts[1])) {
                     metadata2 = eparts[1];
@@ -323,6 +349,8 @@ public class SemverParser {
                 }
             }
             Semver semVer2 = new Semver(versionNumber2, pre2, metadata2);
+            semVer2.setBuild(build2);
+            semVer2.setOpt(opt2);
             semVer2.setComparison(comparison2);
 
             // Define filter

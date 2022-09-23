@@ -40,6 +40,8 @@ public class Semver implements Comparable<Semver> {
     private String        pre;
     private String        preBuild;
     private String        metadata;
+    private String        build;
+    private String        opt;
     private Comparison    comparison;
 
 
@@ -204,6 +206,15 @@ public class Semver implements Comparable<Semver> {
         this.metadata = md;
     }
 
+    public String getBuild() { return build; }
+    public void setBuild(final String build) { this.build = build; }
+
+    public String getOpt() { return opt; }
+    public void setOpt(final String opt) {
+        final String op = opt.replaceFirst("\\+", "").replaceFirst("\\-", "");
+        this.opt = op;
+    }
+
     public Comparison getComparison() { return comparison; }
     public void setComparison(final Comparison comparison) { this.comparison = comparison; }
 
@@ -259,6 +270,7 @@ public class Semver implements Comparable<Semver> {
 
     public Semver incFeature() {
         Semver vNext = Semver.this;
+        vNext.setOpt("");
         vNext.setMetadata("");
         vNext.setPre("");
         vNext.setPatch(0);
