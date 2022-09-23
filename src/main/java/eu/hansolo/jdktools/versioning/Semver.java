@@ -221,9 +221,13 @@ public class Semver implements Comparable<Semver> {
     public Semver incSixth() {
         Semver vNext = Semver.this;
         if (null != pre && !pre.isEmpty()) {
+            vNext.setBuild("");
+            vNext.setOpt("");
             vNext.setMetadata("");
             vNext.setPre("");
         } else {
+            vNext.setBuild("");
+            vNext.setOpt("");
             vNext.metadata = "";
             vNext.pre      = "";
             vNext.setSixth(getSixth() + 1);
@@ -233,6 +237,8 @@ public class Semver implements Comparable<Semver> {
 
     public Semver incFifth() {
         Semver vNext = Semver.this;
+        vNext.setBuild("");
+        vNext.setOpt("");
         vNext.setMetadata("");
         vNext.setPre("");
         vNext.setSixth(0);
@@ -242,6 +248,8 @@ public class Semver implements Comparable<Semver> {
 
     public Semver incPatch() {
         Semver vNext = Semver.this;
+        vNext.setBuild("");
+        vNext.setOpt("");
         vNext.setMetadata("");
         vNext.setPre("");
         vNext.setFifth(0);
@@ -251,6 +259,8 @@ public class Semver implements Comparable<Semver> {
 
     public Semver incUpdate() {
         Semver vNext = Semver.this;
+        vNext.setBuild("");
+        vNext.setOpt("");
         vNext.setMetadata("");
         vNext.setPre("");
         vNext.setPatch(0);
@@ -260,6 +270,8 @@ public class Semver implements Comparable<Semver> {
 
     public Semver incInterim() {
         Semver vNext = Semver.this;
+        vNext.setBuild("");
+        vNext.setOpt("");
         vNext.setMetadata("");
         vNext.setPre("");
         vNext.setPatch(0);
@@ -270,6 +282,7 @@ public class Semver implements Comparable<Semver> {
 
     public Semver incFeature() {
         Semver vNext = Semver.this;
+        vNext.setBuild("");
         vNext.setOpt("");
         vNext.setMetadata("");
         vNext.setPre("");
