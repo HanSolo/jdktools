@@ -35,29 +35,33 @@ import static eu.hansolo.jdktools.Constants.QUOTES;
 
 
 public enum Severity implements Api {
-    LOW("LOW", "LOW", 0.1, 3.9),
-    MEDIUM("MEDIUM", "MEDIUM", 4.0, 6.9),
-    HIGH("HIGH", "HIGH", 7.0, 8.9),
-    CRITICAL("CRITICAL", "CRITICAL", 9.0, 10.0),
-    NONE("-", "", 0, 0),
-    NOT_FOUND("", "", 0, 0);
+    LOW("LOW", "LOW", 0.1, 3.9, 2),
+    MEDIUM("MEDIUM", "MEDIUM", 4.0, 6.9, 3),
+    HIGH("HIGH", "HIGH", 7.0, 8.9, 4),
+    CRITICAL("CRITICAL", "CRITICAL", 9.0, 10.0, 5),
+    NONE("-", "", 0, 0, 1),
+    NOT_FOUND("", "", 0, 0, 0);
 
-    private final String uiString;
-    private final String apiString;
-    private final double minScore;
-    private final double maxScore;
+    private final String  uiString;
+    private final String  apiString;
+    private final double  minScore;
+    private final double  maxScore;
+    private final Integer order;
 
 
-    Severity(final String uiString, final String apiString, final double minScore, final double maxScore) {
+    Severity(final String uiString, final String apiString, final double minScore, final double maxScore, final Integer order) {
         this.uiString  = uiString;
         this.apiString = apiString;
         this.minScore  = minScore;
         this.maxScore  = maxScore;
+        this.order     = order;
     }
 
     public double getMinScore() { return minScore; }
 
     public double getMaxScore() { return maxScore; }
+
+    public int getOrder() { return order; }
 
 
     @Override public String getUiString() { return uiString; }
@@ -130,4 +134,8 @@ public enum Severity implements Api {
      * @return the values of the enum as list
      */
     public static List<Severity> getAsList() { return Arrays.asList(values()); }
+
+    public int compareToSeverity(final Severity other) {
+        return order.compareTo(other.order);
+    }
 }
