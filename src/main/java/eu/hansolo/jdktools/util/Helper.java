@@ -119,6 +119,8 @@ public class Helper {
             return OperatingSystem.WINDOWS;
         } else if (os.contains("apple") || os.contains("mac")) {
             return OperatingSystem.MACOS;
+        } else if (os.contains("freebsd")) {
+            return OperatingSystem.FREE_BSD;
         } else if (os.contains("nix") || os.contains("nux")) {
             try {
                 final ProcessBuilder processBuilder = new ProcessBuilder(DETECT_ALPINE_CMDS);

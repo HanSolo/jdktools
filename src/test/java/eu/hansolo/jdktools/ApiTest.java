@@ -204,6 +204,14 @@ class ApiTest {
     }
 
     @Test
+    void severityFromCVSSTest() {
+        assert Severity.fromScore(9.0, CVSS.CVSSV2) == Severity.HIGH;
+        assert Severity.fromScore(9.0, CVSS.CVSSV3) == Severity.CRITICAL;
+        assert Severity.fromScore(0.0, CVSS.CVSSV2) == Severity.LOW;
+        assert Severity.fromScore(0.0, CVSS.CVSSV3) == Severity.NONE;
+    }
+
+    @Test
     void signatureTypeFromTextTest() {
         assert SignatureType.fromText(null) == SignatureType.NOT_FOUND;
         assert SignatureType.fromText("") == SignatureType.NOT_FOUND;

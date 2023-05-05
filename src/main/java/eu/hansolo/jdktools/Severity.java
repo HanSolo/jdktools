@@ -35,31 +35,37 @@ import static eu.hansolo.jdktools.Constants.QUOTES;
 
 
 public enum Severity implements Api {
-    LOW("LOW", "LOW", 0.1, 3.9, 2),
-    MEDIUM("MEDIUM", "MEDIUM", 4.0, 6.9, 3),
-    HIGH("HIGH", "HIGH", 7.0, 8.9, 4),
-    CRITICAL("CRITICAL", "CRITICAL", 9.0, 10.0, 5),
-    NONE("-", "", 0, 0, 1),
-    NOT_FOUND("", "", 0, 0, 0);
+    LOW(SeverityName.LOW.name(), SeverityName.LOW.name().toLowerCase(), 0.0, 3.9, 0.1, 3.9, 2),
+    MEDIUM(SeverityName.MEDIUM.name(), SeverityName.MEDIUM.name().toLowerCase(), 4.0, 6.9, 4.0, 6.9, 3),
+    HIGH(SeverityName.HIGH.name(), SeverityName.HIGH.name().toLowerCase(), 7.0, 10.0, 7.0, 8.9, 4),
+    CRITICAL(SeverityName.CRITICAL.name(), SeverityName.CRITICAL.name().toLowerCase(), 10.0, 10.0, 9.0, 10.0, 5),
+    NONE("-", "", 0, 0, 0, 0, 1),
+    NOT_FOUND("", "", 0, 0, 0, 0, 0);
 
     private final String  uiString;
     private final String  apiString;
-    private final double  minScore;
-    private final double  maxScore;
+    private final double  minScoreV2;
+    private final double  maxScoreV2;
+    private final double  minScoreV3;
+    private final double  maxScoreV3;
     private final Integer order;
 
 
-    Severity(final String uiString, final String apiString, final double minScore, final double maxScore, final Integer order) {
-        this.uiString  = uiString;
-        this.apiString = apiString;
-        this.minScore  = minScore;
-        this.maxScore  = maxScore;
-        this.order     = order;
+    Severity(final String uiString, final String apiString, final double minScoreV2, final double maxScoreV2, final double minScoreV3, final double maxScoreV3, final Integer order) {
+        this.uiString   = uiString;
+        this.apiString  = apiString;
+        this.minScoreV2 = minScoreV2;
+        this.maxScoreV2 = maxScoreV2;
+        this.minScoreV3 = minScoreV3;
+        this.maxScoreV3 = maxScoreV3;
+        this.order      = order;
     }
 
-    public double getMinScore() { return minScore; }
+    public double getMinScoreV2() { return minScoreV2; }
+    public double getMaxScoreV2() { return maxScoreV2; }
 
-    public double getMaxScore() { return maxScore; }
+    public double getMinScoreV3() { return minScoreV3; }
+    public double getMaxScoreV3() { return maxScoreV3; }
 
     public int getOrder() { return order; }
 
@@ -108,25 +114,50 @@ public enum Severity implements Api {
     public static Severity fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {
-            case "low":
-            case "LOW":
-            case "Low":
-                return LOW;
-            case "medium":
-            case "MEDIUM":
-            case "Medium":
-                return MEDIUM;
-            case "high":
-            case "HIGH":
-            case "High":
-                return HIGH;
-            case "critical":
-            case "CRITICAL":
-            case "Critical":
-                return CRITICAL;
-            default:
-                return NOT_FOUND;
+            case "low", "LOW", "Low"                -> { return LOW; }
+            case "medium", "MEDIUM", "Medium"       -> { return MEDIUM; }
+            case "high", "HIGH", "High"             -> { return HIGH; }
+            case "critical", "CRITICAL", "Critical" -> { return CRITICAL; }
+            default                                 -> { return NOT_FOUND; }
         }
+    }
+
+    /**
+     * Returns a Severity parsed from the given score and cvss version
+     * @param score The CVSS score (0.0 - 10.0)
+     * @param cvss  The CVSS version (CVSS2 or CVSS3)
+     * @return Severity parsed from a given score and cvss version
+     */
+    public static Severity fromScore(final double score, final CVSS cvss) {
+        switch (cvss) {
+            case CVSSV2 -> {
+                if (score >= 0 && score <= 3.9) {
+                    return Severity.LOW;
+                } else if (score > 3.9 && score <= 6.9) {
+                    return Severity.MEDIUM;
+                } else if (score > 6.9 && score <= 10.0) {
+                    return Severity.HIGH;
+                } else {
+                    return Severity.NOT_FOUND;
+                }
+            }
+            case CVSSV3 -> {
+                if (score <= 0) {
+                    return Severity.NONE;
+                } else if (score > 0 && score <= 3.9) {
+                    return Severity.LOW;
+                } else if (score > 3.9 && score <= 6.9) {
+                    return Severity.MEDIUM;
+                } else if (score > 6.9 && score < 8.9) {
+                    return Severity.HIGH;
+                } else if (score > 8.9 && score <= 10.0) {
+                    return Severity.CRITICAL;
+                } else {
+                    return Severity.NOT_FOUND;
+                }
+            }
+        }
+        return Severity.NOT_FOUND;
     }
 
     /**

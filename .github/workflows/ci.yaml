@@ -9,17 +9,18 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [17.0.3]
+        java: [17.0.6]
       fail-fast: false
       max-parallel: 4
     name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK
-        uses: foojayio/setup-java@disco
+        uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
+          distribution: 'zulu'
       - name: Import GPG Key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v3
@@ -39,7 +40,7 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_KEY }}
           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: jdktools
           path: ./build/libs/**
