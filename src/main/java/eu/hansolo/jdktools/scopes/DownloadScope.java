@@ -48,18 +48,9 @@ public enum DownloadScope implements Scope {
     public static Scope fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch(text) {
-            case "directly":
-            case "directly_downloadable":
-            case "directlyDownloadable":
-            case "DIRECTLY_DOWNLOADABLE":
-                return DIRECTLY;
-            case "not_directly":
-            case "not_directly_downloadable":
-            case "notDirectlyDownloadable":
-            case "NOT_DIRECTLY_DOWNLOADABLE":
-                return NOT_DIRECTLY;
-            default:
-                return NOT_FOUND;
+            case "directly", "directly_downloadable", "directlyDownloadable", "DIRECTLY_DOWNLOADABLE"                -> { return DIRECTLY; }
+            case "not_directly", "not_directly_downloadable", "notDirectlyDownloadable", "NOT_DIRECTLY_DOWNLOADABLE" -> { return NOT_DIRECTLY; }
+            default                                                                                                  -> { return NOT_FOUND; }
         }
     }
 

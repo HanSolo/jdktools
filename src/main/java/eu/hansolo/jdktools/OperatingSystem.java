@@ -93,24 +93,20 @@ public enum OperatingSystem implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL:
-            case REDUCED:
-            case REDUCED_ENRICHED:
+            case FULL, REDUCED, REDUCED_ENRICHED ->
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("lib_c_type").append(QUOTES).append(COLON).append(QUOTES).append(libCType.getApiString()).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-                break;
-            default:
+            default ->
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("lib_c_type").append(QUOTES).append(COLON).append(QUOTES).append(libCType.getApiString()).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
-                break;
         }
         return msgBuilder.toString();
     }
@@ -125,88 +121,17 @@ public enum OperatingSystem implements Api {
      */
     public static OperatingSystem fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        switch (text) {
-            case "-linux":
-            case "linux":
-            case "Linux":
-            case "LINUX":
-            case "unix":
-            case "UNIX":
-            case "Unix":
-            case "-unix":
-                return LINUX;
-            case "-linux-musl":
-            case "-linux_musl":
-            case "Linux-Musl":
-            case "linux-musl":
-            case "Linux_Musl":
-            case "LINUX_MUSL":
-            case "linux_musl":
-            case "alpine":
-            case "ALPINE":
-            case "Alpine":
-            case "alpine-linux":
-            case "ALPINE-LINUX":
-            case "alpine_linux":
-            case "Alpine_Linux":
-            case "ALPINE_LINUX":
-            case "Alpine Linux":
-            case "alpine linux":
-            case "ALPINE LINUX":
-                return ALPINE_LINUX;
-            case "free_bsd":
-            case "FREE_BSD":
-            case "FREE BSD":
-            case "free bsd":
-            case "freebsd":
-            case "FreeBSD":
-            case "freeBSD":
-                return FREE_BSD;
-            case "-solaris":
-            case "solaris":
-            case "SOLARIS":
-            case "Solaris":
-                return SOLARIS;
-            case "-qnx":
-            case "qnx":
-            case "QNX":
-                return QNX;
-            case"-aix":
-            case "aix":
-            case "AIX":
-                return AIX;
-            case "darwin":
-            case "-darwin":
-            case "-macosx":
-            case "-MACOSX":
-            case "MacOS":
-            case "Mac OS":
-            case "mac_os":
-            case "Mac_OS":
-            case "mac-os":
-            case "Mac-OS":
-            case "mac":
-            case "MAC":
-            case "macos":
-            case "MACOS":
-            case "osx":
-            case "OSX":
-            case "macosx":
-            case "MACOSX":
-            case "Mac OSX":
-            case "mac osx":
-                return MACOS;
-            case "-win":
-            case "windows":
-            case "Windows":
-            case "WINDOWS":
-            case "win":
-            case "Win":
-            case "WIN":
-                return WINDOWS;
-            default:
-                return NOT_FOUND;
-        }
+        return switch (text) {
+            case "-linux", "linux", "Linux", "LINUX", "unix", "UNIX", "Unix", "-unix" -> LINUX;
+            case "-linux-musl", "-linux_musl", "Linux-Musl", "linux-musl", "Linux_Musl", "LINUX_MUSL", "linux_musl", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX", "Alpine Linux", "alpine linux", "ALPINE LINUX" -> ALPINE_LINUX;
+            case "free_bsd", "FREE_BSD", "FREE BSD", "free bsd", "freebsd", "FreeBSD", "freeBSD" -> FREE_BSD;
+            case "-solaris", "solaris", "SOLARIS", "Solaris" -> SOLARIS;
+            case "-qnx", "qnx", "QNX" -> QNX;
+            case "-aix", "aix", "AIX" -> AIX;
+            case "darwin", "-darwin", "-macosx", "-MACOSX", "MacOS", "Mac OS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX", "macosx", "MACOSX", "Mac OSX", "mac osx" -> MACOS;
+            case "-win", "windows", "Windows", "WINDOWS", "win", "Win", "WIN" -> WINDOWS;
+            default -> NOT_FOUND;
+        };
     }
 
     public LibCType getLibCType() { return libCType; }

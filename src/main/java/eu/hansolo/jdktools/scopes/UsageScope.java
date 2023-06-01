@@ -49,16 +49,9 @@ public enum UsageScope implements Scope {
     public static Scope fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch(text) {
-            case "free":
-            case "free_to_use":
-            case "free_to_use_in_production":
-                return FREE_TO_USE_IN_PRODUCTION;
-            case "license":
-            case "license_needed":
-            case "license_needed_for_production":
-                return LICENSE_NEEDED_FOR_PRODUCTION;
-            default:
-                return NOT_FOUND;
+            case "free", "free_to_use", "free_to_use_in_production"           -> { return FREE_TO_USE_IN_PRODUCTION; }
+            case "license", "license_needed", "license_needed_for_production" -> { return LICENSE_NEEDED_FOR_PRODUCTION; }
+            default                                                           -> { return NOT_FOUND; }
         }
     }
 

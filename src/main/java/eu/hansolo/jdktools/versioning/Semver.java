@@ -28,21 +28,20 @@ import java.util.Objects;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 public class Semver implements Comparable<Semver> {
     public static final Pattern EA_PATTERN           = Pattern.compile("(ea|EA)(([.+\\-])([0-9]+))?");
     public static final Pattern BUILD_NUMBER_PATTERN = Pattern.compile("\\+?([bB])([0-9]+)");
 
-    private VersionNumber versionNumber;
-    private ReleaseStatus releaseStatus;
-    private String        pre;
-    private String        preBuild;
-    private String        metadata;
-    private String        build;
-    private String        opt;
-    private Comparison    comparison;
+    private final VersionNumber versionNumber;
+    private       ReleaseStatus releaseStatus;
+    private       String        pre;
+    private       String        preBuild;
+    private       String        metadata;
+    private       String        build;
+    private       String        opt;
+    private       Comparison    comparison;
 
 
     public Semver(final VersionNumber versionNumber) {
@@ -70,15 +69,15 @@ public class Semver implements Comparable<Semver> {
         }
 
         if (Helper.isPositiveInteger(this.metadata)) {
-            int meta = Integer.parseInt(metadata);
+            int meta = Integer.parseInt(this.metadata);
             if (meta == 0) {
                 this.metadata = "";
             }
         }
 
-        if (this.preBuild.isEmpty() && !metadata.isEmpty() && Helper.isPositiveInteger(this.metadata)) {
+        if (this.preBuild.isEmpty() && !this.metadata.isEmpty() && Helper.isPositiveInteger(this.metadata)) {
             this.preBuild = this.metadata;
-            Integer build = Integer.valueOf(this.preBuild);
+            int build = Integer.parseInt(this.preBuild);
             if (build > 0) {
                 this.versionNumber.setBuild(build);
             }
@@ -91,7 +90,7 @@ public class Semver implements Comparable<Semver> {
         // Extract early access preBuild
         if (null != this.pre) {
             final Matcher           eaMatcher = EA_PATTERN.matcher(this.pre);
-            final List<MatchResult> eaResults = eaMatcher.results().collect(Collectors.toList());
+            final List<MatchResult> eaResults = eaMatcher.results().toList();
             if (!eaResults.isEmpty()) {
                 final MatchResult eaResult = eaResults.get(0);
                 if (null != eaResult.group(1)) {
@@ -99,7 +98,7 @@ public class Semver implements Comparable<Semver> {
                     if (null != eaResult.group(4)) {
                         this.preBuild = !eaResult.group(4).equals("0") ? eaResult.group(4) : "";
                         if ((null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty()) && !this.preBuild.isEmpty()) {
-                            Integer build = Integer.parseInt(this.preBuild);
+                            int build = Integer.parseInt(this.preBuild);
                             if (build > 0) {
                                 this.versionNumber.setBuild(build);
                             }
@@ -127,11 +126,11 @@ public class Semver implements Comparable<Semver> {
 
         // Extract metadata e.g. build number
         final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
-        final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
+        final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
         if (!buildNumberResults.isEmpty()) {
             final MatchResult buildNumberResult = buildNumberResults.get(0);
             if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
-                Integer build = Integer.parseInt(buildNumberResult.group(2));
+                int build = Integer.parseInt(buildNumberResult.group(2));
                 if (build > 0) {
                     this.versionNumber.setBuild(build);
                     this.preBuild = Integer.toString(build);
@@ -197,7 +196,7 @@ public class Semver implements Comparable<Semver> {
     public String getMetadata() { return metadata; }
     public void setMetadata(final String metadata) {
         final String md = metadata.replaceFirst("\\+", "");
-        if (null != md && md.length() > 0) {
+        if (md.length() > 0) {
             Error err = validateMetadata(md);
             if (null != err) {
                 throw new IllegalArgumentException(err.getMessage());
@@ -211,8 +210,7 @@ public class Semver implements Comparable<Semver> {
 
     public String getOpt() { return opt; }
     public void setOpt(final String opt) {
-        final String op = opt.replaceFirst("\\+", "").replaceFirst("\\-", "");
-        this.opt = op;
+        this.opt = opt.replaceFirst("\\+", "").replaceFirst("\\-", "");
     }
 
     public Comparison getComparison() { return comparison; }
@@ -371,8 +369,6 @@ public class Semver implements Comparable<Semver> {
             int otherBuild = semVer.getPreBuildAsInt();
 
             d = Integer.compare(thisBuild, otherBuild);
-        } else {
-            d = 0;
         }
 
         return d;
@@ -429,7 +425,7 @@ public class Semver implements Comparable<Semver> {
         int preParts1Length = preParts1.length;
         int preParts2Length = preParts2.length;
 
-        int l = preParts2Length > preParts1Length ? preParts2Length : preParts1Length;
+        int l = Math.max(preParts2Length, preParts1Length);
 
         for (int i = 0 ; i < l ; i++) {
             String tmp1 = "";
@@ -458,7 +454,7 @@ public class Semver implements Comparable<Semver> {
         }
 
         if (prePart2.isEmpty()) {
-            return !prePart1.isEmpty() ? 1 : -1;
+            return 1;
         }
 
         Integer prePart1Number;

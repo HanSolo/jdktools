@@ -62,22 +62,18 @@ public enum Match implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL:
-            case REDUCED:
-            case REDUCED_ENRICHED:
+            case FULL, REDUCED, REDUCED_ENRICHED ->
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-                break;
-            default:
+            default ->
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
-                break;
         }
         return msgBuilder.toString();
     }
@@ -93,16 +89,9 @@ public enum Match implements Api {
     public static Match fromText(final String text) {
         if (null == text) { return ANY; }
         switch (text) {
-            case "any":
-            case "ANY":
-            case "Any":
-                return ANY;
-            case "all":
-            case "ALL":
-            case "All":
-                return ALL;
-            default:
-                return ANY;
+            case "any", "ANY", "Any" -> { return ANY; }
+            case "all", "ALL", "All" -> { return ALL; }
+            default                  -> { return ANY; }
         }
     }
 

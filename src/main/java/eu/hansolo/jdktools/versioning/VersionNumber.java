@@ -100,7 +100,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
     }
     public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch, final OptionalInt fifth, final OptionalInt sixth, final OptionalInt build, final Optional<ReleaseStatus> releaseStatus) {
         if (null == feature)                                                     { throw new IllegalArgumentException("Feature version cannot be null"); }
-        if (null != feature  && feature.isPresent()  && 0 >= feature.getAsInt()) { throw new IllegalArgumentException("Feature version cannot be smaller than 0"); }
+        if (feature.isPresent()  && 0 >= feature.getAsInt()) { throw new IllegalArgumentException("Feature version cannot be smaller than 0"); }
         if (null != interim  && interim.isPresent()  && 0 > interim.getAsInt())  { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
         if (null != update   && update.isPresent()   && 0 > update.getAsInt())   { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
         if (null != patch    && patch.isPresent()    && 0 > patch.getAsInt())    { throw new IllegalArgumentException("Patch version cannot be smaller than 0"); }
@@ -116,8 +116,6 @@ public class VersionNumber implements Comparable<VersionNumber> {
         this.sixth         = null == sixth         ? OptionalInt.of(0)   : sixth;
         this.build         = null == build         ? OptionalInt.empty() : build;
         this.releaseStatus = null == releaseStatus ? Optional.empty()    : releaseStatus;
-
-        if (null == this.feature) { this.feature = OptionalInt.empty(); }
     }
 
 
@@ -211,7 +209,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
         String version = text.startsWith("1.") ? text.replace("1.", "") : text;
 
         final Matcher           versionNoMatcher = VERSION_NO_PATTERN.matcher(version);
-        final List<MatchResult> results          = versionNoMatcher.results().collect(Collectors.toList());
+        final List<MatchResult> results          = versionNoMatcher.results().toList();
         final int               noOfResults      = results.size();
         final int               resultToTake     = noOfResults > resultToMatch ? resultToMatch : 0;
         List<VersionNumber>     numbersFound     = new ArrayList<>();
@@ -315,7 +313,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
             // Extract early access preBuild
             if (null != result.group(16)) {
                 final Matcher           eaMatcher = EA_PATTERN.matcher(result.group(16));
-                final List<MatchResult> eaResults = eaMatcher.results().collect(Collectors.toList());
+                final List<MatchResult> eaResults = eaMatcher.results().toList();
                 if (!eaResults.isEmpty()) {
                     final MatchResult eaResult = eaResults.get(0);
                     if (null != eaResult.group(1)) {
@@ -323,7 +321,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                         if (null == eaResult.group(4)) {
                             if (null != result.group(17)) {
                                 final Matcher           eaBuildNumberMatcher = EA_BUILD_NUMBER_PATTERN.matcher(result.group(17));
-                                final List<MatchResult> eaBuildNumberResults = eaBuildNumberMatcher.results().collect(Collectors.toList());
+                                final List<MatchResult> eaBuildNumberResults = eaBuildNumberMatcher.results().toList();
                                 if (!eaBuildNumberResults.isEmpty()) {
                                     final MatchResult eaBuildNumberResult = eaBuildNumberResults.get(0);
                                     versionNumber.setBuild(Integer.parseInt(eaBuildNumberResult.group(2)));
@@ -340,7 +338,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
 
             // Extract build number
             final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(version);
-            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().collect(Collectors.toList());
+            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
             if (!buildNumberResults.isEmpty()) {
                 final MatchResult buildNumberResult = buildNumberResults.get(0);
                 if (null != buildNumberResult.group(2)) {
@@ -348,19 +346,19 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 }
             }
 
-            if (!versionNumber.getInterim().isPresent() || versionNumber.getInterim().isEmpty()) {
+            if (versionNumber.getInterim().isEmpty()) {
                 versionNumber.setInterim(0);
             }
-            if (!versionNumber.getUpdate().isPresent() || versionNumber.getUpdate().isEmpty()) {
+            if (versionNumber.getUpdate().isEmpty()) {
                 versionNumber.setUpdate(0);
             }
-            if (!versionNumber.getPatch().isPresent() || versionNumber.getPatch().isEmpty()) {
+            if (versionNumber.getPatch().isEmpty()) {
                 versionNumber.setPatch(0);
             }
-            if (!versionNumber.getFifth().isPresent() || versionNumber.getFifth().isEmpty()) {
+            if (versionNumber.getFifth().isEmpty()) {
                 versionNumber.setFifth(0);
             }
-            if (!versionNumber.getSixth().isPresent() || versionNumber.getSixth().isEmpty()) {
+            if (versionNumber.getSixth().isEmpty()) {
                 versionNumber.setSixth(0);
             }
 
@@ -417,7 +415,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
      */
     public int compareForFilterTo(final VersionNumber otherVersionNumber) {
         int comparisonResult = 0;
-        if (!feature.isPresent() || !otherVersionNumber.getFeature().isPresent()) { return comparisonResult; }
+        if (feature.isEmpty() || otherVersionNumber.getFeature().isEmpty()) { return comparisonResult; }
         String[] version1Splits = toString().split("\\.");
         String[] version2Splits = otherVersionNumber.toString().split("\\.");
         int maxLengthOfVersionSplits = Math.min(version1Splits.length, version2Splits.length);
@@ -435,13 +433,16 @@ public class VersionNumber implements Comparable<VersionNumber> {
     }
 
     @Override public int hashCode() {
+        if (feature.isEmpty()) { throw new IllegalArgumentException("feature cannot be null or empty"); }
         return Objects.hash(feature.getAsInt(), interim.orElse(0), update.orElse(0), patch.orElse(0));
     }
 
     @Override public boolean equals(final Object obj) {
         if (obj == VersionNumber.this) { return true; }
         if (!(obj instanceof VersionNumber)) { return false; }
+        if (feature.isEmpty()) { throw new IllegalArgumentException("feature cannot be null or empty"); }
         VersionNumber other = (VersionNumber) obj;
+        if (other.feature.isEmpty()) { throw new IllegalArgumentException("feature cannot be null or empty"); }
         boolean isEqual;
         if (feature.getAsInt() == other.getFeature().getAsInt()) {
             if (interim.isPresent()) {
@@ -533,7 +534,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                     if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
                     if (!javaFormat) {
                         if (fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
-                        if (sixth.isPresent()) { versionBuilder.append(".").append(sixth.getAsInt()); }
+                        versionBuilder.append(".").append(sixth.getAsInt());
                     }
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
@@ -541,22 +542,22 @@ public class VersionNumber implements Comparable<VersionNumber> {
                     if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
                     if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
                     if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
-                    if (!javaFormat && fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
+                    if (!javaFormat) { versionBuilder.append(".").append(fifth.getAsInt()); }
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
                 } else if (patch.isPresent() && patch.getAsInt() != 0) {
                     if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
                     if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                    if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
+                    versionBuilder.append(".").append(patch.getAsInt());
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
                 } else if (update.isPresent() && update.getAsInt() != 0) {
                     if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
+                    versionBuilder.append(".").append(update.getAsInt());
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
                 } else if (interim.isPresent() && interim.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
+                    versionBuilder.append(".").append(interim.getAsInt());
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
                 } else {
@@ -698,8 +699,6 @@ public class VersionNumber implements Comparable<VersionNumber> {
             } else if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isEmpty() &&
                        otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isPresent()) {
                 ret = smallerThan;
-            } else {
-                ret = equal;
             }
         }
         return ret;

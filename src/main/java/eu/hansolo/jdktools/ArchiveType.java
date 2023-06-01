@@ -79,22 +79,18 @@ public enum ArchiveType implements Api {
     @Override public String toString(final OutputFormat outputFormat) {
         StringBuilder msgBuilder = new StringBuilder();
         switch(outputFormat) {
-            case FULL:
-            case REDUCED:
-            case REDUCED_ENRICHED:
+            case FULL, REDUCED, REDUCED_ENRICHED ->
                 msgBuilder.append(CURLY_BRACKET_OPEN).append(NEW_LINE)
                           .append(INDENTED_QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA_NEW_LINE)
                           .append(INDENTED_QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES).append(NEW_LINE)
                           .append(CURLY_BRACKET_CLOSE);
-                break;
-            default:
+            default ->
                 msgBuilder.append(CURLY_BRACKET_OPEN)
                           .append(QUOTES).append("name").append(QUOTES).append(COLON).append(QUOTES).append(name()).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("ui_string").append(QUOTES).append(COLON).append(QUOTES).append(uiString).append(QUOTES).append(COMMA)
                           .append(QUOTES).append("api_string").append(QUOTES).append(COLON).append(QUOTES).append(apiString).append(QUOTES)
                           .append(CURLY_BRACKET_CLOSE);
-                break;
         }
         return msgBuilder.toString();
     }
@@ -108,78 +104,25 @@ public enum ArchiveType implements Api {
      */
     public static ArchiveType fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
-        switch (text) {
-            case "apk":
-            case ".apk":
-            case "APK":
-                return APK;
-            case "bin":
-            case ".bin":
-            case "BIN":
-                return BIN;
-            case "cab":
-            case ".cab":
-            case "CAB":
-                return CAB;
-            case "deb":
-            case ".deb":
-            case "DEB":
-                return DEB;
-            case "dmg":
-            case ".dmg":
-            case "DMG":
-                return DMG;
-            case "exe":
-            case ".exe":
-            case "EXE":
-                return EXE;
-            case "msi":
-            case ".msi":
-            case "MSI":
-                return MSI;
-            case "pkg":
-            case ".pkg":
-            case "PKG":
-                return PKG;
-            case "rpm":
-            case ".rpm":
-            case "RPM":
-                return RPM;
-            case "src.tar.gz":
-            case ".src.tar.gz":
-            case "source.tar.gz":
-            case "SRC.TAR.GZ":
-            case "src_tar":
-            case "SRC_TAR":
-                return SRC_TAR;
-            case "tar.Z":
-            case ".tar.Z":
-            case "TAR.Z":
-            case "tar.z":
-                return TAR_Z;
-            case "tar.gz":
-            case ".tar.gz":
-            case "TAR.GZ":
-                return TAR_GZ;
-            case "tar.xz":
-            case ".tar.xz":
-            case "TAR.XZ":
-                return TAR_XZ;
-            case "tgz":
-            case ".tgz":
-            case "TGZ":
-                return TGZ;
-            case "tar":
-            case ".tar":
-            case "TAR":
-                return TAR;
-            case "zip":
-            case ".zip":
-            case "ZIP":
-                return ZIP;
-            default:
-                return NOT_FOUND;
-        }
+        return switch (text) {
+            case "apk", ".apk", "APK" -> APK;
+            case "bin", ".bin", "BIN" -> BIN;
+            case "cab", ".cab", "CAB" -> CAB;
+            case "deb", ".deb", "DEB" -> DEB;
+            case "dmg", ".dmg", "DMG" -> DMG;
+            case "exe", ".exe", "EXE" -> EXE;
+            case "msi", ".msi", "MSI" -> MSI;
+            case "pkg", ".pkg", "PKG" -> PKG;
+            case "rpm", ".rpm", "RPM" -> RPM;
+            case "src.tar.gz", ".src.tar.gz", "source.tar.gz", "SRC.TAR.GZ", "src_tar", "SRC_TAR" -> SRC_TAR;
+            case "tar.Z", ".tar.Z", "TAR.Z", "tar.z" -> TAR_Z;
+            case "tar.gz", ".tar.gz", "TAR.GZ" -> TAR_GZ;
+            case "tar.xz", ".tar.xz", "TAR.XZ" -> TAR_XZ;
+            case "tgz", ".tgz", "TGZ" -> TGZ;
+            case "tar", ".tar", "TAR" -> TAR;
+            case "zip", ".zip", "ZIP" -> ZIP;
+            default -> NOT_FOUND;
+        };
     }
 
     public List<String> getFileEndings() { return fileEndings; }
