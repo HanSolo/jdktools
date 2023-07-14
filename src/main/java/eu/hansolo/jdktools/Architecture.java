@@ -182,7 +182,7 @@ public enum Architecture implements Api {
             case "ppc", "PPC" -> PPC;
             case "ppc64el", "PPC64EL", "ppc64le", "PPC64LE" -> PPC64LE;
             case "ppc64", "PPC64" -> PPC64;
-            case "riscv64", "RISCV64" -> RISCV64;
+            case "riscv64", "RISCV64", "risc-v", "RISC-V", "riscv", "RISCV" -> RISCV64;
             case "s390", "s390x", "S390X" -> S390X;
             case "sparc", "SPARC" -> SPARC;
             case "sparcv9", "SPARCV9" -> SPARCV9;

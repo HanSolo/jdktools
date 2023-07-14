@@ -84,8 +84,8 @@ public enum Verification implements Api {
     public Boolean getAsBoolean() {
         return switch (Verification.this) {
             case YES -> Boolean.TRUE;
-            case NO -> Boolean.FALSE;
-            default -> null;
+            case NO  -> Boolean.FALSE;
+            default  -> null;
         };
     }
 
