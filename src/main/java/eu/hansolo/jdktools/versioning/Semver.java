@@ -196,7 +196,7 @@ public class Semver implements Comparable<Semver> {
     public String getMetadata() { return metadata; }
     public void setMetadata(final String metadata) {
         final String md = metadata.replaceFirst("\\+", "");
-        if (md.length() > 0) {
+        if (null != md && md.length() > 0) {
             Error err = validateMetadata(md);
             if (null != err) {
                 throw new IllegalArgumentException(err.getMessage());
