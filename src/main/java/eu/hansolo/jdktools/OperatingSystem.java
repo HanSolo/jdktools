@@ -43,6 +43,9 @@ public enum OperatingSystem implements Api {
     LINUX_MUSL("Linux Musl", "linux", LibCType.MUSL) {
         @Override public List<OperatingSystem> getSynonyms() { return List.of(OperatingSystem.LINUX, OperatingSystem.ALPINE_LINUX); }
     },
+    FREE_BSD("FreeBSD", "free_bsd", LibCType.LIBC) {
+        @Override public List<OperatingSystem> getSynonyms() { return List.of(); }
+    },
     MACOS("Mac OS", "macos", LibCType.LIBC) {
         @Override public List<OperatingSystem> getSynonyms() { return List.of(); }
     },
@@ -151,6 +154,14 @@ public enum OperatingSystem implements Api {
             case "alpine linux":
             case "ALPINE LINUX":
                 return ALPINE_LINUX;
+            case "free_bsd":
+            case "FREE_BSD":
+            case "FREE BSD":
+            case "free bsd":
+            case "freebsd" :
+            case "FreeBSD" :
+            case "freeBSD" :
+                return FREE_BSD;
             case "-solaris":
             case "solaris":
             case "SOLARIS":

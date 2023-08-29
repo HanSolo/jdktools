@@ -225,6 +225,10 @@ public enum Architecture implements Api {
                 return PPC64;
             case "riscv64":
             case "RISCV64":
+            case "risc-v" :
+            case "RISC-V" :
+            case "riscv"  :
+            case "RISCV"  :
                 return RISCV64;
             case "s390" :
             case "s390x":
