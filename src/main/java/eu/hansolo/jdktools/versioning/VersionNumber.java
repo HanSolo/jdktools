@@ -302,9 +302,11 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 versionNumber.setInterim(0);
                 if (result.group(15).equals("+")) {
                     if (result.group(16).startsWith("b")) {
-                        versionNumber.setBuild(Integer.parseInt(result.group(16).substring(1)));
+                        String buildNumber = result.group(16).replaceAll("[^\\d.]", "");
+                        versionNumber.setBuild(Integer.parseInt(buildNumber));
                     } else {
-                        versionNumber.setBuild(Integer.parseInt(result.group(16)));
+                        String buildNumber = result.group(16).replaceAll("[^\\d.]", "");
+                        versionNumber.setBuild(Integer.parseInt(buildNumber));
                     }
                     versionNumber.setReleaseStatus(ReleaseStatus.GA);
                 }
@@ -576,7 +578,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                 return versionBuilder.toString();
             }
-        }
+    }
 
     @Override public String toString() {
         return toString(OutputFormat.FULL, true, true);

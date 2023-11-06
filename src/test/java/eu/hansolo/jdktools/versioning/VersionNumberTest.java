@@ -199,6 +199,7 @@ class VersionNumberTest {
         final String versionNumber38String = "17-ea+8";                           // 17-ea preBuild 8
         final String versionNumber39String = "17-ea+5_linux-x64-musl_bin.tar.gz"; // 17-ea preBuild 5
         final String versionNumber40String = "17.0.0-ea.2";                       // 17-ea prebuild 2
+        final String versionNumber41String = "17+35-LTS";                         // 17 ga
 
 
         final VersionNumber versionNumber1  = new VersionNumber(8);
@@ -241,6 +242,7 @@ class VersionNumberTest {
         final VersionNumber versionNumber38 = new VersionNumber(17, null, null, null, null, null, 8, ReleaseStatus.EA);
         final VersionNumber versionNumber39 = new VersionNumber(17, null, null, null, null, null, 5, ReleaseStatus.EA);
         final VersionNumber versionNumber40 = new VersionNumber(17, null, null, null, null, null, 2, ReleaseStatus.EA);
+        final VersionNumber versionNumber41 = new VersionNumber(17, null, null, null, null, null, 35, ReleaseStatus.GA);
 
         assert versionNumber1.compareTo(VersionNumber.fromText(versionNumber1String))   == 0;
         assert versionNumber2.compareTo(VersionNumber.fromText(versionNumber2String))   == 0;
@@ -282,6 +284,7 @@ class VersionNumberTest {
         assert versionNumber38.compareTo(VersionNumber.fromText(versionNumber38String)) == 0;
         assert versionNumber39.compareTo(VersionNumber.fromText(versionNumber39String)) == 0;
         assert versionNumber40.compareTo(VersionNumber.fromText(versionNumber40String)) == 0;
+        assert versionNumber41.compareTo(VersionNumber.fromText(versionNumber41String)) == 0;
 
         assert VersionNumber.fromText(versionNumber27String).toString().equals(versionNumber27.toString());
         assert VersionNumber.fromText(versionNumber31String).toString(OutputFormat.REDUCED, true, true).equals(versionNumber31.toString(OutputFormat.REDUCED, true, true));
