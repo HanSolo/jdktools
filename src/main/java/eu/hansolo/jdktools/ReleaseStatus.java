@@ -36,6 +36,7 @@ import static eu.hansolo.jdktools.Constants.QUOTES;
 public enum ReleaseStatus implements Api {
     GA("General Access", "ga",""),
     EA("Early Access", "ea", "-ea"),
+    //DEBUG("Debug", "debug", "debug"),
     NONE("-", "", ""),
     NOT_FOUND("", "", "");
 
@@ -93,9 +94,10 @@ public enum ReleaseStatus implements Api {
     public static ReleaseStatus fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         return switch (text) {
-            case "-ea", "-EA", "_ea", "_EA", "ea", "EA", "ea_", "EA_" -> EA;
-            case "-ga", "-GA", "_ga", "_GA", "ga", "GA", "ga_", "GA_" -> GA;
-            default                                                   -> NOT_FOUND;
+            case "-ea", "-EA", "_ea", "_EA", "ea", "EA", "ea_", "EA_"                         -> EA;
+            case "-ga", "-GA", "_ga", "_GA", "ga", "GA", "ga_", "GA_"                         -> GA;
+            //case "-debug", "-DEBUG", "_debug", "_DEBUG", "debug", "DEBUG", "debug_", "DEBUG_" -> DEBUG;
+            default                                                                           -> NOT_FOUND;
         };
     }
 

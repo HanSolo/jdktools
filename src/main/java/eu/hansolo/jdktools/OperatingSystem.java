@@ -20,6 +20,7 @@ package eu.hansolo.jdktools;
 
 import eu.hansolo.jdktools.util.OutputFormat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -132,6 +133,20 @@ public enum OperatingSystem implements Api {
             case "-win", "windows", "Windows", "WINDOWS", "win", "Win", "WIN" -> WINDOWS;
             default -> NOT_FOUND;
         };
+    }
+
+    public static List<String> getAcronyms(final OperatingSystem operatingSystem) {
+        switch (operatingSystem) {
+            case LINUX      -> { return List.of("linux", "Linux", "LINUX", "unix", "UNIX", "Unix"); }
+            case LINUX_MUSL -> { return List.of("linux-musl", "linux_musl", "Linux-Musl", "Linux_Musl", "LINUX_MUSL", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX"); }
+            case FREE_BSD   -> { return List.of("free_bsd", "FREE_BSD", "free-bsd", "FREE-BSD","freebsd", "FREEBSD", "FreeBSD", "freeBSD"); }
+            case SOLARIS    -> { return List.of("solaris", "SOLARIS", "Solaris"); }
+            case QNX        -> { return List.of("qnx", "QNX"); }
+            case AIX        -> { return List.of("aix", "AIX"); }
+            case MACOS      -> { return List.of("darwin", "macosx", "MACOSX", "MacOS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX"); }
+            case WINDOWS    -> { return List.of("win", "windows", "Windows", "WINDOWS", "Win", "WIN"); }
+            default         -> { return new ArrayList<>(); }
+        }
     }
 
     public LibCType getLibCType() { return libCType; }

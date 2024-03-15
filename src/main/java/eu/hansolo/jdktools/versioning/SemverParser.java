@@ -171,7 +171,7 @@ public class SemverParser {
                 pre1 = "ea";
             }
             */
-            if (eparts.length > 0 && (eparts[0].matches("[a-zA-Z]+") && eparts[0].length() > 0)) {
+            if (eparts.length > 0 && eparts[0].length() > 0 && eparts[0].matches("[a-zA-Z]+")) {
                 pre1 = "ea";
                 opt1 = eparts[0].equals("ea") ? opt1 : eparts[0];
             }

@@ -164,7 +164,7 @@ class VersionNumberTest {
         final String versionNumber3String  = "1.2.3";                             // 1.2.3
         final String versionNumber4String  = "8.2.3.4";                           // 8.2.3.4
         final String versionNumber5String  = "11.26.2-DEBUG";                     // 11.26.2
-        final String versionNumber6String  = "11.0.2+13-LTS";                     // 11.0.2.13
+        final String versionNumber6String  = "11.0.2+13-LTS";                     // 11.0.2 build 13
         final String versionNumber7String  = "signed.7.5.4.3.2.1.0";              // 7.5.4.3
         final String versionNumber8String  = "20.30.0";                           // 20.30.0
         final String versionNumber9String  = "11.25.3.DEBUG";                     // 11.25.3
@@ -173,7 +173,7 @@ class VersionNumberTest {
         final String versionNumber12String = "8u262";                             // 8.0.262
         final String versionNumber13String = "11";                                // 11
         final String versionNumber14String = "8.0.272-ea+10";                     // 8.0.272
-        final String versionNumber15String = "1.8.0_275.b01-x86.rpm";             // 8.0.275 build 1
+        final String versionNumber15String = "1.8.0_275.b01-x86.rpm";             // 8.0.275 ea build 1
         final String versionNumber16String = "8u272b09_ea.tar.gz";                // 8.0.272 build 9
         final String versionNumber17String = "11.0.9.1_1.tar.gz";                 // 11.0.9.1
         final String versionNumber18String = "11.0.9.12-1_amd64.deb";             // 11.0.9.12
@@ -183,7 +183,7 @@ class VersionNumberTest {
         final String versionNumber22String = "7u25";                              // 7.0.25
         final String versionNumber23String = "8u172-b11";                         // 8.0.172 build 11
         final String versionNumber24String = "8u162-b12_openj9-0.8.0";            // 8.0.162 build 12
-        final String versionNumber25String = "11.0.1+13";                         // 11.0.1
+        final String versionNumber25String = "11.0.1+13";                         // 11.0.1 build 13
         final String versionNumber26String = "11+28";                             // 11
         final String versionNumber27String = "14.0.0-ea.28";                      // 14-ea preBuild 28
         final String versionNumber28String = "15.0.0-ea";                         // 15.0.0. ea
@@ -199,15 +199,16 @@ class VersionNumberTest {
         final String versionNumber38String = "17-ea+8";                           // 17-ea preBuild 8
         final String versionNumber39String = "17-ea+5_linux-x64-musl_bin.tar.gz"; // 17-ea preBuild 5
         final String versionNumber40String = "17.0.0-ea.2";                       // 17-ea prebuild 2
-        final String versionNumber41String = "17+35-LTS";                         // 17 ga
-
+        final String versionNumber41String = "17+35-LTS";                         // 17 build 31
+        final String versionNumber42String = "23.0-b12";                          // 23.0 preBuild 12
+        final String versionNumber43String = "22-beta+28";                        // 22 ea build 28
 
         final VersionNumber versionNumber1  = new VersionNumber(8);
         final VersionNumber versionNumber2  = new VersionNumber(8, 2);
         final VersionNumber versionNumber3  = new VersionNumber(2, 3);
         final VersionNumber versionNumber4  = new VersionNumber(8, 2, 3, 4);
-        final VersionNumber versionNumber5  = new VersionNumber(11, 26, 2, null);
-        final VersionNumber versionNumber6  = new VersionNumber(11, 0, 2, null);
+        final VersionNumber versionNumber5  = VersionNumberBuilder.create(11).interimNumber(26).updateNumber(2).releaseStatus(ReleaseStatus.EA).build();
+        final VersionNumber versionNumber6  = VersionNumberBuilder.create(11).interimNumber(0).updateNumber(2).buildNumber(13).build();
         final VersionNumber versionNumber7  = new VersionNumber(7, 5, 4, 3, 2, 1);
         final VersionNumber versionNumber8  = new VersionNumber(20, 30, 0);
         final VersionNumber versionNumber9  = new VersionNumber(11, 25, 3, null);
@@ -217,16 +218,16 @@ class VersionNumberTest {
         final VersionNumber versionNumber13 = new VersionNumber(11);
         final VersionNumber versionNumber14 = VersionNumberBuilder.create(8).updateNumber(272).buildNumber(10).releaseStatus(ReleaseStatus.EA).build();
         final VersionNumber versionNumber15 = VersionNumberBuilder.create(8).updateNumber(275).buildNumber(1).build();
-        final VersionNumber versionNumber16 = VersionNumberBuilder.create(8).updateNumber(272).buildNumber(9).build();
+        final VersionNumber versionNumber16 = VersionNumberBuilder.create(8).updateNumber(272).buildNumber(9).releaseStatus(ReleaseStatus.EA).build();
         final VersionNumber versionNumber17 = new VersionNumber(11, 0, 9, 1);
-        final VersionNumber versionNumber18 = new VersionNumber(11, 0, 9, 12);
+        final VersionNumber versionNumber18 = new VersionNumber(11, 0, 9, 12,1);
         final VersionNumber versionNumber19 = new VersionNumber(13, 0, 5, 1);
         final VersionNumber versionNumber20 = new VersionNumber(13, 0, 5, 1);
         final VersionNumber versionNumber21 = VersionNumberBuilder.create(7).updateNumber(25).buildNumber(15).build();
         final VersionNumber versionNumber22 = new VersionNumber(7, 0, 25, 0);
         final VersionNumber versionNumber23 = new VersionNumber(8, 0, 172, 0,11);
         final VersionNumber versionNumber24 = new VersionNumber(8, 0, 162, 0, 12);
-        final VersionNumber versionNumber25 = new VersionNumber(11, 0, 1, 0);
+        final VersionNumber versionNumber25 = new VersionNumber(11, 0, 1, 0, 13);
         final VersionNumber versionNumber26 = VersionNumberBuilder.create(11).buildNumber(28).build();
         final VersionNumber versionNumber27 = VersionNumberBuilder.create(14).releaseStatus(ReleaseStatus.EA).buildNumber(28).build();
         final VersionNumber versionNumber28 = VersionNumberBuilder.create(15).releaseStatus(ReleaseStatus.EA).build();
@@ -243,6 +244,13 @@ class VersionNumberTest {
         final VersionNumber versionNumber39 = new VersionNumber(17, null, null, null, null, null, 5, ReleaseStatus.EA);
         final VersionNumber versionNumber40 = new VersionNumber(17, null, null, null, null, null, 2, ReleaseStatus.EA);
         final VersionNumber versionNumber41 = new VersionNumber(17, null, null, null, null, null, 35, ReleaseStatus.GA);
+        final VersionNumber versionNumber42 = new VersionNumber(23, null, null, null, null, null, 12, ReleaseStatus.GA);
+        final VersionNumber versionNumber43 = new VersionNumber(22, 0, 0, 0, null, null, 28, ReleaseStatus.EA);
+
+        //System.out.println(versionNumber43String);
+        //System.out.println("Correct: " + versionNumber43.toString(OutputFormat.FULL, true, true));
+        //System.out.println("Parsed : " + VersionNumber.fromText(versionNumber43String).toString(OutputFormat.FULL, true, true));
+        //System.out.println("------------------------");
 
         assert versionNumber1.compareTo(VersionNumber.fromText(versionNumber1String))   == 0;
         assert versionNumber2.compareTo(VersionNumber.fromText(versionNumber2String))   == 0;
@@ -285,6 +293,8 @@ class VersionNumberTest {
         assert versionNumber39.compareTo(VersionNumber.fromText(versionNumber39String)) == 0;
         assert versionNumber40.compareTo(VersionNumber.fromText(versionNumber40String)) == 0;
         assert versionNumber41.compareTo(VersionNumber.fromText(versionNumber41String)) == 0;
+        assert versionNumber42.compareTo(VersionNumber.fromText(versionNumber42String)) == 0;
+        assert versionNumber43.compareTo(VersionNumber.fromText(versionNumber43String)) == 0;
 
         assert VersionNumber.fromText(versionNumber27String).toString().equals(versionNumber27.toString());
         assert VersionNumber.fromText(versionNumber31String).toString(OutputFormat.REDUCED, true, true).equals(versionNumber31.toString(OutputFormat.REDUCED, true, true));
@@ -293,13 +303,13 @@ class VersionNumberTest {
     @Test
     void compareIncludingBuildNumber() {
         final String versionNumber1String = "1.8.0_275.b01-x86.rpm";     // 8.0.275 build 1
-        final String versionNumber2String = "8u272b09_ea.tar.gz";        // 8.0.272 build 9
+        final String versionNumber2String = "8u272b09_ea.tar.gz";        // 8.0.272 ea build 9
         final String versionNumber3String = "1.7.0_25-b15";              // 7.0.25 build 15
         final String versionNumber4String = "8u172-b11";                 // 8.0.172 build 11
         final String versionNumber5String = "8u162-b12_openj9-0.8.0";    // 8.0.162 build 12
 
         final VersionNumber versionNumber1 = new VersionNumber(8, 0, 275, null, null, null, 1, null);
-        final VersionNumber versionNumber2 = new VersionNumber(8, 0, 272, null, null, null, 9, null);
+        final VersionNumber versionNumber2 = new VersionNumber(8, 0, 272, null, null, null, 9, ReleaseStatus.EA);
         final VersionNumber versionNumber3 = new VersionNumber(7, 0, 25, null, null, null, 15, null);
         final VersionNumber versionNumber4 = new VersionNumber(8, 0, 172, null, null, null, 11, null);
         final VersionNumber versionNumber5 = new VersionNumber(8, 0, 162, null, null, null, 12, null);

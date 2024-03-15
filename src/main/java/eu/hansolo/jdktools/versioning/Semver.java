@@ -308,7 +308,7 @@ public class Semver implements Comparable<Semver> {
         SemverParsingResult result = SemverParser.fromText(text);
         if (null != result.getError1()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError1()); }
         if (null != result.getError2()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError2()); }
-        return SemverParser.fromText(text);
+        return result;
     }
 
 

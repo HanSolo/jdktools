@@ -20,6 +20,7 @@ package eu.hansolo.jdktools;
 
 import eu.hansolo.jdktools.util.OutputFormat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -202,6 +203,30 @@ public enum Architecture implements Api {
      * @return the values of the enum as list
      */
     public static List<Architecture> getAsList() { return Arrays.asList(values()); }
+
+    public static List<String> getAcronyms(final Architecture architecture) {
+        switch (architecture) {
+            case AARCH64 -> { return List.of("aarch64", "AARCH64"); }
+            case AMD64   -> { return List.of("amd64", "AMD64"); }
+            case ARM     -> { return List.of("aarch32", "AARCH32", "arm32", "ARM32", "armv6", "ARMV6", "armv7l", "ARMV7L", "armv7", "ARMV7", "arm", "ARM"); }
+            case ARMEL   -> { return List.of("armel", "ARMEL"); }
+            case ARMHF   -> { return List.of("armhf", "ARMHF"); }
+            case ARM64   -> { return List.of("arm64", "ARM64", "armv8", "ARMV8"); }
+            case MIPS    -> { return List.of("mips", "MIPS"); }
+            case MIPSEL  -> { return List.of("mipsel", "MIPSEL"); }
+            case PPC     -> { return List.of("ppc", "PPC"); }
+            case PPC64LE -> { return List.of("ppc64el", "PPC64EL", "ppc64le", "PPC64LE"); }
+            case PPC64   -> { return List.of("ppc64", "PPC64"); }
+            case RISCV64 -> { return List.of("riscv64", "RISCV64", "risc-v", "RISC-V", "riscv", "RISCV", "risc_v", "RISC_V"); }
+            case S390X   -> { return List.of("s390", "s390x", "S390X"); }
+            case SPARC   -> { return List.of("sparc", "SPARC"); }
+            case SPARCV9 -> { return List.of("sparcv9", "SPARCV9"); }
+            case X64     -> { return List.of("x64", "X64", "x86-64", "X86-64", "x86_64", "X86_64", "x86lx64", "X86LX64"); }
+            case X86     -> { return List.of("x32", "x86", "X86", "286", "386", "486", "586", "686", "i386", "i486", "i586", "i686", "x86-32", "x86lx32", "X86LX32"); }
+            case IA64    -> { return List.of("ia64", "IA64", "ia-64", "IA-64", "ia_64", "IA_64"); }
+            default      -> { return new ArrayList<>(); }
+        }
+    }
 
     public abstract List<Architecture> getSynonyms();
 }

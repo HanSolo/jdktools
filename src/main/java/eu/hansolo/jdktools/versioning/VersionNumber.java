@@ -18,6 +18,9 @@
 
 package eu.hansolo.jdktools.versioning;
 
+import eu.hansolo.jdktools.Architecture;
+import eu.hansolo.jdktools.ArchiveType;
+import eu.hansolo.jdktools.OperatingSystem;
 import eu.hansolo.jdktools.ReleaseStatus;
 import eu.hansolo.jdktools.util.Helper;
 import eu.hansolo.jdktools.util.OutputFormat;
@@ -28,17 +31,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 public class VersionNumber implements Comparable<VersionNumber> {
-    public static final Pattern                 VERSION_NO_PATTERN      = Pattern.compile("([1-9]\\d*)((u(\\d+))|(\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.(\\d+)))?(([_b])(\\d+))?(([-+.])([a-zA-Z0-9\\-\\+]+)(\\.[0-9]+)?)?");
-    public static final Pattern                 EA_PATTERN              = Pattern.compile("(ea|EA)(([.+\\-])([0-9]+))?");
-    public static final Pattern                 EA_BUILD_NUMBER_PATTERN = Pattern.compile("(\\.?)([0-9]+)");
+    public static final Pattern                 VERSION_NO_PATTERN      = Pattern.compile("([1-9]\\d*)((u(\\d+))|(\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.(\\d+)))?(([_b])(\\d+))?(((\\+|\\-)([a-zA-Z0-9_]+))?((\\+|\\-)([a-zA-Z0-9_]+))?)?");
     public static final Pattern                 BUILD_NUMBER_PATTERN    = Pattern.compile("\\+?([bB])([0-9]+)");
+    public static final Pattern                 BUILD_PATTERN           = Pattern.compile("\\d+");
     public static final Pattern                 LEADING_INT_PATTERN     = Pattern.compile("^[0-9]*");
     private             OptionalInt             feature;
     private             OptionalInt             interim;
@@ -205,8 +207,47 @@ public class VersionNumber implements Comparable<VersionNumber> {
             throw new IllegalArgumentException("No version number can be parsed because given text is null or empty.");
         }
 
+        // Remove things like cpu architecture, operating system and file endings
+        AtomicReference<String> tmp = new AtomicReference<>(text);
+        ArchiveType.getAsList().forEach(archiveType -> {
+            archiveType.getFileEndings().forEach(fileEnding -> {
+                if (fileEnding.isEmpty() || fileEnding.equals("-") || fileEnding.equals("_")) { return; }
+                tmp.set(tmp.get().replaceAll(fileEnding, ""));
+            });
+        });
+        OperatingSystem.getAsList().forEach(operatingSystem -> {
+            OperatingSystem.getAcronyms(operatingSystem).forEach(acronym -> {
+                if (acronym.isEmpty()) { return; }
+                tmp.set(tmp.get().replaceAll("\\-" + acronym, ""));
+                tmp.set(tmp.get().replaceAll("_" + acronym, ""));
+            });
+        });
+        Architecture.getAsList().forEach(architecture -> {
+            Architecture.getAcronyms(architecture).forEach(acronym -> {
+                if (acronym.isEmpty()) { return; }
+                tmp.set(tmp.get().replaceAll("\\-" + acronym, ""));
+                tmp.set(tmp.get().replaceAll("_" + acronym, ""));
+            });
+        });
+
+        // Streamline text to be more compatible to semver by replacing comming findings e.g. .bN -> +bN
+        tmp.set(tmp.get().replaceAll("\\-beta", "-ea"));
+        tmp.set(tmp.get().replaceAll("\\-BETA", "-ea"));
+        tmp.set(tmp.get().replaceAll("_ea", "-ea"));
+        tmp.set(tmp.get().replaceAll("_b", "+b"));
+        tmp.set(tmp.get().replaceAll("\\-b", "+b"));
+        tmp.set(tmp.get().replaceAll("\\.b", "+b"));
+        tmp.set(tmp.get().replaceAll("([0-9])b", "$1+b"));
+        tmp.set(tmp.get().replaceAll("(ea|EA)\\.([0-9]+)$", "ea+b$2"));
+        tmp.set(tmp.get().replaceAll("\\-([0-9]+)$", "+$1"));
+        tmp.set(tmp.get().replaceAll("_openj9.*", ""));
+        tmp.set(tmp.get().replaceAll("\\-openj9.*", ""));
+        tmp.set(tmp.get().replaceAll("\\-LTS|\\-lts", ""));
+
+        //System.out.println("stripped: " + tmp.get());
+
         // Remove leading "1." to get correct version number e.g. 1.8u262 -> 8u262
-        String version = text.startsWith("1.") ? text.replace("1.", "") : text;
+        String version = tmp.get().startsWith("1.") ? tmp.get().replace("1.", "") : tmp.get();
 
         final Matcher           versionNoMatcher = VERSION_NO_PATTERN.matcher(version);
         final List<MatchResult> results          = versionNoMatcher.results().toList();
@@ -277,7 +318,12 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 //System.out.println("match: 1, 2, 5, 6, 10, 14, 15, 16");
                 versionNumber.setInterim(getPositiveIntFromText(result.group(6), version));
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(10), version));
-            } */else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(10) && null != result.group(11) && null != result.group(12) && null != result.group(13)) {
+            } */ else if (null != result.group(1) && null != result.group(6) && null != result.group(7) && null != result.group(10)) {
+                versionNumber.setFeature(getPositiveIntFromText(result.group(1)));
+                versionNumber.setInterim(getPositiveIntFromText(result.group(6)));
+                versionNumber.setUpdate(getPositiveIntFromText(result.group(7)));
+                versionNumber.setPatch(getPositiveIntFromText(result.group(10)));
+            } else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(10) && null != result.group(11) && null != result.group(12) && null != result.group(13)) {
                 //System.out.println("match: 1, 2, 5, 10, 11, 12, 13");
                 versionNumber.setInterim(0);
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(13)));
@@ -297,54 +343,77 @@ public class VersionNumber implements Comparable<VersionNumber> {
             } else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(10)) {
                 //System.out.println("match: 1, 2, 5, 9");
                 versionNumber.setInterim(getPositiveIntFromText(result.group(10)));
-            } else if (null != result.group(1) && null != result.group(14) && null != result.group(15) && null != result.group(16)) {
-                //System.out.println("match: 1, 14, 15, 16");
-                versionNumber.setInterim(0);
-                if (result.group(15).equals("+")) {
-                    if (result.group(16).startsWith("b")) {
-                        String buildNumber = result.group(16).replaceAll("[^\\d.]", "");
-                        versionNumber.setBuild(Integer.parseInt(buildNumber));
-                    } else {
-                        String buildNumber = result.group(16).replaceAll("[^\\d.]", "");
-                        versionNumber.setBuild(Integer.parseInt(buildNumber));
-                    }
-                    versionNumber.setReleaseStatus(ReleaseStatus.GA);
-                }
             }
 
-            // Extract early access preBuild
-            if (null != result.group(16)) {
-                final Matcher           eaMatcher = EA_PATTERN.matcher(result.group(16));
-                final List<MatchResult> eaResults = eaMatcher.results().toList();
-                if (!eaResults.isEmpty()) {
-                    final MatchResult eaResult = eaResults.get(0);
-                    if (null != eaResult.group(1)) {
-                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                        if (null == eaResult.group(4)) {
-                            if (null != result.group(17)) {
-                                final Matcher           eaBuildNumberMatcher = EA_BUILD_NUMBER_PATTERN.matcher(result.group(17));
-                                final List<MatchResult> eaBuildNumberResults = eaBuildNumberMatcher.results().toList();
-                                if (!eaBuildNumberResults.isEmpty()) {
-                                    final MatchResult eaBuildNumberResult = eaBuildNumberResults.get(0);
-                                    versionNumber.setBuild(Integer.parseInt(eaBuildNumberResult.group(2)));
-                                }
-                            }
-                        } else {
-                            versionNumber.setBuild(Integer.parseInt(eaResult.group(4)));
-                        }
+            // Parse release status and build
+            versionNumber.setReleaseStatus(ReleaseStatus.GA);
+            if (null == result.group(15) && null == result.group(18)) {
+                versionNumber.setReleaseStatus(ReleaseStatus.GA);
+            } else if (null != result.group(15) && null == result.group(18)) {
+                // Group 15 is present
+                if (result.group(16).equals("-")) {
+                    // Early Access
+                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                } else {
+                    // Build
+                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
+                    final List<MatchResult> buildResults = buildMatcher.results().toList();
+                    if (!buildResults.isEmpty()) {
+                        int build = Integer.parseInt(buildResults.get(0).group());
+                        versionNumber.setBuild(build);
+                    }
+                }
+            } else if (null == result.group(15) && null != result.group(18)) {
+                // Group 18 is present
+                if (result.group(19).equals("-")) {
+                    // Early Access
+                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                } else {
+                    // Build
+                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
+                    final List<MatchResult> buildResults = buildMatcher.results().toList();
+                    if (!buildResults.isEmpty()) {
+                        int build = Integer.parseInt(buildResults.get(0).group());
+                        versionNumber.setBuild(build);
                     }
                 }
             } else {
-                versionNumber.setReleaseStatus(ReleaseStatus.GA);
+                // Group 15 and 18 are present
+                if (result.group(16).equals("-")) {
+                    // Early Access
+                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                } else {
+                    // Build
+                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
+                    final List<MatchResult> buildResults = buildMatcher.results().toList();
+                    if (!buildResults.isEmpty()) {
+                        int build = Integer.parseInt(buildResults.get(0).group());
+                        versionNumber.setBuild(build);
+                    }
+                }
+                if (result.group(19).equals("-")) {
+                    // Early Access
+                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                } else {
+                    // Build
+                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
+                    final List<MatchResult> buildResults = buildMatcher.results().toList();
+                    if (!buildResults.isEmpty()) {
+                        int build = Integer.parseInt(buildResults.get(0).group());
+                        versionNumber.setBuild(build);
+                    }
+                }
             }
 
-            // Extract build number
-            final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(version);
-            final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
-            if (!buildNumberResults.isEmpty()) {
-                final MatchResult buildNumberResult = buildNumberResults.get(0);
-                if (null != buildNumberResult.group(2)) {
-                    versionNumber.setBuild(Integer.parseInt(buildNumberResult.group(2)));
+            // No Semver build found, try things like "b01" etc.
+            if (versionNumber.getBuild().isEmpty()) {
+                final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(version);
+                final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
+                if (!buildNumberResults.isEmpty()) {
+                    final MatchResult buildNumberResult = buildNumberResults.get(0);
+                    if (null != buildNumberResult.group(2)) {
+                        versionNumber.setBuild(Integer.parseInt(buildNumberResult.group(2)));
+                    }
                 }
             }
 
