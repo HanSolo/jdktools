@@ -34,12 +34,12 @@ import static eu.hansolo.jdktools.Constants.QUOTES;
 
 
 public enum Severity implements Api {
-    LOW(SeverityName.LOW.name(), SeverityName.LOW.name().toLowerCase(), 0.0, 3.9, 0.1, 3.9, 2),
-    MEDIUM(SeverityName.MEDIUM.name(), SeverityName.MEDIUM.name().toLowerCase(), 4.0, 6.9, 4.0, 6.9, 3),
-    HIGH(SeverityName.HIGH.name(), SeverityName.HIGH.name().toLowerCase(), 7.0, 10.0, 7.0, 8.9, 4),
-    CRITICAL(SeverityName.CRITICAL.name(), SeverityName.CRITICAL.name().toLowerCase(), 10.0, 10.0, 9.0, 10.0, 5),
-    NONE("-", "", 0, 0, 0, 0, 1),
-    NOT_FOUND("", "", 0, 0, 0, 0, 0);
+    LOW(SeverityName.LOW.name(), SeverityName.LOW.name().toLowerCase(), 0.0, 3.9, 0.1, 3.9, 0.1, 3.9, 2),
+    MEDIUM(SeverityName.MEDIUM.name(), SeverityName.MEDIUM.name().toLowerCase(), 4.0, 6.9, 4.0, 6.9, 4.0, 6.9,3),
+    HIGH(SeverityName.HIGH.name(), SeverityName.HIGH.name().toLowerCase(), 7.0, 10.0, 7.0, 8.9, 7.0, 8.9,4),
+    CRITICAL(SeverityName.CRITICAL.name(), SeverityName.CRITICAL.name().toLowerCase(), 10.0, 10.0, 9.0, 10.0, 9.0, 10.0,5),
+    NONE("-", "", 0, 0, 0, 0, 0, 0,1),
+    NOT_FOUND("", "", 0, 0, 0, 0, 0, 0,0);
 
     private final String  uiString;
     private final String  apiString;
@@ -47,16 +47,20 @@ public enum Severity implements Api {
     private final double  maxScoreV2;
     private final double  minScoreV3;
     private final double  maxScoreV3;
+    private final double  minScoreV4;
+    private final double  maxScoreV4;
     private final Integer order;
 
 
-    Severity(final String uiString, final String apiString, final double minScoreV2, final double maxScoreV2, final double minScoreV3, final double maxScoreV3, final Integer order) {
+    Severity(final String uiString, final String apiString, final double minScoreV2, final double maxScoreV2, final double minScoreV3, final double maxScoreV3, final double minScoreV4, final double maxScoreV4, final Integer order) {
         this.uiString   = uiString;
         this.apiString  = apiString;
         this.minScoreV2 = minScoreV2;
         this.maxScoreV2 = maxScoreV2;
         this.minScoreV3 = minScoreV3;
         this.maxScoreV3 = maxScoreV3;
+        this.minScoreV4 = minScoreV4;
+        this.maxScoreV4 = maxScoreV4;
         this.order      = order;
     }
 
@@ -65,6 +69,9 @@ public enum Severity implements Api {
 
     public double getMinScoreV3() { return minScoreV3; }
     public double getMaxScoreV3() { return maxScoreV3; }
+
+    public double getMinScoreV4() { return minScoreV4; }
+    public double getMaxScoreV4() { return maxScoreV4; }
 
     public int getOrder() { return order; }
 
@@ -120,7 +127,7 @@ public enum Severity implements Api {
     /**
      * Returns a Severity parsed from the given score and cvss version
      * @param score The CVSS score (0.0 - 10.0)
-     * @param cvss  The CVSS version (CVSS2 or CVSS3)
+     * @param cvss  The CVSS version (CVSS2, CVSS3, CVSS4)
      * @return Severity parsed from a given score and cvss version
      */
     public static Severity fromScore(final double score, final CVSS cvss) {
@@ -136,7 +143,7 @@ public enum Severity implements Api {
                     return Severity.NOT_FOUND;
                 }
             }
-            case CVSSV3 -> {
+            case CVSSV3, CVSSV4 -> {
                 if (score <= 0) {
                     return Severity.NONE;
                 } else if (score > 0 && score <= 3.9) {
