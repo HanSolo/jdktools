@@ -22,6 +22,7 @@ import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -34,10 +35,10 @@ import static eu.hansolo.jdktools.Constants.QUOTES;
 
 
 public enum Severity implements Api {
-    LOW(SeverityName.LOW.name(), SeverityName.LOW.name().toLowerCase(), 0.0, 3.9, 0.1, 3.9, 0.1, 3.9, 2),
-    MEDIUM(SeverityName.MEDIUM.name(), SeverityName.MEDIUM.name().toLowerCase(), 4.0, 6.9, 4.0, 6.9, 4.0, 6.9,3),
-    HIGH(SeverityName.HIGH.name(), SeverityName.HIGH.name().toLowerCase(), 7.0, 10.0, 7.0, 8.9, 7.0, 8.9,4),
-    CRITICAL(SeverityName.CRITICAL.name(), SeverityName.CRITICAL.name().toLowerCase(), 10.0, 10.0, 9.0, 10.0, 9.0, 10.0,5),
+    LOW(SeverityName.LOW.name(), SeverityName.LOW.name().toLowerCase(Locale.ENGLISH), 0.0, 3.9, 0.1, 3.9, 0.1, 3.9, 2),
+    MEDIUM(SeverityName.MEDIUM.name(), SeverityName.MEDIUM.name().toLowerCase(Locale.ENGLISH), 4.0, 6.9, 4.0, 6.9, 4.0, 6.9,3),
+    HIGH(SeverityName.HIGH.name(), SeverityName.HIGH.name().toLowerCase(Locale.ENGLISH), 7.0, 10.0, 7.0, 8.9, 7.0, 8.9,4),
+    CRITICAL(SeverityName.CRITICAL.name(), SeverityName.CRITICAL.name().toLowerCase(Locale.ENGLISH), 10.0, 10.0, 9.0, 10.0, 9.0, 10.0,5),
     NONE("-", "", 0, 0, 0, 0, 0, 0,1),
     NOT_FOUND("", "", 0, 0, 0, 0, 0, 0,0);
 

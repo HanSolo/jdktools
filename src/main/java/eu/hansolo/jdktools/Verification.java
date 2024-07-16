@@ -85,7 +85,7 @@ public enum Verification implements Api {
         return switch (Verification.this) {
             case YES -> Boolean.TRUE;
             case NO  -> Boolean.FALSE;
-            default  -> null;
+            default  -> Boolean.FALSE;
         };
     }
 

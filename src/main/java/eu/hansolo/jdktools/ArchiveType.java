@@ -20,8 +20,10 @@ package eu.hansolo.jdktools;
 
 import eu.hansolo.jdktools.util.OutputFormat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -125,7 +127,7 @@ public enum ArchiveType implements Api {
         };
     }
 
-    public List<String> getFileEndings() { return fileEndings; }
+    public List<String> getFileEndings() { return new ArrayList<>(fileEndings); }
 
     /**
      * Returns ArchiveType parsed from a given filename
@@ -136,7 +138,7 @@ public enum ArchiveType implements Api {
         if (null == filename || filename.isEmpty()) { return ArchiveType.NONE; }
         for (ArchiveType archiveType : values()) {
             for (String ending : archiveType.getFileEndings()) {
-                if (filename.toLowerCase().endsWith(ending)) { return archiveType; }
+                if (filename.toLowerCase(Locale.ENGLISH).endsWith(ending)) { return archiveType; }
             }
         }
         return ArchiveType.NONE;

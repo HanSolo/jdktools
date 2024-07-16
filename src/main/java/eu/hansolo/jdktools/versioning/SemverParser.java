@@ -162,7 +162,7 @@ public class SemverParser {
 
         // Validate prerelease
         Error err1;
-        if (null != pre1 && !pre1.isEmpty()) {
+        if (!pre1.isEmpty()) {
             String[] eparts = pre1.split("\\.");
             /*
             if (eparts.length > 0 && (eparts[0].equalsIgnoreCase("-ea") ||
@@ -317,7 +317,7 @@ public class SemverParser {
 
             // Validate prerelease
             Error err2;
-            if (null != pre2 && !pre2.isEmpty()) {
+            if (!pre2.isEmpty()) {
                 String[] eparts = pre2.split("\\.");
                 /*
                 if (eparts.length > 0 && (eparts[0].equalsIgnoreCase("-ea") ||

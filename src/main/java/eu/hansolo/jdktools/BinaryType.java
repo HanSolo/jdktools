@@ -2,8 +2,10 @@ package eu.hansolo.jdktools;
 
 import eu.hansolo.jdktools.util.OutputFormat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -78,7 +80,7 @@ public enum BinaryType implements Api {
         }
     }
 
-    public List<ArchiveType> getArchiveTypes() { return archiveTypes; }
+    public List<ArchiveType> getArchiveTypes() { return new ArrayList<>(archiveTypes); }
 
     /**
      * Returns BinaryType parsed from a given filename
@@ -90,7 +92,7 @@ public enum BinaryType implements Api {
         for (BinaryType binaryType : values()) {
             for (ArchiveType archiveType : binaryType.getArchiveTypes()) {
                 for (String ending : archiveType.getFileEndings()) {
-                    if (filename.toLowerCase().endsWith(ending)) { return binaryType; }
+                    if (filename.toLowerCase(Locale.ENGLISH).endsWith(ending)) { return binaryType; }
                 }
             }
         }

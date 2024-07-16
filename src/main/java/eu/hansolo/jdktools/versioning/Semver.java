@@ -24,6 +24,7 @@ import eu.hansolo.jdktools.util.Helper;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -121,8 +122,8 @@ public class Semver implements Comparable<Semver> {
 
         if (!this.pre.isEmpty() && !this.pre.startsWith("-")) { throw new IllegalArgumentException("pre-release argument has to start with \"-\""); }
         if (!this.metadata.isEmpty() && !this.metadata.startsWith("+")) { throw new IllegalArgumentException("metadata argument has to start with \"+\""); }
-        if (ReleaseStatus.EA == this.releaseStatus && !this.pre.isEmpty() && !this.pre.toLowerCase().startsWith("-ea")) { throw new IllegalArgumentException("ReleaseStatus and pre-release argument cannot be different"); }
-        if (ReleaseStatus.GA == this.releaseStatus && !this.pre.isEmpty() && this.pre.toLowerCase().startsWith("-ea")) { throw new IllegalArgumentException("ReleaseStatus and pre-release argument cannot be different"); }
+        if (ReleaseStatus.EA == this.releaseStatus && !this.pre.isEmpty() && !this.pre.toLowerCase(Locale.ENGLISH).startsWith("-ea")) { throw new IllegalArgumentException("ReleaseStatus and pre-release argument cannot be different"); }
+        if (ReleaseStatus.GA == this.releaseStatus && !this.pre.isEmpty() && this.pre.toLowerCase(Locale.ENGLISH).startsWith("-ea")) { throw new IllegalArgumentException("ReleaseStatus and pre-release argument cannot be different"); }
 
         // Extract metadata e.g. build number
         final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);

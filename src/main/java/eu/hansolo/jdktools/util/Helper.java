@@ -28,6 +28,7 @@ import eu.hansolo.jdktools.versioning.VersionNumber;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.MatchResult;
@@ -112,7 +113,7 @@ public class Helper {
     }
 
     public static final OperatingSystem getOperatingSystem() {
-        String os = System.getProperty("os.name").toLowerCase();
+        String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
         if (os.contains("win")) {
             return OperatingSystem.WINDOWS;
         } else if (os.contains("apple") || os.contains("mac")) {
@@ -123,8 +124,13 @@ public class Helper {
             try {
                 final ProcessBuilder processBuilder = new ProcessBuilder(DETECT_ALPINE_CMDS);
                 final Process        process        = processBuilder.start();
-                final String         result         = new BufferedReader(new InputStreamReader(process.getInputStream())).lines().collect(Collectors.joining("\n"));
-                return null == result ? OperatingSystem.LINUX : result.equals("1") ? OperatingSystem.ALPINE_LINUX : OperatingSystem.LINUX;
+                String result;
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()))) {
+                    result = reader.lines().collect(Collectors.joining("\n"));
+                } catch (IOException ex) {
+                    result = "";
+                }
+                return null == result || result.isEmpty() ? OperatingSystem.LINUX : result.equals("1") ? OperatingSystem.ALPINE_LINUX : OperatingSystem.LINUX;
             } catch (IOException e) {
                 e.printStackTrace();
                 return OperatingSystem.LINUX;
@@ -138,14 +144,14 @@ public class Helper {
 
     public static final Architecture getArchitecture() {
         final String arch = System.getProperty("os.arch").toLowerCase(Locale.ENGLISH);
-        if (arch.contains("sparc")) return Architecture.SPARC;
+        if (arch.contains("sparc"))                           return Architecture.SPARC;
         if (arch.contains("amd64") || arch.contains("86_64")) return Architecture.AMD64;
-        if (arch.contains("86")) return Architecture.X86;
-        if (arch.contains("s390x")) return Architecture.S390X;
-        if (arch.contains("ppc64")) return Architecture.PPC64;
-        if (arch.contains("arm") && arch.contains("64")) return Architecture.AARCH64;
-        if (arch.contains("arm")) return Architecture.ARM;
-        if (arch.contains("aarch64")) return Architecture.AARCH64;
+        if (arch.contains("86"))                              return Architecture.X86;
+        if (arch.contains("s390x"))                           return Architecture.S390X;
+        if (arch.contains("ppc64"))                           return Architecture.PPC64;
+        if (arch.contains("arm") && arch.contains("64"))      return Architecture.AARCH64;
+        if (arch.contains("arm"))                             return Architecture.ARM;
+        if (arch.contains("aarch64"))                         return Architecture.AARCH64;
         return Architecture.NOT_FOUND;
     }
 
@@ -154,7 +160,12 @@ public class Helper {
         try {
             final ProcessBuilder processBuilder = OperatingSystem.WINDOWS == operatingSystem ? new ProcessBuilder(WIN_DETECT_ARCH_CMDS) : new ProcessBuilder(UX_DETECT_ARCH_CMDS);
             final Process        process        = processBuilder.start();
-            final String         result         = new BufferedReader(new InputStreamReader(process.getInputStream())).lines().collect(Collectors.joining("\n"));
+            String result;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()))) {
+                result = reader.lines().collect(Collectors.joining("\n"));
+            } catch (IOException ex) {
+                result = "";
+            }
             switch(operatingSystem) {
                 case WINDOWS -> {
                     ARCHITECTURE_MATCHER.reset(result);
@@ -167,14 +178,19 @@ public class Helper {
                         return new OsArcMode(operatingSystem, Architecture.NOT_FOUND, OperatingMode.NOT_FOUND);
                     }
                 }
-                case MACOS -> {
+                case MACOS   -> {
                     Architecture         architecture    = Architecture.fromText(result);
                     final ProcessBuilder processBuilder1 = new ProcessBuilder(MAC_DETECT_ROSETTA2_CMDS);
                     final Process        process1        = processBuilder1.start();
-                    final String         result1         = new BufferedReader(new InputStreamReader(process1.getInputStream())).lines().collect(Collectors.joining("\n"));
+                    String result1;
+                    try (BufferedReader reader1 = new BufferedReader(new InputStreamReader(process1.getInputStream(), Charset.defaultCharset()))) {
+                        result1 = reader1.lines().collect(Collectors.joining("\n"));
+                    } catch (IOException ex) {
+                        result1 = "";
+                    }
                     return new OsArcMode(operatingSystem, architecture, result1.equals("1") ? OperatingMode.EMULATED : OperatingMode.NATIVE);
                 }
-                case LINUX -> {
+                case LINUX   -> {
                     return new OsArcMode(operatingSystem, Architecture.fromText(result), OperatingMode.NATIVE);
                 }
             }
