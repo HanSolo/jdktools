@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
 }
 
 
@@ -58,6 +58,7 @@ jar {
                 'Bundle-Name'           : project.name,
                 'Bundle-License'        : 'https://www.apache.org/licenses/LICENSE-2.0;description=Apache License Version 2.0;link=https://spdx.org/licenses/Apache-2.0.html',
                 'Bundle-Description'    : description,
+                'Bundle-Version'        : project.version,
                 'Bundle-SymbolicName'   : 'eu.hansolo.jdktools',
                 'Export-Package'        : 'eu.hansolo.jdktools,eu.hansolo.jdktools.scopes,eu.hansolo.jdktools.util,eu.hansolo.jdktools.versioning',
                 'Class-Path'            : configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')

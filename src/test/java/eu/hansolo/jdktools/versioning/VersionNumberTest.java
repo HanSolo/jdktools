@@ -247,10 +247,12 @@ class VersionNumberTest {
         final VersionNumber versionNumber42 = new VersionNumber(23, null, null, null, null, null, 12, ReleaseStatus.GA);
         final VersionNumber versionNumber43 = new VersionNumber(22, 0, 0, 0, null, null, 28, ReleaseStatus.EA);
 
-        //System.out.println(versionNumber43String);
-        //System.out.println("Correct: " + versionNumber43.toString(OutputFormat.FULL, true, true));
-        //System.out.println("Parsed : " + VersionNumber.fromText(versionNumber43String).toString(OutputFormat.FULL, true, true));
-        //System.out.println("------------------------");
+        /*
+        System.out.println(versionNumber43String);
+        System.out.println("Correct: " + versionNumber43.toString(OutputFormat.FULL, true, true));
+        System.out.println("Parsed : " + VersionNumber.fromText(versionNumber43String).toString(OutputFormat.FULL, true, true));
+        System.out.println("------------------------");
+        */
 
         assert versionNumber1.compareTo(VersionNumber.fromText(versionNumber1String))   == 0;
         assert versionNumber2.compareTo(VersionNumber.fromText(versionNumber2String))   == 0;
