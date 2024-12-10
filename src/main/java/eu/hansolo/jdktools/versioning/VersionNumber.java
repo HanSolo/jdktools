@@ -183,15 +183,18 @@ public class VersionNumber implements Comparable<VersionNumber> {
             throw new IllegalArgumentException("Feature version number cannot be null");
         }
         versionBuilder.append(".").append(interim.isPresent() ? interim.getAsInt() : "0");
-        versionBuilder.append(".").append(update.isPresent() ? update.getAsInt() : "0");
-        versionBuilder.append(".").append(patch.isPresent() ? patch.getAsInt() : "0");
-        versionBuilder.append(".").append(fifth.isPresent() ? fifth.getAsInt() : "0");
-        versionBuilder.append(".").append(sixth.isPresent() ? sixth.getAsInt() : "0");
+        versionBuilder.append(".").append(update.isPresent()  ? update.getAsInt()  : "0");
+        versionBuilder.append(".").append(patch.isPresent()   ? patch.getAsInt()   : "0");
+        versionBuilder.append(".").append(fifth.isPresent()   ? fifth.getAsInt()   : "0");
+        versionBuilder.append(".").append(sixth.isPresent()   ? sixth.getAsInt()   : "0");
         return versionBuilder.toString();
     }
 
     public static VersionNumber fromText(final String text) throws IllegalArgumentException {
-        return fromText(text, 0);
+        return fromText(text, 0, true);
+    }
+    public static VersionNumber fromText(final String text, final boolean isJavaVersion) throws IllegalArgumentException {
+        return fromText(text, 0, isJavaVersion);
     }
     /**
      * Returns a version number parsed from the given text. If the matcher finds more than 1 result, the
@@ -203,6 +206,9 @@ public class VersionNumber implements Comparable<VersionNumber> {
      * @throws IllegalArgumentException Throws IllegalArgumentException in case the given text was null or empty
      */
     public static VersionNumber fromText(final String text, final int resultToMatch) throws IllegalArgumentException {
+        return fromText(text, resultToMatch, true);
+    }
+    public static VersionNumber fromText(final String text, final int resultToMatch, final boolean isJavaVersion) throws IllegalArgumentException {
         if (null == text || text.isEmpty()) {
             throw new IllegalArgumentException("No version number can be parsed because given text is null or empty.");
         }
@@ -247,7 +253,14 @@ public class VersionNumber implements Comparable<VersionNumber> {
         //System.out.println("stripped: " + tmp.get());
 
         // Remove leading "1." to get correct version number e.g. 1.8u262 -> 8u262
-        String version = tmp.get().startsWith("1.") ? tmp.get().replace("1.", "") : tmp.get();
+        String version = tmp.get();
+        String[] tmpParts = tmp.get().split("\\.");
+        if (isJavaVersion && tmpParts.length > 1) {
+            if (tmpParts[0].equals("1") && Integer.parseInt(tmpParts[1].substring(0, 1)) <= 8) {
+                version = tmp.get().startsWith("1.") ? tmp.get().replace("1.", "") : tmp.get();
+            }
+        }
+        //String version = tmp.get().startsWith("1.") ? tmp.get().replace("1.", "") : tmp.get();
 
         final Matcher           versionNoMatcher = VERSION_NO_PATTERN.matcher(version);
         final List<MatchResult> results          = versionNoMatcher.results().toList();
@@ -432,7 +445,6 @@ public class VersionNumber implements Comparable<VersionNumber> {
             if (versionNumber.getSixth().isEmpty()) {
                 versionNumber.setSixth(0);
             }
-
             numbersFound.add(versionNumber);
         }
 
