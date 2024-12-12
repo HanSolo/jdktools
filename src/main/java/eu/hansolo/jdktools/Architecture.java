@@ -41,11 +41,14 @@ public enum Architecture implements Api {
     AARCH32("AARCH32", "aarch32", Bitness.BIT_32, false) {
         @Override public List<Architecture> getSynonyms() { return List.of(Architecture.ARM, Architecture.ARM32); }
     },
-    ARM("ARM", "arm", Bitness.BIT_32, true) {
-        @Override public List<Architecture> getSynonyms() { return List.of(Architecture.ARM32, Architecture.AARCH32); }
+    ARM64("ARM64", "arm64", Bitness.BIT_64, true) {
+        @Override public List<Architecture> getSynonyms() { return List.of(Architecture.AARCH64); }
     },
     ARM32("ARM32", "arm32", Bitness.BIT_32, false) {
         @Override public List<Architecture> getSynonyms() { return List.of(Architecture.ARM, Architecture.AARCH32); }
+    },
+    ARM("ARM", "arm", Bitness.BIT_32, true) {
+        @Override public List<Architecture> getSynonyms() { return List.of(Architecture.ARM32, Architecture.AARCH32); }
     },
     ARMHF("ARMHF", "armhf", Bitness.BIT_32, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
@@ -53,22 +56,19 @@ public enum Architecture implements Api {
     ARMEL("ARMEL", "armel", Bitness.BIT_32, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
-    ARM64("ARM64", "arm64", Bitness.BIT_64, true) {
-        @Override public List<Architecture> getSynonyms() { return List.of(Architecture.AARCH64); }
-    },
     MIPS("MIPS", "mips", Bitness.BIT_32, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
     MIPSEL("MIPS EL", "mipsel", Bitness.BIT_32, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
-    PPC("Power PC", "ppc", Bitness.BIT_32, true) {
+    PPC64LE("PPC64LE", "ppc64le", Bitness.BIT_64, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
     PPC64("PPC64", "ppc64", Bitness.BIT_64, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
-    PPC64LE("PPC64LE", "ppc64le", Bitness.BIT_64, true) {
+    PPC("Power PC", "ppc", Bitness.BIT_32, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
     RISCV64("RISCv64", "riscv64", Bitness.BIT_64, true) {
@@ -77,10 +77,10 @@ public enum Architecture implements Api {
     S390X("S390X", "s390x", Bitness.BIT_64, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
-    SPARC("Sparc", "sparc", Bitness.BIT_32, true) {
+    SPARCV9("Sparc V9", "sparcv9", Bitness.BIT_64, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
-    SPARCV9("Sparc V9", "sparcv9", Bitness.BIT_64, true) {
+    SPARC("Sparc", "sparc", Bitness.BIT_32, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     },
     X64("X64", "x64", Bitness.BIT_64, true) {
@@ -98,11 +98,11 @@ public enum Architecture implements Api {
     I686("I686", "i386", Bitness.BIT_32, false) {
         @Override public List<Architecture> getSynonyms() { return List.of(Architecture.X86, Architecture.X32, Architecture.I386, Architecture.I686); }
     },
-    X86("X86", "x86", Bitness.BIT_32, true) {
-        @Override public List<Architecture> getSynonyms() { return List.of(Architecture.X32, Architecture.I386, Architecture.I586, Architecture.I686); }
-    },
     X86_64("X86_64", "x86_64", Bitness.BIT_64, false) {
         @Override public List<Architecture> getSynonyms() { return List.of(Architecture.X64, Architecture.AMD64); }
+    },
+    X86("X86", "x86", Bitness.BIT_32, true) {
+        @Override public List<Architecture> getSynonyms() { return List.of(Architecture.X32, Architecture.I386, Architecture.I586, Architecture.I686); }
     },
     AMD64("AMD64", "amd64", Bitness.BIT_64, true) {
         @Override public List<Architecture> getSynonyms() { return List.of(Architecture.X64, Architecture.X86_64); }
@@ -208,10 +208,10 @@ public enum Architecture implements Api {
         switch (architecture) {
             case AARCH64 -> { return List.of("aarch64", "AARCH64"); }
             case AMD64   -> { return List.of("amd64", "AMD64"); }
+            case ARM64   -> { return List.of("arm64", "ARM64", "armv8", "ARMV8"); }
             case ARM     -> { return List.of("aarch32", "AARCH32", "arm32", "ARM32", "armv6", "ARMV6", "armv7l", "ARMV7L", "armv7", "ARMV7", "arm", "ARM"); }
             case ARMEL   -> { return List.of("armel", "ARMEL"); }
             case ARMHF   -> { return List.of("armhf", "ARMHF"); }
-            case ARM64   -> { return List.of("arm64", "ARM64", "armv8", "ARMV8"); }
             case MIPS    -> { return List.of("mips", "MIPS"); }
             case MIPSEL  -> { return List.of("mipsel", "MIPSEL"); }
             case PPC     -> { return List.of("ppc", "PPC"); }

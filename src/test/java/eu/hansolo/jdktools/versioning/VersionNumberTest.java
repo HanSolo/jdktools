@@ -203,6 +203,7 @@ class VersionNumberTest {
         final String versionNumber42String = "23.0-b12";                          // 23.0 preBuild 12
         final String versionNumber43String = "22-beta+28";                        // 22 ea build 28
         final String versionNumber44String = "1.1.0";                             // 1.0.0
+        final String versionNumber45String = "17.0.13-linux_arm64.deb";           // 17.0.13
 
         final VersionNumber versionNumber1  = new VersionNumber(8);
         final VersionNumber versionNumber2  = new VersionNumber(8, 2);
@@ -248,6 +249,7 @@ class VersionNumberTest {
         final VersionNumber versionNumber42 = new VersionNumber(23, null, null, null, null, null, 12, ReleaseStatus.GA);
         final VersionNumber versionNumber43 = new VersionNumber(22, 0, 0, 0, null, null, 28, ReleaseStatus.EA);
         final VersionNumber versionNumber44 = new VersionNumber(1, 1, 0);
+        final VersionNumber versionNumber45 = new VersionNumber(17, 0, 13);
 
         /*
         System.out.println(versionNumber43String);
@@ -300,6 +302,7 @@ class VersionNumberTest {
         assert versionNumber42.compareTo(VersionNumber.fromText(versionNumber42String)) == 0;
         assert versionNumber43.compareTo(VersionNumber.fromText(versionNumber43String)) == 0;
         assert versionNumber44.compareTo(VersionNumber.fromText(versionNumber44String, false)) == 0;
+        assert versionNumber45.compareTo(VersionNumber.fromText(versionNumber45String)) == 0;
 
         assert VersionNumber.fromText(versionNumber27String).toString().equals(versionNumber27.toString());
         assert VersionNumber.fromText(versionNumber31String).toString(OutputFormat.REDUCED, true, true).equals(versionNumber31.toString(OutputFormat.REDUCED, true, true));
