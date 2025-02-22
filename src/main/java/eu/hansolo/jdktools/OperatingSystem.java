@@ -128,7 +128,7 @@ public enum OperatingSystem implements Api {
             case "-solaris", "solaris", "SOLARIS", "Solaris" -> SOLARIS;
             case "-qnx", "qnx", "QNX" -> QNX;
             case "-aix", "aix", "AIX" -> AIX;
-            case "darwin", "-darwin", "-macosx", "-MACOSX", "MacOS", "Mac OS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX", "macosx", "MACOSX", "Mac OSX", "mac osx" -> MACOS;
+            case "darwin", "-darwin", "-macosx", "-MACOSX", "MacOS", "Mac OS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX", "macosx", "MACOSX", "Mac OSX", "mac osx", "Mac OS X" -> MACOS;
             case "-win", "windows", "Windows", "WINDOWS", "win", "Win", "WIN" -> WINDOWS;
             default -> NOT_FOUND;
         };
