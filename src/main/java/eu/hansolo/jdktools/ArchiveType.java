@@ -47,6 +47,7 @@ public enum ArchiveType implements Api {
     SRC_TAR("src.tar.gz", "src_tar",".src.tar.gz", ".source.tar.gz", ".source.tar.gz"),
     TAR_GZ("tar.gz", "tar.gz", ".tar.gz"),
     TAR_XZ("tar.xz", "tar.xz", ".tar.xz"),
+    TAP_ZIP("tap.zip", "tap.zip", ".tap.zip"),
     TAR("tar", "tar", ".tar"),
     TGZ("tgz", "tgz", ".tgz"),
     TAR_Z("tar.Z", "tar.z", ".tar.Z"),
@@ -118,12 +119,13 @@ public enum ArchiveType implements Api {
             case "rpm", ".rpm", "RPM" -> RPM;
             case "src.tar.gz", ".src.tar.gz", "source.tar.gz", "SRC.TAR.GZ", "src_tar", "SRC_TAR" -> SRC_TAR;
             case "tar.Z", ".tar.Z", "TAR.Z", "tar.z" -> TAR_Z;
-            case "tar.gz", ".tar.gz", "TAR.GZ" -> TAR_GZ;
-            case "tar.xz", ".tar.xz", "TAR.XZ" -> TAR_XZ;
+            case "tar.gz", ".tar.gz", "TAR.GZ"       -> TAR_GZ;
+            case "tar.xz", ".tar.xz", "TAR.XZ"       -> TAR_XZ;
+            case "tap.zip", ".tap.zip", "TAP.ZIP"    -> TAP_ZIP;
             case "tgz", ".tgz", "TGZ" -> TGZ;
             case "tar", ".tar", "TAR" -> TAR;
             case "zip", ".zip", "ZIP" -> ZIP;
-            default -> NOT_FOUND;
+            default                   -> NOT_FOUND;
         };
     }
 
@@ -149,4 +151,12 @@ public enum ArchiveType implements Api {
      * @return the values of the enum as list
      */
     public static List<ArchiveType> getAsList() { return Arrays.asList(values()); }
+
+    /**
+     * Returns the values of the enum without NONE and NOT_FOUND as list
+     * @return the values of the enum without NONE and NOT_FOUND as list
+     */
+    public static List<ArchiveType> getAsListWithoutNotFound() {
+        return Arrays.asList(Arrays.stream(values()).filter(a -> a != ArchiveType.NONE).filter(a -> a != ArchiveType.NOT_FOUND).toArray(ArchiveType[]::new));
+    }
 }
