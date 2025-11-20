@@ -2,7 +2,6 @@ import java.text.SimpleDateFormat
 
 plugins {
     id 'java-library'
-    id 'org.javamodularity.moduleplugin' version '1.8.15'
     id 'net.nemerosa.versioning'         version '3.1.0'
     id 'com.vanniktech.maven.publish' version '0.34.0'
 }
@@ -27,14 +26,16 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+    testImplementation platform('org.junit:junit-bom:5.10.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 
 jar {
     from {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        configurations.runtimeClasspath.collect {  it.isDirectory() ? it : zipTree(it)  }
+        //duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        //configurations.runtimeClasspath.collect {  it.isDirectory() ? it : zipTree(it)  }
     } {
         exclude "META-INF/*.SF"
         exclude "META-INF/*.DSA"
@@ -73,13 +74,15 @@ if (JavaVersion.current().isJava8Compatible()) {
 
 
 // create one jar for the javadoc
-task javadocJar(type: Jar, dependsOn: javadoc) {
+tasks.register('javadocJar', Jar) {
+    dependsOn tasks.javadoc
     archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
 // create one jar for the source files
-task sourcesJar(type: Jar, dependsOn: classes) {
+tasks.register('sourcesJar', Jar) {
+    dependsOn tasks.classes
     archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
@@ -119,4 +122,8 @@ mavenPublishing {
             developerConnection = "scm:git:ssh://git@github.com/HanSolo/jdktools.git"
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
