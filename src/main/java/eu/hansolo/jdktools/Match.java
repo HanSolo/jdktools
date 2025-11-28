@@ -43,12 +43,14 @@ public enum Match implements Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     Match(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -99,5 +101,15 @@ public enum Match implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<Match> getAsList() { return Arrays.asList(values()); }
+    public static List<Match> getAsList() { return getAsList(false); }
+    public static List<Match> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(match -> match != Match.NONE)
+                         .filter(match -> match != Match.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

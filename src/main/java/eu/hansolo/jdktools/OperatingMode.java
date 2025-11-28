@@ -43,12 +43,14 @@ public enum OperatingMode implements Api {
     private final String  apiString;
 
 
+    // ******************** Constructor ***************************************
     OperatingMode(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     public String getUiString() {
         return this.uiString;
     }
@@ -67,29 +69,6 @@ public enum OperatingMode implements Api {
 
     public OperatingMode[] getAll() {
         return values();
-    }
-
-
-    /**
-     * Returns OperatingMode parsed from a given text
-     * @param text Name of the operating mode to parse usually the api_string of a operating mode e.g. 'emulated'
-     * @return OperatingMode parsed from a given text
-     */
-    public static OperatingMode fromText(final String text) {
-        if (null == text) { return NOT_FOUND; }
-        return switch (text) {
-            case "native", "NATIVE", "Native"       -> NATIVE;
-            case "emulated", "EMULATED", "Emulated" -> EMULATED;
-            default                                 -> NOT_FOUND;
-        };
-    }
-
-    /**
-     * Returns the values of the enum as list
-     * @return the values of the enum as list
-     */
-    public static List<OperatingMode> getAsList() {
-        return Arrays.asList(values());
     }
 
     public String toString(final OutputFormat outputFormat) {
@@ -112,7 +91,36 @@ public enum OperatingMode implements Api {
         return msgBuilder.toString();
     }
 
-    @Override public String toString() {
-        return toString(OutputFormat.REDUCED_COMPRESSED);
+    @Override public String toString() { return toString(OutputFormat.REDUCED_COMPRESSED); }
+
+
+    /**
+     * Returns OperatingMode parsed from a given text
+     * @param text Name of the operating mode to parse usually the api_string of a operating mode e.g. 'emulated'
+     * @return OperatingMode parsed from a given text
+     */
+    public static OperatingMode fromText(final String text) {
+        if (null == text) { return NOT_FOUND; }
+        return switch (text) {
+            case "native", "NATIVE", "Native"       -> NATIVE;
+            case "emulated", "EMULATED", "Emulated" -> EMULATED;
+            default                                 -> NOT_FOUND;
+        };
+    }
+
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
+    public static List<OperatingMode> getAsList() { return getAsList(false); }
+    public static List<OperatingMode> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(operatingMode -> operatingMode != OperatingMode.NONE)
+                         .filter(operatingMode -> operatingMode != OperatingMode.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
     }
 }

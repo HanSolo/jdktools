@@ -53,6 +53,7 @@ public enum Severity implements Api {
     private final Integer order;
 
 
+    // ******************** Constructor ***************************************
     Severity(final String uiString, final String apiString, final double minScoreV2, final double maxScoreV2, final double minScoreV3, final double maxScoreV3, final double minScoreV4, final double maxScoreV4, final Integer order) {
         this.uiString   = uiString;
         this.apiString  = apiString;
@@ -65,6 +66,8 @@ public enum Severity implements Api {
         this.order      = order;
     }
 
+
+    // ******************** Methods *******************************************
     public double getMinScoreV2() { return minScoreV2; }
     public double getMaxScoreV2() { return maxScoreV2; }
 
@@ -76,6 +79,9 @@ public enum Severity implements Api {
 
     public int getOrder() { return order; }
 
+    public int compareToSeverity(final Severity other) {
+        return order.compareTo(other.order);
+    }
 
     @Override public String getUiString() { return uiString; }
 
@@ -167,9 +173,15 @@ public enum Severity implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<Severity> getAsList() { return Arrays.asList(values()); }
-
-    public int compareToSeverity(final Severity other) {
-        return order.compareTo(other.order);
+    public static List<Severity> getAsList() { return getAsList(false); }
+    public static List<Severity> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(severity -> severity != Severity.NONE)
+                         .filter(severity -> severity != Severity.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
     }
 }

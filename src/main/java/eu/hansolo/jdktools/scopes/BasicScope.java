@@ -43,12 +43,14 @@ public enum BasicScope implements Scope, Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     BasicScope(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -80,6 +82,7 @@ public enum BasicScope implements Scope, Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
     /**
      * Return Scope parsed from given text
      * @param text Name of the scope to parse usually the api_string of a scope e.g. 'public'
@@ -97,5 +100,15 @@ public enum BasicScope implements Scope, Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<BasicScope> getAsList() { return Arrays.asList(values()); }
+    public static List<BasicScope> getAsList() { return getAsList(false); }
+    public static List<BasicScope> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(basicScope -> basicScope != BasicScope.NONE)
+                         .filter(basicScope -> basicScope != BasicScope.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

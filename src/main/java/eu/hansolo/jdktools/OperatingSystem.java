@@ -74,6 +74,7 @@ public enum OperatingSystem implements Api {
     private final LibCType libCType;
 
 
+    // ******************** Constructor ***************************************
     OperatingSystem(final String uiString, final String apiString, final LibCType libCType) {
         this.uiString  = uiString;
         this.apiString = apiString;
@@ -81,9 +82,12 @@ public enum OperatingSystem implements Api {
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     public String getApiString() { return apiString; }
+
+    public LibCType getLibCType() { return libCType; }
 
     @Override public OperatingSystem getDefault() { return OperatingSystem.NONE; }
 
@@ -114,6 +118,22 @@ public enum OperatingSystem implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+    public abstract List<OperatingSystem> getSynonyms();
+
+
+    public static List<String> getAcronyms(final OperatingSystem operatingSystem) {
+        switch (operatingSystem) {
+            case LINUX      -> { return List.of("linux", "Linux", "LINUX", "unix", "UNIX", "Unix"); }
+            case LINUX_MUSL -> { return List.of("linux-musl", "linux_musl", "Linux-Musl", "Linux_Musl", "LINUX_MUSL", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX"); }
+            case FREE_BSD   -> { return List.of("free_bsd", "FREE_BSD", "free-bsd", "FREE-BSD","freebsd", "FREEBSD", "FreeBSD", "freeBSD"); }
+            case SOLARIS    -> { return List.of("solaris", "SOLARIS", "Solaris"); }
+            case QNX        -> { return List.of("qnx", "QNX"); }
+            case AIX        -> { return List.of("aix", "AIX"); }
+            case MACOS      -> { return List.of("darwin", "macosx", "MACOSX", "MacOS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX"); }
+            case WINDOWS    -> { return List.of("win", "windows", "Windows", "WINDOWS", "Win", "WIN"); }
+            default         -> { return new ArrayList<>(); }
+        }
+    }
 
     /**
      * Returns OperatingSystem parsed from a given text
@@ -135,27 +155,19 @@ public enum OperatingSystem implements Api {
         };
     }
 
-    public static List<String> getAcronyms(final OperatingSystem operatingSystem) {
-        switch (operatingSystem) {
-            case LINUX      -> { return List.of("linux", "Linux", "LINUX", "unix", "UNIX", "Unix"); }
-            case LINUX_MUSL -> { return List.of("linux-musl", "linux_musl", "Linux-Musl", "Linux_Musl", "LINUX_MUSL", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX"); }
-            case FREE_BSD   -> { return List.of("free_bsd", "FREE_BSD", "free-bsd", "FREE-BSD","freebsd", "FREEBSD", "FreeBSD", "freeBSD"); }
-            case SOLARIS    -> { return List.of("solaris", "SOLARIS", "Solaris"); }
-            case QNX        -> { return List.of("qnx", "QNX"); }
-            case AIX        -> { return List.of("aix", "AIX"); }
-            case MACOS      -> { return List.of("darwin", "macosx", "MACOSX", "MacOS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX"); }
-            case WINDOWS    -> { return List.of("win", "windows", "Windows", "WINDOWS", "Win", "WIN"); }
-            default         -> { return new ArrayList<>(); }
-        }
-    }
-
-    public LibCType getLibCType() { return libCType; }
-
     /**
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<OperatingSystem> getAsList() { return Arrays.asList(values()); }
-
-    public abstract List<OperatingSystem> getSynonyms();
+    public static List<OperatingSystem> getAsList() { return getAsList(false); }
+    public static List<OperatingSystem> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(operatingSystem -> operatingSystem != OperatingSystem.NONE)
+                         .filter(operatingSystem -> operatingSystem != OperatingSystem.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

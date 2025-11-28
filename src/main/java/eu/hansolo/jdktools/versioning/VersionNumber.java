@@ -52,6 +52,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
     private             Optional<ReleaseStatus> releaseStatus;
 
 
+    // ******************** Constructors **************************************
     public VersionNumber() {
         this(OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), Optional.empty());
     }
@@ -121,6 +122,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
     }
 
 
+    // ******************** Methods *******************************************
     public OptionalInt getFeature() { return feature; }
     public void setFeature(final Integer feature) throws IllegalArgumentException {
         if (null == feature) { throw new IllegalArgumentException("Feature version cannot be null"); }

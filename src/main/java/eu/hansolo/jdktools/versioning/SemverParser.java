@@ -33,9 +33,11 @@ public class SemverParser {
     private static final Pattern SEM_VER_PATTERN = Pattern.compile("^(<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?((<|<=|>|>=|=)?v?([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(\\.[0-9]+)?(-([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?)?$");
     private static final Pattern OPT_PATTERN     = Pattern.compile("(([0-9]+(\\.[0-9]+)?))?(\\-([a-zA-Z0-9\\-]*))?");
 
+    // ******************** Constructor ***************************************
     private SemverParser() {}
 
 
+    // ******************** Methods *******************************************
     public static SemverParsingResult fromText(final String text) {
         SemverParsingResult parsingResult = new SemverParsingResult();
 

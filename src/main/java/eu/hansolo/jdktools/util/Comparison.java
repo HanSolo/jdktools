@@ -31,10 +31,14 @@ public enum Comparison {
 
     private final String operator;
 
+
+    // ******************** Constructor ***************************************
     Comparison(final String operator) {
         this.operator = operator;
     }
 
+
+    // ******************** Methods *******************************************
     public String getOperator() { return operator; }
 
     /**

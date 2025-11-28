@@ -44,12 +44,14 @@ public enum Verification implements Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     Verification(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -89,6 +91,7 @@ public enum Verification implements Api {
         };
     }
 
+
     /**
      * Returns Verification parsed from a given text
      * @param text Name of the verification to parse usually the api_string of a verification e.g. 'yes'
@@ -97,10 +100,10 @@ public enum Verification implements Api {
     public static Verification fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         return switch (text) {
-            case "yes", "YES", "Yes", "y", "Y", "true", "TRUE" -> YES;
-            case "no", "NO", "No", "n", "N", "false", "FALSE"  -> NO;
-            case "unknown", "UNKNOWN", "Unknown"               -> UNKNOWN;
-            default                                            -> NOT_FOUND;
+            case "yes", "YES", "Yes", "y", "Y", "true", "TRUE", "1" -> YES;
+            case "no", "NO", "No", "n", "N", "false", "FALSE", "0"  -> NO;
+            case "unknown", "UNKNOWN", "Unknown"                    -> UNKNOWN;
+            default                                                 -> NOT_FOUND;
         };
     }
 
@@ -108,5 +111,15 @@ public enum Verification implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<Verification> getAsList() { return Arrays.asList(values()); }
+    public static List<Verification> getAsList() { return getAsList(false); }
+    public static List<Verification> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(verification -> verification != Verification.NONE)
+                         .filter(verification -> verification != Verification.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

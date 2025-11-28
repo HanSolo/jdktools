@@ -48,6 +48,7 @@ public class SimpleMajorVersion implements Comparable<SimpleMajorVersion> {
     private              ReleaseStatus releaseStatus;
 
 
+    // ******************** Constructors **************************************
     public SimpleMajorVersion(final int majorVersion) {
         this(majorVersion, Helper.getTermOfSupport(majorVersion), ReleaseStatus.GA);
     }
@@ -59,6 +60,7 @@ public class SimpleMajorVersion implements Comparable<SimpleMajorVersion> {
     }
 
 
+    // ******************** Methods *******************************************
     public int getAsInt() { return featureVersion; }
 
     // Term of support

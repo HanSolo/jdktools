@@ -48,12 +48,14 @@ public enum HashAlgorithm implements Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     HashAlgorithm(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -109,5 +111,15 @@ public enum HashAlgorithm implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<HashAlgorithm> getAsList() { return Arrays.asList(values()); }
+    public static List<HashAlgorithm> getAsList() { return getAsList(false); }
+    public static List<HashAlgorithm> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(hashAlgorithm -> hashAlgorithm != HashAlgorithm.NONE)
+                         .filter(hashAlgorithm -> hashAlgorithm != HashAlgorithm.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

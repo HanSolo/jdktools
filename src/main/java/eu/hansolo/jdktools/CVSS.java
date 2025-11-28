@@ -7,7 +7,7 @@ public enum CVSS {
     NOT_FOUND;
 
 
-
+    // ******************** Methods *******************************************
     public static CVSS fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         switch (text) {

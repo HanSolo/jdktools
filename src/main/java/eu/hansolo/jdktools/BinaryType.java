@@ -28,6 +28,7 @@ public enum BinaryType implements Api {
     private final List<ArchiveType> archiveTypes;
 
 
+    // ******************** Constructor ***************************************
     BinaryType(final String uiString, final String apiString, final ArchiveType... archiveTypes) {
         this.uiString     = uiString;
         this.apiString    = apiString;
@@ -35,6 +36,7 @@ public enum BinaryType implements Api {
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -82,6 +84,7 @@ public enum BinaryType implements Api {
 
     public List<ArchiveType> getArchiveTypes() { return new ArrayList<>(archiveTypes); }
 
+
     /**
      * Returns BinaryType parsed from a given filename
      * @param filename Filename from which the binary type should be parsed e.g. 'zulu-18.jdk.tar.gz' -> BinaryType.PACKAGE
@@ -110,5 +113,15 @@ public enum BinaryType implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<BinaryType> getAsList() { return Arrays.asList(values()); }
+    public static List<BinaryType> getAsList() { return getAsList(false); }
+    public static List<BinaryType> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(binaryType -> binaryType != BinaryType.NONE)
+                         .filter(binaryType -> binaryType != BinaryType.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

@@ -44,12 +44,14 @@ public enum TermOfSupport implements Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     TermOfSupport(final String uiString, final String apiString) {
         this.uiString = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -101,5 +103,15 @@ public enum TermOfSupport implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<TermOfSupport> getAsList() { return Arrays.asList(values()); }
+    public static List<TermOfSupport> getAsList() { return getAsList(false); }
+    public static List<TermOfSupport> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(termOfSupport -> termOfSupport != TermOfSupport.NONE)
+                         .filter(termOfSupport -> termOfSupport != TermOfSupport.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

@@ -44,6 +44,7 @@ public enum Bitness implements Api {
     private final int    bits;
 
 
+    // ******************** Constructor ***************************************
     Bitness(final String uiString, final String apiString, final int bits) {
         this.uiString  = uiString;
         this.apiString = apiString;
@@ -51,6 +52,7 @@ public enum Bitness implements Api {
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -128,5 +130,15 @@ public enum Bitness implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<Bitness> getAsList() { return Arrays.asList(values()); }
+    public static List<Bitness> getAsList() { return getAsList(false); }
+    public static List<Bitness> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(bitness -> bitness != Bitness.NONE)
+                         .filter(bitness -> bitness != Bitness.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

@@ -45,12 +45,14 @@ public enum LibCType implements Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     LibCType(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -103,5 +105,15 @@ public enum LibCType implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<LibCType> getAsList() { return Arrays.asList(values()); }
+    public static List<LibCType> getAsList() { return getAsList(false); }
+    public static List<LibCType> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(libCType -> libCType != LibCType.NONE)
+                         .filter(libCType -> libCType != LibCType.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

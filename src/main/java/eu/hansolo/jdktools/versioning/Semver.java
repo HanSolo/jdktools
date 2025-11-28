@@ -45,6 +45,7 @@ public class Semver implements Comparable<Semver> {
     private       Comparison    comparison;
 
 
+    // ******************** Constructors **************************************
     public Semver(final VersionNumber versionNumber) {
         this(versionNumber, versionNumber.getReleaseStatus() != null && versionNumber.getReleaseStatus().isPresent() ? versionNumber.getReleaseStatus().get() : ReleaseStatus.GA, versionNumber.getReleaseStatus().isPresent() ? ReleaseStatus.EA == versionNumber.getReleaseStatus().get() ? "-ea" : "" : "", (versionNumber.getBuild() != null && versionNumber.getBuild().isPresent() && versionNumber.getBuild().getAsInt() > 0) ? "+" + versionNumber.getBuild().getAsInt() : "");
     }
@@ -141,6 +142,7 @@ public class Semver implements Comparable<Semver> {
     }
 
 
+    // ******************** Methods *******************************************
     public VersionNumber getVersionNumber() { return versionNumber; }
 
     public int getFeature() { return versionNumber.getFeature().isPresent() ? versionNumber.getFeature().getAsInt() : 0; }
@@ -303,15 +305,6 @@ public class Semver implements Comparable<Semver> {
     public boolean equalTo(final Semver semVer) {
         return compareTo(semVer) == 0;
     }
-
-
-    public static SemverParsingResult fromText(final String text) throws IllegalArgumentException {
-        SemverParsingResult result = SemverParser.fromText(text);
-        if (null != result.getError1()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError1()); }
-        if (null != result.getError2()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError2()); }
-        return result;
-    }
-
 
     private Error validatePrerelease(final String prerelease) {
         String[] eparts = prerelease.split("\\.");
@@ -530,5 +523,13 @@ public class Semver implements Comparable<Semver> {
 
     @Override public String toString() {
         return toString(true);
+    }
+
+
+    public static SemverParsingResult fromText(final String text) throws IllegalArgumentException {
+        SemverParsingResult result = SemverParser.fromText(text);
+        if (null != result.getError1()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError1()); }
+        if (null != result.getError2()) { throw new IllegalArgumentException("Error parsing Semver from text. " + result.getError2()); }
+        return result;
     }
 }

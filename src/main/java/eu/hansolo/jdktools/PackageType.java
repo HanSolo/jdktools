@@ -43,12 +43,14 @@ public enum PackageType implements Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     PackageType(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     public String getApiString() { return apiString; }
@@ -99,5 +101,15 @@ public enum PackageType implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<PackageType> getAsList() { return Arrays.asList(values()); }
+    public static List<PackageType> getAsList() { return getAsList(false); }
+    public static List<PackageType> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(packageType -> packageType != PackageType.NONE)
+                         .filter(packageType -> packageType != PackageType.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

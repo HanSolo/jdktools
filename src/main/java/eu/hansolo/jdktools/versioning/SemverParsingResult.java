@@ -29,6 +29,7 @@ public class SemverParsingResult {
     private Predicate<Semver> filter;
 
 
+    // ******************** Constructor ***************************************
     public SemverParsingResult() {
         semVer1 = null;
         error1  = null;
@@ -38,6 +39,7 @@ public class SemverParsingResult {
     }
 
 
+    // ******************** Methods *******************************************
     public Semver getSemver1() { return semVer1; }
     public void setSemver1(final Semver semVer) { semVer1 = semVer; }
 

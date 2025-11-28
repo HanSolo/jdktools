@@ -45,12 +45,14 @@ public enum SignatureType implements Api {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     SignatureType(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -82,6 +84,7 @@ public enum SignatureType implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+
     /**
      * Returns SignatureType parsed from a given text
      * @param text Name of the signature type to parse usually the api_string of a signature type e.g. 'rsa'
@@ -102,5 +105,15 @@ public enum SignatureType implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<SignatureType> getAsList() { return Arrays.asList(values()); }
+    public static List<SignatureType> getAsList() { return getAsList(false); }
+    public static List<SignatureType> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(signatureType -> signatureType != SignatureType.NONE)
+                         .filter(signatureType -> signatureType != SignatureType.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

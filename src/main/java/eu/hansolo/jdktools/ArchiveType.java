@@ -61,6 +61,7 @@ public enum ArchiveType implements Api {
     private final List<String> fileEndings;
 
 
+    // ******************** Constructor ***************************************
     ArchiveType(final String uiString, final String apiString, final String... fileEndings) {
         this.uiString    = uiString;
         this.apiString   = apiString;
@@ -68,10 +69,12 @@ public enum ArchiveType implements Api {
     }
 
 
+    // ******************** Methods *******************************************
+    public List<String> getFileEndings() { return new ArrayList<>(fileEndings); }
+
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
-
 
     @Override public ArchiveType getDefault() { return ArchiveType.NONE; }
 
@@ -99,6 +102,7 @@ public enum ArchiveType implements Api {
     }
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
+
 
     /**
      * Returns ArchiveType parsed from a given text
@@ -129,8 +133,6 @@ public enum ArchiveType implements Api {
         };
     }
 
-    public List<String> getFileEndings() { return new ArrayList<>(fileEndings); }
-
     /**
      * Returns ArchiveType parsed from a given filename
      * @param filename Filename from which the archive type should be parsed e.g. 'zulu-18.jdk.tar.gz'
@@ -150,13 +152,15 @@ public enum ArchiveType implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<ArchiveType> getAsList() { return Arrays.asList(values()); }
-
-    /**
-     * Returns the values of the enum without NONE and NOT_FOUND as list
-     * @return the values of the enum without NONE and NOT_FOUND as list
-     */
-    public static List<ArchiveType> getAsListWithoutNotFound() {
-        return Arrays.asList(Arrays.stream(values()).filter(a -> a != ArchiveType.NONE).filter(a -> a != ArchiveType.NOT_FOUND).toArray(ArchiveType[]::new));
+    public static List<ArchiveType> getAsList() { return getAsList(false); }
+    public static List<ArchiveType> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(archiveType -> archiveType != ArchiveType.NONE)
+                         .filter(archiveType -> archiveType != ArchiveType.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
     }
 }

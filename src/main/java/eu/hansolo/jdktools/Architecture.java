@@ -123,6 +123,7 @@ public enum Architecture implements Api {
     private final boolean standard;
 
 
+    // ******************** Constructor ***************************************
     Architecture(final String uiString, final String apiString, final Bitness bitness, final boolean standard) {
         this.uiString  = uiString;
         this.apiString = apiString;
@@ -130,6 +131,11 @@ public enum Architecture implements Api {
         this.standard  = standard;
     }
 
+
+    // ******************** Methods *******************************************
+    public Bitness getBitness() { return bitness; }
+
+    public boolean isStandard() { return standard; }
 
     @Override public String getUiString() { return uiString; }
 
@@ -164,6 +170,9 @@ public enum Architecture implements Api {
 
     @Override public String toString() { return toString(OutputFormat.FULL_COMPRESSED); }
 
+    public abstract List<Architecture> getSynonyms();
+
+
     /**
      * Returns Architecture parsed from a given text
      * @param text Name of the architecture to parse usually the api_string of an architecture e.g. 'x64'
@@ -194,16 +203,6 @@ public enum Architecture implements Api {
         };
     }
 
-    public Bitness getBitness() { return bitness; }
-
-    public boolean isStandard() { return standard; }
-
-    /**
-     * Returns the values of the enum as list
-     * @return the values of the enum as list
-     */
-    public static List<Architecture> getAsList() { return Arrays.asList(values()); }
-
     public static List<String> getAcronyms(final Architecture architecture) {
         switch (architecture) {
             case AARCH64 -> { return List.of("aarch64", "AARCH64"); }
@@ -228,5 +227,19 @@ public enum Architecture implements Api {
         }
     }
 
-    public abstract List<Architecture> getSynonyms();
+    /**
+     * Returns the values of the enum as list
+     * @return the values of the enum as list
+     */
+    public static List<Architecture> getAsList() { return Arrays.asList(values()); }
+    public static List<Architecture> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(architecture -> architecture != Architecture.NONE)
+                         .filter(architecture -> architecture != Architecture.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

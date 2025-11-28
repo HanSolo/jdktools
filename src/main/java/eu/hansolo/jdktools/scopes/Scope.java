@@ -24,6 +24,8 @@ public interface Scope {
         @Override public String getApiString() { return ""; }
     };
 
+
+    // ******************** Methods *******************************************
     String getUiString();
 
     String getApiString();

@@ -25,6 +25,7 @@ public class VersionNumberBuilder {
     private VersionNumber versionNumber;
 
 
+    // ******************** Constructor ***************************************
     protected VersionNumberBuilder(final Integer featureNumber) {
         if (null == featureNumber) { throw new IllegalArgumentException("featureNumber cannot be null"); }
         if (featureNumber <= 0) { throw new IllegalArgumentException("featureNumber cannot <= 0"); }
@@ -32,6 +33,7 @@ public class VersionNumberBuilder {
     }
 
 
+    // ******************** Methods *******************************************
     public static VersionNumberBuilder create(final Integer featureNumber) throws IllegalArgumentException {
         if (null == featureNumber) { throw new IllegalArgumentException("Feature version cannot be null"); }
         if (0 >= featureNumber) { throw new IllegalArgumentException("Feature version cannot be smaller than 0 (" + featureNumber + ")"); }

@@ -30,12 +30,14 @@ public enum UsageScope implements Scope {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     UsageScope(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -59,5 +61,14 @@ public enum UsageScope implements Scope {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<UsageScope> getAsList() { return Arrays.asList(values()); }
+    public static List<UsageScope> getAsList() { return getAsList(false); }
+    public static List<UsageScope> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(usageScope -> usageScope != UsageScope.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

@@ -30,15 +30,18 @@ public enum BuildScope implements Scope {
     private final String apiString;
 
 
+    // ******************** Constructor ***************************************
     BuildScope(final String uiString, final String apiString) {
         this.uiString  = uiString;
         this.apiString = apiString;
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
+
 
     /**
      * Return Scope parsed from given text
@@ -58,5 +61,14 @@ public enum BuildScope implements Scope {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<BuildScope> getAsList() { return Arrays.asList(values()); }
+    public static List<BuildScope> getAsList() { return getAsList(false); }
+    public static List<BuildScope> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(buildScope -> buildScope != BuildScope.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }

@@ -54,6 +54,7 @@ public class ScopeConfig {
     private String       latest;
 
 
+    // ******************** Methods *******************************************
     public String getName() { return null == name ? "" : name; }
     public void setName(final String name) { this.name = name; }
 

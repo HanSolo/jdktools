@@ -45,6 +45,7 @@ public enum ReleaseStatus implements Api {
     private final String preReleaseId;
 
 
+    // ******************** Constructor ***************************************
     ReleaseStatus(final String uiString, final String apiString, final String preReleaseId) {
         this.uiString     = uiString;
         this.apiString    = apiString;
@@ -52,6 +53,7 @@ public enum ReleaseStatus implements Api {
     }
 
 
+    // ******************** Methods *******************************************
     @Override public String getUiString() { return uiString; }
 
     @Override public String getApiString() { return apiString; }
@@ -105,5 +107,15 @@ public enum ReleaseStatus implements Api {
      * Returns the values of the enum as list
      * @return the values of the enum as list
      */
-    public static List<ReleaseStatus> getAsList() { return Arrays.asList(values()); }
+    public static List<ReleaseStatus> getAsList() { return getAsList(false); }
+    public static List<ReleaseStatus> getAsList(final boolean withoutNoneAndNotFound) {
+        if (withoutNoneAndNotFound) {
+            return Arrays.asList(values()).stream()
+                         .filter(releaseStatus -> releaseStatus != ReleaseStatus.NONE)
+                         .filter(releaseStatus -> releaseStatus != ReleaseStatus.NOT_FOUND)
+                         .toList();
+        } else {
+            return Arrays.asList(values());
+        }
+    }
 }
