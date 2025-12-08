@@ -26,23 +26,27 @@ public class Constants {
 
     public static final String SQUARE_BRACKET_OPEN         = "[";
     public static final String SQUARE_BRACKET_CLOSE        = "]";
-    public static final String CURLY_BRACKET_OPEN          = "{";
-    public static final String CURLY_BRACKET_CLOSE         = "}";
-    public static final String INDENTED_QUOTES             = "  \"";
-    public static final String QUOTES                      = "\"";
-    public static final String COLON                       = ":";
-    public static final String QUOTES_COLON                = "\":";
-    public static final String QUOTES_COLON_QUOTES         = "\":\"";
-    public static final String COMMA                       = ",";
-    public static final String SLASH                       = "/";
-    public static final String NEW_LINE                    = "\n";
-    public static final String COMMA_NEW_LINE              = ",\n";
-    public static final String NULL                        = "null";
-    public static final String INDENT                      = "  ";
-    public static final String QUOTES_COMMA_QUOTES         = "\",\"";
     public static final String SQUARE_BRACKET_OPEN_QUOTES  = "[\"";
     public static final String SQUARE_BRACKET_CLOSE_QUOTES = "\"]";
     public static final String EMPTY_SQUARE_BRACKETS       = "[]";
+    public static final String CURLY_BRACKET_OPEN          = "{";
+    public static final String CURLY_BRACKET_CLOSE         = "}";
+    public static final String QUOTES                      = "\"";
+    public static final String COLON                       = ":";
+    public static final String QUOTES_NEW_LINE             = "\"\n";
+    public static final String QUOTES_COLON                = "\":";
+    public static final String QUOTES_COLON_QUOTES         = "\":\"";
+    public static final String QUOTES_COMMA                = "\",";
+    public static final String QUOTES_COMMA_QUOTES         = "\",\"";
+    public static final String INDENTED_QUOTES             = "  \"";
+    public static final String COMMA                       = ",";
+    public static final String COMMA_NEW_LINE              = ",\n";
+    public static final String NEW_LINE                    = "\n";
+    public static final String NULL                        = "null";
+    public static final String SLASH                       = "/";
+    public static final String INDENT                      = "  ";
+    public static final String DOUBLE_INDENT               = "    ";
+    public static final String TRIPLE_INDENT               = "      ";
 
     public static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\+?\\d+");
 }
