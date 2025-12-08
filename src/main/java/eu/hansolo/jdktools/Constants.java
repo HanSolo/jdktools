@@ -31,6 +31,7 @@ public class Constants {
     public static final String EMPTY_SQUARE_BRACKETS       = "[]";
     public static final String CURLY_BRACKET_OPEN          = "{";
     public static final String CURLY_BRACKET_CLOSE         = "}";
+    public static final String EMPTY_CURLY_BRACKETS        = "{}";
     public static final String QUOTES                      = "\"";
     public static final String COLON                       = ":";
     public static final String QUOTES_NEW_LINE             = "\"\n";
