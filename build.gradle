@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 plugins {
     id 'java-library'
     id 'net.nemerosa.versioning'         version '3.1.0'
-    id 'com.vanniktech.maven.publish' version '0.34.0'
+    id 'com.vanniktech.maven.publish' version '0.35.0'
 }
 
 description = 'JDKTools is a library that contains tools related to system info and versioning'
