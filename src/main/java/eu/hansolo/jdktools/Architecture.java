@@ -22,7 +22,9 @@ import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -117,10 +119,14 @@ public enum Architecture implements Api {
         @Override public List<Architecture> getSynonyms() { return List.of(); }
     };
 
-    private final String   uiString;
-    private final String   apiString;
-    private final Bitness  bitness;
-    private final boolean standard;
+    private final       String                    uiString;
+    private final       String                    apiString;
+    private final       Bitness                   bitness;
+    private final       boolean                   standard;
+    public static final Map<String, Architecture> apiStringLookup = new HashMap<>();
+    static {
+        Architecture.getAsList(true).forEach(architecture -> Architecture.apiStringLookup.put(architecture.apiString, architecture));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -201,6 +207,20 @@ public enum Architecture implements Api {
             case "ia64", "IA64", "ia-64", "IA-64" -> IA64;
             default -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns Architecture from given apiString
+     * @param apiString
+     * @return Architecture from given apiString
+     */
+    public static Architecture fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     public static List<String> getAcronyms(final Architecture architecture) {

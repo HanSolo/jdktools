@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -40,8 +42,12 @@ public enum Verification implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String uiString;
-    private final String apiString;
+    private final       String                    uiString;
+    private final       String                    apiString;
+    public static final Map<String, Verification> apiStringLookup = new HashMap<>();
+    static {
+        Verification.getAsList(true).forEach(verification -> Verification.apiStringLookup.put(verification.apiString, verification));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -105,6 +111,20 @@ public enum Verification implements Api {
             case "unknown", "UNKNOWN", "Unknown"                    -> UNKNOWN;
             default                                                 -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns Verification from given apiString
+     * @param apiString
+     * @return Verification from given apiString
+     */
+    public static Verification fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**

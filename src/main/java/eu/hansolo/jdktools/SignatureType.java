@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -41,8 +43,12 @@ public enum SignatureType implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String uiString;
-    private final String apiString;
+    private final       String                     uiString;
+    private final       String                     apiString;
+    public static final Map<String, SignatureType> apiStringLookup = new HashMap<>();
+    static {
+        SignatureType.getAsList(true).forEach(signatureType -> SignatureType.apiStringLookup.put(signatureType.apiString, signatureType));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -99,6 +105,20 @@ public enum SignatureType implements Api {
             case "eddsa", "EdDSA", "EDDSA" -> EDDSA;
             default                        -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns SignatureType from given apiString
+     * @param apiString
+     * @return SignatureType from given apiString
+     */
+    public static SignatureType fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**

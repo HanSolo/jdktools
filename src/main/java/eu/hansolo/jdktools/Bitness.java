@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -39,9 +41,13 @@ public enum Bitness implements Api {
     NONE("-", "", 0),
     NOT_FOUND("", "", 0);
 
-    private final String uiString;
-    private final String apiString;
-    private final int    bits;
+    private final       String               uiString;
+    private final       String               apiString;
+    private final       int                  bits;
+    public static final Map<String, Bitness> apiStringLookup = new HashMap<>();
+    static {
+        Bitness.getAsList(true).forEach(bitness -> Bitness.apiStringLookup.put(bitness.apiString, bitness));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -110,6 +116,20 @@ public enum Bitness implements Api {
             case "32", "32bit", "32Bit", "32BIT" -> { return BIT_32; }
             case "64", "64bit", "64Bit", "64BIT" -> { return BIT_64; }
             default                              -> { return NOT_FOUND; }
+        }
+    }
+
+    /**
+     * Returns Bitness from given apiString
+     * @param apiString
+     * @return Bitness from given apiString
+     */
+    public static Bitness fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
         }
     }
 

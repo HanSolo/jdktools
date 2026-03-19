@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -40,8 +42,12 @@ public enum FPU implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String uiString;
-    private final String apiString;
+    private final       String           uiString;
+    private final       String           apiString;
+    public static final Map<String, FPU> apiStringLookup = new HashMap<>();
+    static {
+        FPU.getAsList(true).forEach(fpu -> FPU.apiStringLookup.put(fpu.apiString, fpu));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -96,6 +102,20 @@ public enum FPU implements Api {
             case "soft_float", "SOFT_FLOAT", "soft-float", "SOFT-FLOAT", "softfloat", "SOFTFLOAT", "sfl", "sflt", "SFLT" -> { return SOFT_FLOAT; }
             case "unknown", "UNKNOWN"                                                                                    -> { return UNKNOWN; }
             default                                                                                                      -> { return NOT_FOUND; }
+        }
+    }
+
+    /**
+     * Returns FPU from given apiString
+     * @param apiString
+     * @return FPU from given apiString
+     */
+    public static FPU fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
         }
     }
 

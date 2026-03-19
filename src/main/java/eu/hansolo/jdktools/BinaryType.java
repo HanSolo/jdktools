@@ -4,8 +4,10 @@ import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -23,9 +25,14 @@ public enum BinaryType implements Api {
     NONE("-", "", ArchiveType.NONE),
     NOT_FOUND("", "", ArchiveType.NOT_FOUND);
 
-    private final String            uiString;
-    private final String            apiString;
-    private final List<ArchiveType> archiveTypes;
+    private final       String                  uiString;
+    private final       String                  apiString;
+    private final       List<ArchiveType>       archiveTypes;
+    public static final Map<String, BinaryType> apiStringLookup = new HashMap<>();
+    static {
+        BinaryType.getAsList(true).forEach(binaryType -> BinaryType.apiStringLookup.put(binaryType.apiString, binaryType));
+    }
+
 
 
     // ******************** Constructor ***************************************
@@ -79,6 +86,20 @@ public enum BinaryType implements Api {
             case "package", "Package", "PACKAGE"       -> { return PACKAGE; }
             case "installer", "Installer", "INSTALLER" -> { return INSTALLER; }
             default                                    -> { return NOT_FOUND; }
+        }
+    }
+
+    /**
+     * Returns BinaryType from given apiString
+     * @param apiString
+     * @return BinaryType from given apiString
+     */
+    public static BinaryType fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
         }
     }
 

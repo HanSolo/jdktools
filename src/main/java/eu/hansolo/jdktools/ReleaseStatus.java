@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -40,9 +42,13 @@ public enum ReleaseStatus implements Api {
     NONE("-", "", ""),
     NOT_FOUND("", "", "");
 
-    private final String uiString;
-    private final String apiString;
-    private final String preReleaseId;
+    private final       String                     uiString;
+    private final       String                     apiString;
+    private final       String                     preReleaseId;
+    public static final Map<String, ReleaseStatus> apiStringLookup = new HashMap<>();
+    static {
+        ReleaseStatus.getAsList(true).forEach(releaseStatus -> ReleaseStatus.apiStringLookup.put(releaseStatus.apiString, releaseStatus));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -101,6 +107,20 @@ public enum ReleaseStatus implements Api {
             //case "-debug", "-DEBUG", "_debug", "_DEBUG", "debug", "DEBUG", "debug_", "DEBUG_" -> DEBUG;
             default                                                                           -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns ReleaseStatus from given apiString
+     * @param apiString
+     * @return ReleaseStatus from given apiString
+     */
+    public static ReleaseStatus fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**

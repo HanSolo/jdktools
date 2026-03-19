@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -39,8 +41,12 @@ public enum OperatingMode implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String  uiString;
-    private final String  apiString;
+    private final       String                     uiString;
+    private final       String                     apiString;
+    public static final Map<String, OperatingMode> apiStringLookup = new HashMap<>();
+    static {
+        OperatingMode.getAsList(true).forEach(operatingMode -> OperatingMode.apiStringLookup.put(operatingMode.apiString, operatingMode));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -106,6 +112,20 @@ public enum OperatingMode implements Api {
             case "emulated", "EMULATED", "Emulated" -> EMULATED;
             default                                 -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns OperatingMode from given apiString
+     * @param apiString
+     * @return OperatingMode from given apiString
+     */
+    public static OperatingMode fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**

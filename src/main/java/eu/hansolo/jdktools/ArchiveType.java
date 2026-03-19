@@ -22,8 +22,10 @@ import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -56,9 +58,13 @@ public enum ArchiveType implements Api {
     NONE("-", "", "-"),
     NOT_FOUND("", "", "");
 
-    private final String       uiString;
-    private final String       apiString;
-    private final List<String> fileEndings;
+    private final       String                   uiString;
+    private final       String                   apiString;
+    private final       List<String>             fileEndings;
+    public static final Map<String, ArchiveType> apiStringLookup = new HashMap<>();
+    static {
+        ArchiveType.getAsList(true).forEach(archiveType -> ArchiveType.apiStringLookup.put(archiveType.apiString, archiveType));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -131,6 +137,20 @@ public enum ArchiveType implements Api {
             case "zip", ".zip", "ZIP" -> ZIP;
             default                   -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns ArchiveType from given apiString
+     * @param apiString
+     * @return ArchiveType from given apiString
+     */
+    public static ArchiveType fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**

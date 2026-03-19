@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -40,8 +42,12 @@ public enum TermOfSupport implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String uiString;
-    private final String apiString;
+    private final       String                     uiString;
+    private final       String                     apiString;
+    public static final Map<String, TermOfSupport> apiStringLookup = new HashMap<>();
+    static {
+        TermOfSupport.getAsList(true).forEach(termOfSupport -> TermOfSupport.apiStringLookup.put(termOfSupport.apiString, termOfSupport));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -97,6 +103,20 @@ public enum TermOfSupport implements Api {
             case "short_term_stable", "ShortTermStable", "sts", "STS", "Sts" -> STS;
             default                                                          -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns TermOfSupport from given apiString
+     * @param apiString
+     * @return TermOfSupport from given apiString
+     */
+    public static TermOfSupport fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**

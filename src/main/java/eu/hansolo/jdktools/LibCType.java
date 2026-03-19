@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -41,8 +43,12 @@ public enum LibCType implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String uiString;
-    private final String apiString;
+    private final       String                uiString;
+    private final       String                apiString;
+    public static final Map<String, LibCType> apiStringLookup = new HashMap<>();
+    static {
+        LibCType.getAsList(true).forEach(libCType -> LibCType.apiStringLookup.put(libCType.apiString, libCType));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -98,6 +104,20 @@ public enum LibCType implements Api {
             case "c_std_lib", "C_STD_LIB", "c-std-lib", "C-STD-LIB", "windows", "Windows", "win", "Win"                                     -> { return C_STD_LIB; }
             case "libc", "LIBC", "macos", "MACOS", "macosx", "MACOSX", "aix", "AIX", "qnx", "QNX", "solaris", "SOLARIS", "darwin", "DARWIN" -> { return LIBC; }
             default                                                                                                                         -> { return NOT_FOUND; }
+        }
+    }
+
+    /**
+     * Returns LibCType from given apiString
+     * @param apiString
+     * @return LibCType from given apiString
+     */
+    public static LibCType fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
         }
     }
 

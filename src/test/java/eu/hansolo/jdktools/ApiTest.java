@@ -65,6 +65,15 @@ class ApiTest {
     }
 
     @Test
+    void architectureFromApiStringText() {
+        assert Architecture.fromApiString(null)      == Architecture.NOT_FOUND;
+        assert Architecture.fromApiString("")        == Architecture.NOT_FOUND;
+        assert Architecture.fromApiString("arm")     == Architecture.ARM;
+        assert Architecture.fromApiString("aarch64") == Architecture.AARCH64;
+        assert Architecture.fromApiString("x64")     == Architecture.X64;
+    }
+
+    @Test
     void archiveTypeFromTextTest() {
         assert ArchiveType.fromText(null) == ArchiveType.NOT_FOUND;
         assert ArchiveType.fromText("") == ArchiveType.NOT_FOUND;

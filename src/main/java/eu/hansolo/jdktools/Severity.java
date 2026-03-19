@@ -21,8 +21,10 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -42,15 +44,19 @@ public enum Severity implements Api {
     NONE("-", "", 0, 0, 0, 0, 0, 0,1),
     NOT_FOUND("", "", 0, 0, 0, 0, 0, 0,0);
 
-    private final String  uiString;
-    private final String  apiString;
-    private final double  minScoreV2;
-    private final double  maxScoreV2;
-    private final double  minScoreV3;
-    private final double  maxScoreV3;
-    private final double  minScoreV4;
-    private final double  maxScoreV4;
-    private final Integer order;
+    private final       String                uiString;
+    private final       String                apiString;
+    private final       double                minScoreV2;
+    private final       double                maxScoreV2;
+    private final       double                minScoreV3;
+    private final       double                maxScoreV3;
+    private final       double                minScoreV4;
+    private final       double                maxScoreV4;
+    private final       Integer               order;
+    public static final Map<String, Severity> apiStringLookup = new HashMap<>();
+    static {
+        Severity.getAsList(true).forEach(severity -> Severity.apiStringLookup.put(severity.apiString, severity));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -128,6 +134,20 @@ public enum Severity implements Api {
             case "high", "HIGH", "High"             -> { return HIGH; }
             case "critical", "CRITICAL", "Critical" -> { return CRITICAL; }
             default                                 -> { return NOT_FOUND; }
+        }
+    }
+
+    /**
+     * Returns Severity from given apiString
+     * @param apiString
+     * @return Severity from given apiString
+     */
+    public static Severity fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
         }
     }
 

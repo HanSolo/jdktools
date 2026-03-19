@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -44,8 +46,12 @@ public enum HashAlgorithm implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String uiString;
-    private final String apiString;
+    private final       String                     uiString;
+    private final       String                     apiString;
+    public static final Map<String, HashAlgorithm> apiStringLookup = new HashMap<>();
+    static {
+        HashAlgorithm.getAsList(true).forEach(hashAlgorithm -> HashAlgorithm.apiStringLookup.put(hashAlgorithm.apiString, hashAlgorithm));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -104,6 +110,20 @@ public enum HashAlgorithm implements Api {
             case "sha512", "SHA512", "sha_512", "SHA_512", "sha-512", "SHA-512"             -> { return SHA512; }
             case "sha3_256", "SHA3_256", "sha-3-256", "SHA-3-256", "sha_3_256", "SHA_3_256" -> { return SHA3_256; }
             default                                                                         -> { return NOT_FOUND; }
+        }
+    }
+
+    /**
+     * Returns HashAlgorithm from given apiString
+     * @param apiString
+     * @return HashAlgorithm from given apiString
+     */
+    public static HashAlgorithm fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
         }
     }
 

@@ -21,7 +21,9 @@ package eu.hansolo.jdktools;
 import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -39,8 +41,12 @@ public enum PackageType implements Api {
     NONE("-", ""),
     NOT_FOUND("", "");
 
-    private final String uiString;
-    private final String apiString;
+    private final       String                   uiString;
+    private final       String                   apiString;
+    public static final Map<String, PackageType> apiStringLookup = new HashMap<>();
+    static {
+        PackageType.getAsList(true).forEach(packageType -> PackageType.apiStringLookup.put(packageType.apiString, packageType));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -95,6 +101,20 @@ public enum PackageType implements Api {
             case "-jre", "JRE", "jre", "jre+fx", "JRE+FX" -> JRE;
             default                                       -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns PackageType from given apiString
+     * @param apiString
+     * @return PackageType from given apiString
+     */
+    public static PackageType fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**

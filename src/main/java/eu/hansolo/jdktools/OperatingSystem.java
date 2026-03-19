@@ -22,7 +22,9 @@ import eu.hansolo.jdktools.util.OutputFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static eu.hansolo.jdktools.Constants.COLON;
 import static eu.hansolo.jdktools.Constants.COMMA;
@@ -69,9 +71,13 @@ public enum OperatingSystem implements Api {
         @Override public List<OperatingSystem> getSynonyms() { return List.of(); }
     };
 
-    private final String   uiString;
-    private final String   apiString;
-    private final LibCType libCType;
+    private final       String                       uiString;
+    private final       String                       apiString;
+    private final       LibCType                     libCType;
+    public static final Map<String, OperatingSystem> apiStringLookup = new HashMap<>();
+    static {
+        OperatingSystem.getAsList(true).forEach(operatingSystem -> OperatingSystem.apiStringLookup.put(operatingSystem.apiString, operatingSystem));
+    }
 
 
     // ******************** Constructor ***************************************
@@ -153,6 +159,20 @@ public enum OperatingSystem implements Api {
             case "-win", "windows", "Windows", "WINDOWS", "win", "Win", "WIN" -> WINDOWS;
             default -> NOT_FOUND;
         };
+    }
+
+    /**
+     * Returns OperatingSystem from given apiString
+     * @param apiString
+     * @return OperatingSystem from given apiString
+     */
+    public static OperatingSystem fromApiString(final String apiString) {
+        if (null == apiString || apiString.isEmpty()) { return NOT_FOUND; }
+        try {
+            return apiStringLookup.get(apiString);
+        } catch (Exception ex) {
+            return NOT_FOUND;
+        }
     }
 
     /**
