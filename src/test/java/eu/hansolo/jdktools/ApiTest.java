@@ -71,6 +71,10 @@ class ApiTest {
         assert Architecture.fromApiString("arm")     == Architecture.ARM;
         assert Architecture.fromApiString("aarch64") == Architecture.AARCH64;
         assert Architecture.fromApiString("x64")     == Architecture.X64;
+        assert Architecture.fromApiString("amd64")   == Architecture.AMD64;
+        assert Architecture.fromApiString("arm32")   == Architecture.fromText("arm32");
+        assert Architecture.fromApiString("arm64")   == Architecture.fromText("arm64");
+        assert Architecture.fromApiString("amd64")   == Architecture.fromText("amd64");
     }
 
     @Test
@@ -184,6 +188,20 @@ class ApiTest {
         assert OperatingSystem.fromText("solaris") == OperatingSystem.SOLARIS;
         assert OperatingSystem.fromText("windows") == OperatingSystem.WINDOWS;
         assert OperatingSystem.fromText("win") == OperatingSystem.WINDOWS;
+    }
+
+    @Test
+    void operatingSystemFromApiStringText() {
+        assert OperatingSystem.fromText(null) == OperatingSystem.fromApiString(null);
+        assert OperatingSystem.fromText("") == OperatingSystem.fromApiString("");
+        assert OperatingSystem.fromText("aix") == OperatingSystem.fromApiString("aix");
+        assert OperatingSystem.fromText("osx") == OperatingSystem.fromApiString("osx");
+        assert OperatingSystem.fromText("macos") == OperatingSystem.fromApiString("macos");
+        assert OperatingSystem.fromText("linux") == OperatingSystem.fromApiString("linux");
+        assert OperatingSystem.fromText("qnx") == OperatingSystem.fromApiString("qnx");
+        assert OperatingSystem.fromText("solaris") == OperatingSystem.fromApiString("solaris");
+        assert OperatingSystem.fromText("windows") == OperatingSystem.fromApiString("windows");
+        assert OperatingSystem.fromText("win") == OperatingSystem.fromApiString("win");
     }
 
     @Test

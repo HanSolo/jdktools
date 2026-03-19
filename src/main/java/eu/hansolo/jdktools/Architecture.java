@@ -125,7 +125,10 @@ public enum Architecture implements Api {
     private final       boolean                   standard;
     public static final Map<String, Architecture> apiStringLookup = new HashMap<>();
     static {
-        Architecture.getAsList(true).forEach(architecture -> Architecture.apiStringLookup.put(architecture.apiString, architecture));
+        Architecture.getAsList(true).forEach(architecture -> {
+            Architecture.apiStringLookup.put(architecture.apiString, architecture);
+            getAcronyms(architecture).forEach(acronym -> Architecture.apiStringLookup.put(acronym.toLowerCase(), architecture));
+        });
     }
 
 

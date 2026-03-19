@@ -40,11 +40,11 @@ public enum OperatingSystem implements Api {
     ALPINE_LINUX("Alpine Linux", "linux", LibCType.MUSL) {
         @Override public List<OperatingSystem> getSynonyms() { return List.of(OperatingSystem.LINUX, OperatingSystem.LINUX_MUSL); }
     },
-    LINUX("Linux", "linux", LibCType.GLIBC) {
-        @Override public List<OperatingSystem> getSynonyms() { return List.of(); }
-    },
     LINUX_MUSL("Linux Musl", "linux", LibCType.MUSL) {
         @Override public List<OperatingSystem> getSynonyms() { return List.of(OperatingSystem.LINUX, OperatingSystem.ALPINE_LINUX); }
+    },
+    LINUX("Linux", "linux", LibCType.GLIBC) {
+        @Override public List<OperatingSystem> getSynonyms() { return List.of(); }
     },
     FREE_BSD("FreeBSD", "free_bsd", LibCType.LIBC) {
         @Override public List<OperatingSystem> getSynonyms() { return List.of(); }
@@ -76,7 +76,11 @@ public enum OperatingSystem implements Api {
     private final       LibCType                     libCType;
     public static final Map<String, OperatingSystem> apiStringLookup = new HashMap<>();
     static {
-        OperatingSystem.getAsList(true).forEach(operatingSystem -> OperatingSystem.apiStringLookup.put(operatingSystem.apiString, operatingSystem));
+        OperatingSystem.getAsList(true).forEach(operatingSystem -> {
+            OperatingSystem.apiStringLookup.put(operatingSystem.apiString, operatingSystem);
+            OperatingSystem.apiStringLookup.put("osx", OperatingSystem.MACOS);
+            OperatingSystem.apiStringLookup.put("win", OperatingSystem.WINDOWS);
+        });
     }
 
 
@@ -129,15 +133,16 @@ public enum OperatingSystem implements Api {
 
     public static List<String> getAcronyms(final OperatingSystem operatingSystem) {
         switch (operatingSystem) {
-            case LINUX      -> { return List.of("linux", "Linux", "LINUX", "unix", "UNIX", "Unix"); }
-            case LINUX_MUSL -> { return List.of("linux-musl", "linux_musl", "Linux-Musl", "Linux_Musl", "LINUX_MUSL", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX"); }
-            case FREE_BSD   -> { return List.of("free_bsd", "FREE_BSD", "free-bsd", "FREE-BSD","freebsd", "FREEBSD", "FreeBSD", "freeBSD"); }
-            case SOLARIS    -> { return List.of("solaris", "SOLARIS", "Solaris"); }
-            case QNX        -> { return List.of("qnx", "QNX"); }
-            case AIX        -> { return List.of("aix", "AIX"); }
-            case MACOS      -> { return List.of("darwin", "macosx", "MACOSX", "MacOS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX"); }
-            case WINDOWS    -> { return List.of("win", "windows", "Windows", "WINDOWS", "Win", "WIN"); }
-            default         -> { return new ArrayList<>(); }
+            case LINUX        -> { return List.of("linux", "Linux", "LINUX", "unix", "UNIX", "Unix"); }
+            //case ALPINE_LINUX -> { return List.of("alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX", "linux-musl", "linux_musl", "Linux-Musl", "Linux_Musl", "LINUX_MUSL"); }
+            case LINUX_MUSL   -> { return List.of("linux-musl", "linux_musl", "Linux-Musl", "Linux_Musl", "LINUX_MUSL", "alpine", "ALPINE", "Alpine", "alpine-linux", "ALPINE-LINUX", "alpine_linux", "Alpine_Linux", "ALPINE_LINUX"); }
+            case FREE_BSD     -> { return List.of("free_bsd", "FREE_BSD", "free-bsd", "FREE-BSD","freebsd", "FREEBSD", "FreeBSD", "freeBSD"); }
+            case SOLARIS      -> { return List.of("solaris", "SOLARIS", "Solaris"); }
+            case QNX          -> { return List.of("qnx", "QNX"); }
+            case AIX          -> { return List.of("aix", "AIX"); }
+            case MACOS        -> { return List.of("darwin", "macosx", "MACOSX", "MacOS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX"); }
+            case WINDOWS      -> { return List.of("win", "windows", "Windows", "WINDOWS", "Win", "WIN"); }
+            default           -> { return new ArrayList<>(); }
         }
     }
 
