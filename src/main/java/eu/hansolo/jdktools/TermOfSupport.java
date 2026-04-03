@@ -52,7 +52,7 @@ public enum TermOfSupport implements Api {
 
     // ******************** Constructor ***************************************
     TermOfSupport(final String uiString, final String apiString) {
-        this.uiString = uiString;
+        this.uiString  = uiString;
         this.apiString = apiString;
     }
 
@@ -98,9 +98,9 @@ public enum TermOfSupport implements Api {
     public static TermOfSupport fromText(final String text) {
         if (null == text) { return NOT_FOUND; }
         return switch (text) {
-            case "long_term_stable", "LongTermStable", "lts", "LTS", "Lts"   -> LTS;
-            case "mid_term_stable", "MidTermStable", "mts", "MTS", "Mts"     -> MTS;
-            case "short_term_stable", "ShortTermStable", "sts", "STS", "Sts" -> STS;
+            case "lts", "long_term_stable", "LongTermStable", "LTS", "Lts"   -> LTS;
+            case "mts", "mid_term_stable", "MidTermStable", "MTS", "Mts"     -> MTS;
+            case "sts", "short_term_stable", "ShortTermStable", "STS", "Sts" -> STS;
             default                                                          -> NOT_FOUND;
         };
     }

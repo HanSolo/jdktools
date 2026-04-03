@@ -79,7 +79,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
     }
     public VersionNumber(final Integer feature, final Integer interim, final Integer update, final Integer patch, final Integer fifth, final Integer sixth, final Integer build, final ReleaseStatus releaseStatus) throws IllegalArgumentException {
         Objects.requireNonNull(feature, "Feature version cannot be null");
-        if (0 >= feature)    { throw new IllegalArgumentException("Feature version cannot be smaller than 0"); }
+        if (0 >= feature)    { throw new IllegalArgumentException("Feature version must be greater than 0"); }
         if (null != interim  && 0 > interim)  { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
         if (null != update   && 0 > update)   { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
         if (null != patch    && 0 > patch)    { throw new IllegalArgumentException("Patch version cannot be smaller than 0"); }
@@ -103,7 +103,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
     }
     public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch, final OptionalInt fifth, final OptionalInt sixth, final OptionalInt build, final Optional<ReleaseStatus> releaseStatus) {
         if (null == feature)                                                     { throw new IllegalArgumentException("Feature version cannot be null"); }
-        if (feature.isPresent()  && 0 >= feature.getAsInt()) { throw new IllegalArgumentException("Feature version cannot be smaller than 0"); }
+        if (feature.isPresent()  && 0 >= feature.getAsInt()) { throw new IllegalArgumentException("Feature version must be greater than 0"); }
         if (null != interim  && interim.isPresent()  && 0 > interim.getAsInt())  { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
         if (null != update   && update.isPresent()   && 0 > update.getAsInt())   { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
         if (null != patch    && patch.isPresent()    && 0 > patch.getAsInt())    { throw new IllegalArgumentException("Patch version cannot be smaller than 0"); }
@@ -126,7 +126,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
     public OptionalInt getFeature() { return feature; }
     public void setFeature(final Integer feature) throws IllegalArgumentException {
         if (null == feature) { throw new IllegalArgumentException("Feature version cannot be null"); }
-        if (0 >= feature) { throw new IllegalArgumentException("Feature version cannot be smaller than 0 (" + feature + ")"); }
+        if (0 >= feature) { throw new IllegalArgumentException("Feature version must be greater than 0 (" + feature + ")"); }
         this.feature = OptionalInt.of(feature);
     }
 
@@ -220,7 +220,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
         ArchiveType.getAsList().forEach(archiveType -> {
             archiveType.getFileEndings().forEach(fileEnding -> {
                 if (fileEnding.isEmpty() || fileEnding.equals("-") || fileEnding.equals("_")) { return; }
-                tmp.set(tmp.get().replaceAll(fileEnding, ""));
+                tmp.set(tmp.get().replaceAll(Pattern.quote(fileEnding), ""));
             });
         });
         OperatingSystem.getAsList().forEach(operatingSystem -> {
@@ -356,14 +356,70 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 versionNumber.setInterim(0);
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(4)));
             } else if (null != result.group(1) && null != result.group(2) && null != result.group(5) && null != result.group(10)) {
-                //System.out.println("match: 1, 2, 5, 9");
+                //System.out.println("match: 1, 2, 5, 10");
                 versionNumber.setInterim(getPositiveIntFromText(result.group(10)));
             }
 
             // Parse release status and build
             versionNumber.setReleaseStatus(ReleaseStatus.GA);
-            if (null == result.group(15) && null == result.group(18)) {
-                versionNumber.setReleaseStatus(ReleaseStatus.GA);
+            if (null == result.group(18)) {
+                if (null == result.group(15)) {
+                    versionNumber.setReleaseStatus(ReleaseStatus.GA);
+                } else if (null != result.group(15) && null == result.group(18)) {
+                    // Group 15 is present
+                    if (result.group(16).equals("-")) {
+                        // Early Access
+                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                    } else {
+                        // Build
+                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
+                        final List<MatchResult> buildResults = buildMatcher.results().toList();
+                        if (!buildResults.isEmpty()) {
+                            int build = Integer.parseInt(buildResults.get(0).group());
+                            versionNumber.setBuild(build);
+                        }
+                    }
+                } else if (null == result.group(15) && null != result.group(18)) {
+                    // Group 18 is present
+                    if (result.group(19).equals("-")) {
+                        // Early Access
+                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                    } else {
+                        // Build
+                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
+                        final List<MatchResult> buildResults = buildMatcher.results().toList();
+                        if (!buildResults.isEmpty()) {
+                            int build = Integer.parseInt(buildResults.get(0).group());
+                            versionNumber.setBuild(build);
+                        }
+                    }
+                } else {
+                    // Group 15 and 18 are present
+                    if (result.group(16).equals("-")) {
+                        // Early Access
+                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                    } else {
+                        // Build
+                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
+                        final List<MatchResult> buildResults = buildMatcher.results().toList();
+                        if (!buildResults.isEmpty()) {
+                            int build = Integer.parseInt(buildResults.get(0).group());
+                            versionNumber.setBuild(build);
+                        }
+                    }
+                    if (result.group(19).equals("-")) {
+                        // Early Access
+                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                    } else {
+                        // Build
+                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
+                        final List<MatchResult> buildResults = buildMatcher.results().toList();
+                        if (!buildResults.isEmpty()) {
+                            int build = Integer.parseInt(buildResults.get(0).group());
+                            versionNumber.setBuild(build);
+                        }
+                    }
+                }
             } else if (null != result.group(15) && null == result.group(18)) {
                 // Group 15 is present
                 if (result.group(16).equals("-")) {
@@ -480,6 +536,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
         }
     }
 
+    /*
     private static Integer getLeadingIntFromText(final String text) {
         if (null == text || text.isEmpty()) { return -1; }
         Matcher matcher = LEADING_INT_PATTERN.matcher(text);
@@ -490,6 +547,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
             return -1;
         }
     }
+    */
 
     /**
      * Returns 0 if given version number is equal to this. But with just a number like 11, it will
@@ -597,7 +655,13 @@ public class VersionNumber implements Comparable<VersionNumber> {
         return isEqual;
     }
 
-    public static boolean equalsExceptBuild(final VersionNumber v1, final VersionNumber v2) { return v1.equals(v2); }
+    public static boolean equalsExceptBuild(final VersionNumber v1, final VersionNumber v2) {
+        VersionNumber v1Copy = new VersionNumber(v1);
+        v1Copy.setBuild(null);
+        VersionNumber v2Copy = new VersionNumber(v2);
+        v2Copy.setBuild(null);
+        return v1Copy.equals(v2Copy);
+    }
     public static boolean equalsIncludingBuild(final VersionNumber v1, final VersionNumber v2) { return v1.compareTo(v2) == 0; }
 
     public String toStringInclBuild(final boolean javaFormat) {
@@ -788,6 +852,11 @@ public class VersionNumber implements Comparable<VersionNumber> {
         }
         return ret;
     }
+
+    public boolean isLessThan(final VersionNumber versionNumber) { return compareTo(versionNumber) < 0; }
+    public boolean isLessThanOrEqualTo(final VersionNumber versionNumber) { return compareTo(versionNumber) <= 0; }
+    public boolean isGreaterThan(final VersionNumber versionNumber) { return compareTo(versionNumber) > 0; }
+    public boolean isGreaterThanOrEqualTo(final VersionNumber versionNumber) { return compareTo(versionNumber) >= 0; }
 
     public boolean isSmallerThan(final VersionNumber versionNumber) {
         return compareTo(versionNumber) < 0;

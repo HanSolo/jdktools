@@ -94,7 +94,7 @@ public class Semver implements Comparable<Semver> {
             final Matcher           eaMatcher = EA_PATTERN.matcher(this.pre);
             final List<MatchResult> eaResults = eaMatcher.results().toList();
             if (!eaResults.isEmpty()) {
-                final MatchResult eaResult = eaResults.get(0);
+                final MatchResult eaResult = eaResults.getFirst();
                 if (null != eaResult.group(1)) {
                     this.versionNumber.setReleaseStatus(ReleaseStatus.EA);
                     if (null != eaResult.group(4)) {
@@ -109,13 +109,13 @@ public class Semver implements Comparable<Semver> {
                 }
             }
 
-            if (this.pre.matches("[a-zA-Z]+") && this.pre.length() > 0) {
+            if (this.pre.matches("[a-zA-Z]+")) {
                 this.pre = "ea";
             }
         }
 
         if (null != this.pre && !this.pre.isEmpty() && !this.pre.startsWith("+") && !this.pre.startsWith("-")) {
-            this.pre = "-" + pre;
+            this.pre = "-" + this.pre;
         }
         if (null != this.metadata && !this.metadata.isEmpty() && !this.metadata.startsWith("-") && !this.metadata.startsWith("+")) {
             this.metadata = "+" + metadata;
@@ -130,7 +130,7 @@ public class Semver implements Comparable<Semver> {
         final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(this.metadata);
         final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
         if (!buildNumberResults.isEmpty()) {
-            final MatchResult buildNumberResult = buildNumberResults.get(0);
+            final MatchResult buildNumberResult = buildNumberResults.getFirst();
             if (null != buildNumberResult.group(1) && null != buildNumberResult.group(2) && (null == this.versionNumber.getBuild() || this.versionNumber.getBuild().isEmpty())) {
                 int build = Integer.parseInt(buildNumberResult.group(2));
                 if (build > 0) {
@@ -169,7 +169,7 @@ public class Semver implements Comparable<Semver> {
 
     public String getPre() { return pre; }
     public void setPre(final String pre) {
-        if (null != pre && pre.length() > 0) {
+        if (null != pre && !pre.isEmpty()) {
             Error err = validatePrerelease(pre);
             if (null != err) {
                 throw new IllegalArgumentException(err.getMessage());
@@ -199,7 +199,7 @@ public class Semver implements Comparable<Semver> {
     public String getMetadata() { return metadata; }
     public void setMetadata(final String metadata) {
         final String md = metadata.replaceFirst("\\+", "");
-        if (null != md && md.length() > 0) {
+        if (!md.isEmpty()) {
             Error err = validateMetadata(md);
             if (null != err) {
                 throw new IllegalArgumentException(err.getMessage());
