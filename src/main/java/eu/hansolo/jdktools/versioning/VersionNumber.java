@@ -675,12 +675,12 @@ public class VersionNumber implements Comparable<VersionNumber> {
         StringBuilder versionBuilder = new StringBuilder();
         switch(outputFormat) {
             case REDUCED:
-            case REDUCED_COMPRESSED:
+            case REDUCED_COMPRESSED: // e.g. 25.0.0.0 -> 25
                 if (feature.isPresent()) { versionBuilder.append(feature.getAsInt()); }
                 if (sixth.isPresent() && sixth.getAsInt() != 0) {
                     if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                    if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
+                    if (update.isPresent())  { versionBuilder.append(".").append(update.getAsInt()); }
+                    if (patch.isPresent())   { versionBuilder.append(".").append(patch.getAsInt()); }
                     if (!javaFormat) {
                         if (fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
                         versionBuilder.append(".").append(sixth.getAsInt());
@@ -706,6 +706,44 @@ public class VersionNumber implements Comparable<VersionNumber> {
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();
                 } else if (interim.isPresent() && interim.getAsInt() != 0) {
+                    versionBuilder.append(".").append(interim.getAsInt());
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    return versionBuilder.toString();
+                } else {
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    return versionBuilder.toString();
+                }
+            case FULL_COMPRESSED: // e.g. 25.0.0
+                if (feature.isPresent()) { versionBuilder.append(feature.getAsInt()); }
+                if (sixth.isPresent() && sixth.getAsInt() != 0) {
+                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
+                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
+                    if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
+                    if (!javaFormat) {
+                        if (fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
+                        versionBuilder.append(".").append(sixth.getAsInt());
+                    }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    return versionBuilder.toString();
+                } else if (fifth.isPresent() && fifth.getAsInt() != 0) {
+                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
+                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
+                    if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
+                    if (!javaFormat) { versionBuilder.append(".").append(fifth.getAsInt()); }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    return versionBuilder.toString();
+                } else if (patch.isPresent() && patch.getAsInt() != 0) {
+                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
+                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
+                    versionBuilder.append(".").append(patch.getAsInt());
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    return versionBuilder.toString();
+                } else if (update.isPresent()) {
+                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
+                    versionBuilder.append(".").append(update.getAsInt());
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    return versionBuilder.toString();
+                } else if (interim.isPresent()) {
                     versionBuilder.append(".").append(interim.getAsInt());
                     if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
                     return versionBuilder.toString();

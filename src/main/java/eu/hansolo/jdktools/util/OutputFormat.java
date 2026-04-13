@@ -18,6 +18,16 @@
 
 package eu.hansolo.jdktools.util;
 
+/**
+ * An enum that will be used in different toString() implementations.
+ * The biggest impact is in the VersionNumber class where it is as follows
+ */
 public enum OutputFormat {
-    FULL, REDUCED, REDUCED_ENRICHED, FULL_COMPRESSED, REDUCED_COMPRESSED, REDUCED_ENRICHED_COMPRESSED, MINIMIZED
+    FULL,
+    REDUCED,
+    REDUCED_ENRICHED,
+    FULL_COMPRESSED,
+    REDUCED_COMPRESSED,
+    REDUCED_ENRICHED_COMPRESSED,
+    MINIMIZED
 }

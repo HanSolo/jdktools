@@ -605,4 +605,25 @@ class VersionNumberTest {
         sv6.setMetadata("b2.2.5");
         assert sv6.toString(true).equals("9.0.1-ea+b2.2.5");
     }
+
+    @Test
+    void outputFormat() {
+        VersionNumber v1 = VersionNumberBuilder.create(11).interimNumber(0).updateNumber(7).build();
+        VersionNumber v2 = VersionNumberBuilder.create(25).interimNumber(0).updateNumber(2).buildNumber(37).build();
+        VersionNumber v3 = VersionNumberBuilder.create(25).interimNumber(0).updateNumber(0).build();
+        VersionNumber v4 = VersionNumberBuilder.create(25).interimNumber(0).updateNumber(0).patchNumber(2).build();
+        VersionNumber v5 = VersionNumberBuilder.create(25).interimNumber(1).updateNumber(0).patchNumber(0).build();
+
+        assert v1.toString(OutputFormat.FULL_COMPRESSED, true, false).equals("11.0.7");
+        assert v2.toString(OutputFormat.FULL_COMPRESSED, true, false).equals("25.0.2");
+        assert v3.toString(OutputFormat.FULL_COMPRESSED, true, false).equals("25.0.0");
+        assert v3.toString(OutputFormat.FULL_COMPRESSED, false, false).equals("25.0.0");
+        assert v4.toString(OutputFormat.FULL_COMPRESSED, false, false).equals("25.0.0.2");
+        assert v5.toString(OutputFormat.FULL_COMPRESSED, false, false).equals("25.1.0");
+        assert v5.toString(OutputFormat.FULL, false, false).equals("25.1.0.0.0.0");
+
+        assert v1.toString(OutputFormat.REDUCED_COMPRESSED, true, false).equals("11.0.7");
+        assert v2.toString(OutputFormat.REDUCED_COMPRESSED, true, false).equals("25.0.2");
+        assert v3.toString(OutputFormat.REDUCED_COMPRESSED, true, false).equals("25");
+    }
 }
