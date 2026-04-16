@@ -204,6 +204,9 @@ class VersionNumberTest {
         final String versionNumber43String = "22-beta+28";                        // 22 ea build 28
         final String versionNumber44String = "1.1.0";                             // 1.0.0
         final String versionNumber45String = "17.0.13-linux_arm64.deb";           // 17.0.13
+        final String versionNumber46String = "jdk8.0.265-linux_ppc32hf.tar.gz";   // 8.0.265
+        final String versionNumber47String = "jdk8.0.265-linux_ppc32spe.tar.gz";  // 8.0.265
+        final String versionNumber48String = "jdk8.0.252-linux_ppc32spe.tar.gz";  // 8.0.252
 
         final VersionNumber versionNumber1  = new VersionNumber(8);
         final VersionNumber versionNumber2  = new VersionNumber(8, 2);
@@ -250,6 +253,9 @@ class VersionNumberTest {
         final VersionNumber versionNumber43 = new VersionNumber(22, 0, 0, 0, null, null, 28, ReleaseStatus.EA);
         final VersionNumber versionNumber44 = new VersionNumber(1, 1, 0);
         final VersionNumber versionNumber45 = new VersionNumber(17, 0, 13);
+        final VersionNumber versionNumber46 = new VersionNumber(8, 0, 265);
+        final VersionNumber versionNumber47 = new VersionNumber(8, 0, 265);
+        final VersionNumber versionNumber48 = new VersionNumber(8, 0, 252);
 
         /*
         System.out.println(versionNumber43String);
@@ -303,6 +309,9 @@ class VersionNumberTest {
         assert versionNumber43.compareTo(VersionNumber.fromText(versionNumber43String)) == 0;
         assert versionNumber44.compareTo(VersionNumber.fromText(versionNumber44String, false)) == 0;
         assert versionNumber45.compareTo(VersionNumber.fromText(versionNumber45String)) == 0;
+        assert versionNumber46.compareTo(VersionNumber.fromText(versionNumber46String, false)) == 0;
+        assert versionNumber47.compareTo(VersionNumber.fromText(versionNumber47String, false)) == 0;
+        assert versionNumber48.compareTo(VersionNumber.fromText(versionNumber48String, false)) == 0;
 
         assert VersionNumber.fromText(versionNumber27String).toString().equals(versionNumber27.toString());
         assert VersionNumber.fromText(versionNumber31String).toString(OutputFormat.REDUCED, true, true).equals(versionNumber31.toString(OutputFormat.REDUCED, true, true));

@@ -140,8 +140,8 @@ public enum OperatingSystem implements Api {
             case SOLARIS      -> { return List.of("solaris", "SOLARIS", "Solaris"); }
             case QNX          -> { return List.of("qnx", "QNX"); }
             case AIX          -> { return List.of("aix", "AIX"); }
-            case MACOS        -> { return List.of("darwin", "macosx", "MACOSX", "MacOS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "mac", "MAC", "macos", "MACOS", "osx", "OSX"); }
-            case WINDOWS      -> { return List.of("win", "windows", "Windows", "WINDOWS", "Win", "WIN"); }
+            case MACOS        -> { return List.of("darwin", "macosx", "MACOSX", "MacOS", "mac_os", "Mac_OS", "mac-os", "Mac-OS", "macos", "MACOS", "osx", "OSX", "mac", "MAC"); }
+            case WINDOWS      -> { return List.of("win64", "win", "windows", "Windows", "WINDOWS", "Win", "WIN"); }
             default           -> { return new ArrayList<>(); }
         }
     }

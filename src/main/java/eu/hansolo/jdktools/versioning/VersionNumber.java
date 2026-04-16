@@ -334,6 +334,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 versionNumber.setInterim(getPositiveIntFromText(result.group(6), version));
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(10), version));
             } */ else if (null != result.group(1) && null != result.group(6) && null != result.group(7) && null != result.group(10)) {
+                //System.out.println("match: 1, 6, 7, 10");
                 versionNumber.setFeature(getPositiveIntFromText(result.group(1)));
                 versionNumber.setInterim(getPositiveIntFromText(result.group(6)));
                 versionNumber.setUpdate(getPositiveIntFromText(result.group(7)));
