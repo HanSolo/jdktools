@@ -25,6 +25,10 @@ public class JavaVersion implements Comparable<JavaVersion> {
     private             int     patch;
     private             String  pre;
     private             String  meta;
+    private             boolean graalVM;
+    private             boolean fx;
+    private             boolean crac;
+    private             int     buildNumber;
 
 
     // ******************** Constructors **************************************
@@ -57,7 +61,13 @@ public class JavaVersion implements Comparable<JavaVersion> {
         this.pre     = pre  == null || pre.isEmpty()  ? "" : pre.replaceFirst("-", "");
         this.meta    = meta == null || meta.isEmpty() ? "" : meta.replaceFirst("\\+", "");
 
+        // TODO: Check pre and meta with Regex for graalvm, fx, crac and build number and set the variables
 
+        // Additional information
+        this.graalVM     = this.pre.isEmpty() ? false : ;
+        this.fx          = this.pre.isEmpty() ? false : ;
+        this.crac        = this.pre.isEmpty() ? false : ;
+        this.buildNumber = this.pre.isEmpty() ?   0   : ;
     }
     
 
@@ -90,11 +100,15 @@ public class JavaVersion implements Comparable<JavaVersion> {
     public String getPre() { return this.pre; }
     public void setPre(final String pre) {
         this.pre = pre == null || pre.isEmpty() ? "" : pre.replaceFirst("-", "");
+
+        // TODO: Check with Regex for graalvm, fx, crac and build number and set the variables
     }
 
     public String getMeta() { return this.meta; }
     public void setMeta(final String meta) {
         this.meta = meta == null || meta.isEmpty() ? "" : meta.replaceFirst("\\+", "");
+
+        // TODO: Check with Regex for graalvm, fx, crac and build number and set the variables
     }
 
     public SimpleMajorVersion getMajorVersion() { return new SimpleMajorVersion(this.feature); }
@@ -112,6 +126,15 @@ public class JavaVersion implements Comparable<JavaVersion> {
     public static JavaVersion fromText(final String text) throws IllegalArgumentException {
         return fromText(text, 0, true);
     }
+
+    // Additional convenience methods
+    public boolean isGraalVM() { return this.graalVM; }
+
+    public boolean hasFX() { return this.fx; }
+
+    public boolean hasCRaC() { return this.crac; }
+
+    public int getBuildNumber() { return this.buildNumber; }
 
     /**
      * Returns a version number parsed from the given text. If the matcher finds more than 1 result, the
@@ -298,9 +321,19 @@ public class JavaVersion implements Comparable<JavaVersion> {
                 }
             }
         }
-        if (!pre.isEmpty()) {
-            // Check for build number
+
+        if (ret == equal) {
+            if (!pre.isEmpty()) {
+                if (!otherJavaVersion.getPre().isEmpty()) {
+                    ret = Integer.compare(getBuildNumber(), otherJavaVersion.getBuildNumber());
+                } else {
+                    ret = largerThan;
+                }
+            } else if (!otherJavaVersion.getPre().isEmpty()) {
+                ret = smallerThan;
+            }
         }
+
         if (!meta.isEmpty()) {
             // Check for build number
         }
