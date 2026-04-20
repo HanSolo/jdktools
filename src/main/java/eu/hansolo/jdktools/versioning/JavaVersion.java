@@ -3,32 +3,28 @@ package eu.hansolo.jdktools.versioning;
 import eu.hansolo.jdktools.Architecture;
 import eu.hansolo.jdktools.ArchiveType;
 import eu.hansolo.jdktools.OperatingSystem;
-import eu.hansolo.jdktools.ReleaseStatus;
-import eu.hansolo.jdktools.util.Helper;
-import eu.hansolo.jdktools.util.OutputFormat;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class JavaVersion implements Comparable<JavaVersion> {
-    public static final Pattern VERSION_NO_PATTERN   = Pattern.compile("^([1-9]\\d*)(\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?)(\\-ea(\\.?(\\d+)?))?(\\+(fx|crac|r\\d+|\\d+\\.r\\d+|\\d+))?");
-    private             int     feature; // major
-    private             int     interim; // minor
-    private             int     update;  // patch
-    private             int     patch;
-    private             String  pre;
-    private             String  meta;
-    private             boolean graalVM;
-    private             boolean fx;
-    private             boolean crac;
-    private             int     buildNumber;
+    private static final Pattern VERSION_NUMBER_PATTERN = Pattern.compile("^([1-9]\\d*)(\\.(\\d+)\\.(\\d+)(?:\\.(\\d+))?)((-[a-zA-Z]+)(\\.(\\d+))?)?(\\+(fx|crac|r\\d+|\\d+\\.r\\d+|\\d+))?$");
+    private static final Pattern INT_PATTERN            = Pattern.compile("\\d+");
+    private              int     feature;
+    private              int     interim;
+    private              int     update;
+    private              int     patch;
+    private              String  pre;
+    private              String  meta;
+    private              boolean earlyAccess;
+    private              boolean graal;
+    private              boolean fx;
+    private              boolean crac;
+    private              int     buildNumber;
+    private              int     target;
 
 
     // ******************** Constructors **************************************
@@ -47,8 +43,10 @@ public class JavaVersion implements Comparable<JavaVersion> {
     public JavaVersion(final int feature, final int interim, final int update, final int patch) throws IllegalArgumentException {
         this(feature, interim, update, patch, "", "");
     }
-    public JavaVersion(final int feature, final int interim, final int update, final int patch, final String pre,  final String meta) {
-        Objects.requireNonNull(feature, "Feature version cannot be null");
+    public JavaVersion(final int feature, final int interim, final int update, final int patch, final String pre, final String meta) {
+        this(feature, interim, update, patch, pre, meta, (null != pre && !pre.isEmpty()), false, 0, false, false, 0);
+    }
+    JavaVersion(final int feature, final int interim, final int update, final int patch, final String pre, final String meta, final boolean earlyAccess, final boolean graal, final int target, final boolean fx, final boolean crac, final int buildNumber) {
         if (feature < 1) { throw new IllegalArgumentException("Feature version must be greater than 0"); }
         if (interim < 0) { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
         if (update  < 0) { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
@@ -61,13 +59,31 @@ public class JavaVersion implements Comparable<JavaVersion> {
         this.pre     = pre  == null || pre.isEmpty()  ? "" : pre.replaceFirst("-", "");
         this.meta    = meta == null || meta.isEmpty() ? "" : meta.replaceFirst("\\+", "");
 
-        // TODO: Check pre and meta with Regex for graalvm, fx, crac and build number and set the variables
-
         // Additional information
-        this.graalVM     = this.pre.isEmpty() ? false : ;
-        this.fx          = this.pre.isEmpty() ? false : ;
-        this.crac        = this.pre.isEmpty() ? false : ;
-        this.buildNumber = this.pre.isEmpty() ?   0   : ;
+        this.earlyAccess = earlyAccess;
+        this.graal       = graal;
+        this.target      = target;
+        this.fx          = fx;
+        this.crac        = crac;
+        this.buildNumber = buildNumber;
+
+        if (this.pre.isEmpty()) {
+            if (this.earlyAccess) {
+                this.pre = this.buildNumber > 0 ? "ea." + this.buildNumber : "ea";
+            }
+        }
+
+        if (this.meta.isEmpty()) {
+            if (this.graal) {
+                this.meta = this.buildNumber > 0 ? this.buildNumber + "." + (this.target > 0 ? "r" + target : "r") : (this.target > 0 ? "r" + target : "r");
+            } else if (this.buildNumber > 0 && this.pre.isEmpty()) {
+                this.meta = Integer.toString(this.buildNumber);
+            } else if (this.fx) {
+                this.meta = "fx";
+            } else if (this.crac) {
+                this.meta = "crac";
+            }
+        }
     }
     
 
@@ -99,16 +115,13 @@ public class JavaVersion implements Comparable<JavaVersion> {
 
     public String getPre() { return this.pre; }
     public void setPre(final String pre) {
-        this.pre = pre == null || pre.isEmpty() ? "" : pre.replaceFirst("-", "");
-
-        // TODO: Check with Regex for graalvm, fx, crac and build number and set the variables
+        this.pre         = (pre == null || pre.isEmpty()) ? "" : pre.replaceFirst("-", "");
+        this.earlyAccess = !pre.isEmpty();
     }
 
     public String getMeta() { return this.meta; }
     public void setMeta(final String meta) {
         this.meta = meta == null || meta.isEmpty() ? "" : meta.replaceFirst("\\+", "");
-
-        // TODO: Check with Regex for graalvm, fx, crac and build number and set the variables
     }
 
     public SimpleMajorVersion getMajorVersion() { return new SimpleMajorVersion(this.feature); }
@@ -128,7 +141,11 @@ public class JavaVersion implements Comparable<JavaVersion> {
     }
 
     // Additional convenience methods
-    public boolean isGraalVM() { return this.graalVM; }
+    public boolean isEarlyAccess() { return this.earlyAccess; }
+
+    public boolean isGraalVM() { return this.graal; }
+
+    public int getTarget() { return this.target; }
 
     public boolean hasFX() { return this.fx; }
 
@@ -154,94 +171,75 @@ public class JavaVersion implements Comparable<JavaVersion> {
         }
 
         // Remove things like cpu architecture, operating system and file endings
-        AtomicReference<String> tmp = new AtomicReference<>(text);
-        ArchiveType.getAsList().forEach(archiveType -> {
-            archiveType.getFileEndings().forEach(fileEnding -> {
-                if (fileEnding.isEmpty() || fileEnding.equals("-") || fileEnding.equals("_")) { return; }
-                tmp.set(tmp.get().replaceAll(Pattern.quote(fileEnding), ""));
-            });
-        });
-        OperatingSystem.getAsList().forEach(operatingSystem -> {
-            OperatingSystem.getAcronyms(operatingSystem).forEach(acronym -> {
-                if (acronym.isEmpty()) { return; }
-                tmp.set(tmp.get().replaceAll("\\-" + acronym, ""));
-                tmp.set(tmp.get().replaceAll("_" + acronym, ""));
-            });
-        });
-        Architecture.getAsList().forEach(architecture -> {
-            Architecture.getAcronyms(architecture).forEach(acronym -> {
-                if (acronym.isEmpty()) { return; }
-                tmp.set(tmp.get().replaceAll("\\-" + acronym, ""));
-                tmp.set(tmp.get().replaceAll("_" + acronym, ""));
-            });
-        });
-
-        // Streamline text to be more compatible to semver by replacing comming findings e.g. .bN -> +bN
-        tmp.set(tmp.get().replaceAll("\\-beta", "-ea"));
-        tmp.set(tmp.get().replaceAll("\\-BETA", "-ea"));
-        tmp.set(tmp.get().replaceAll("_ea", "-ea"));
-        tmp.set(tmp.get().replaceAll("_b", "+b"));
-        tmp.set(tmp.get().replaceAll("\\-b", "+b"));
-        tmp.set(tmp.get().replaceAll("\\.b", "+b"));
-        tmp.set(tmp.get().replaceAll("([0-9])b", "$1+b"));
-        tmp.set(tmp.get().replaceAll("(ea|EA)\\.([0-9]+)$", "ea+b$2"));
-        tmp.set(tmp.get().replaceAll("\\-([0-9]+)$", "+$1"));
-        tmp.set(tmp.get().replaceAll("_openj9.*", ""));
-        tmp.set(tmp.get().replaceAll("\\-openj9.*", ""));
-        tmp.set(tmp.get().replaceAll("\\-LTS|\\-lts", ""));
-
-        //System.out.println("stripped: " + tmp.get());
-
-        // Remove leading "1." to get correct version number e.g. 1.8u262 -> 8u262
-        String version = tmp.get();
-        String[] tmpParts = tmp.get().split("\\.");
-        if (isJavaVersion && tmpParts.length > 1) {
-            if (tmpParts[0].equals("1") && Integer.parseInt(tmpParts[1].substring(0, 1)) <= 8) {
-                version = tmp.get().startsWith("1.") ? tmp.get().replace("1.", "") : tmp.get();
+        String tmp = text;
+        for (ArchiveType archiveType : ArchiveType.getAsList()) {
+            for (String fileEnding : archiveType.getFileEndings()) {
+                if (fileEnding.isEmpty() || fileEnding.equals("-") || fileEnding.equals("_")) { continue; }
+                tmp = tmp.replaceAll(Pattern.quote(fileEnding), "");
             }
         }
-        //String version = tmp.get().startsWith("1.") ? tmp.get().replace("1.", "") : tmp.get();
+        for (OperatingSystem operatingSystem : OperatingSystem.getAsList()) {
+            for (String acronym : OperatingSystem.getAcronyms(operatingSystem)) {
+                if (acronym.isEmpty()) { continue; }
+                tmp = tmp.replaceAll("\\-" + acronym, "");
+                tmp = tmp.replaceAll("_" + acronym, "");
+            }
+        }
+        for (Architecture architecture : Architecture.getAsList()) {
+            for (String acronym : Architecture.getAcronyms(architecture)) {
+                if (acronym.isEmpty()) { continue; }
+                tmp = tmp.replaceAll("\\-" + acronym, "");
+                tmp = tmp.replaceAll("_" + acronym, "");
+            }
+        }
 
-        final Matcher           versionNoMatcher = VERSION_NO_PATTERN.matcher(version);
-        final List<MatchResult> results          = versionNoMatcher.results().toList();
-        final int               noOfResults      = results.size();
-        final int               resultToTake     = noOfResults > resultToMatch ? resultToMatch : 0;
-        if (noOfResults > 0) {
-            MatchResult result = results.get(resultToTake);
+        // Remove leading "1." to get correct version number e.g. 1.8u262 -> 8u262
+        String version = tmp;
+        String[] tmpParts = tmp.split("\\.");
+        if (isJavaVersion && tmpParts.length > 1) {
+            if (tmpParts[0].equals("1") && Integer.parseInt(tmpParts[1].substring(0, 1)) <= 8) {
+                version = tmp.startsWith("1.") ? tmp.replace("1.", "") : tmp;
+            }
+        }
+        version = version.replace("u", ".0.");
+
+        final Matcher matcher = VERSION_NUMBER_PATTERN.matcher(version);
+
+        if (matcher.find()) {
+            final MatchResult result = matcher.toMatchResult();
             if (null != result.group(1)) {
-                int feature    = Integer.valueOf(result.group(1));
-                int interim    = result.group(3)  != null ? Integer.valueOf(result.group(3)) : 0;
-                int update     = result.group(4)  != null ? Integer.valueOf(result.group(4)) : 0;
-                int patch      = result.group(5)  != null ? Integer.valueOf(result.group(5)) : 0;
+                int    feature      = Integer.parseInt(result.group(1));
+                int    interim      = result.group(3)  != null ? Integer.parseInt(result.group(3)) : 0;
+                int    update       = result.group(4)  != null ? Integer.parseInt(result.group(4)) : 0;
+                int    patch        = result.group(5)  != null ? Integer.parseInt(result.group(5)) : 0;
+                String  pre         = "";
+                String  meta        = "";
+                int     build       = 0;
+                boolean earlyAccess = !pre.isEmpty();
+                boolean graal       = false;
+                int     target      = 0;
+                boolean fx          = false;
+                boolean crac        = false;
 
-                String pre     = result.group(6)  != null ? result.group(6) : "";  // -ea
-                String build   = result.group(7)  != null ? result.group(7) : "";  // .23
-                int    bNumber = result.group(8)  != null ? Integer.valueOf(result.group(8)) : 0;
-
-                // TODO: Set build in JavaVersion -> parse pre in separate method
-                System.out.println("build: " + bNumber);
-                String meta    = "";
-                if (result.group(9) != null) {
-                    meta           = result.group(9); // +fx, +crac, +r25, +1.r17, +1
-                    String  feat   = result.group(10) != null ? result.group(10) : ""; // fx, crac, r25, 1.r17, 1
-                    boolean crac   = feat.equals("crac");
-                    boolean fx     = feat.equals("fx");
-                    boolean graal  = feat.matches("r\\d+");
-                    int     target = graal ? Integer.valueOf(feat.substring(1)) : -1;
-                    boolean comb   = feat.matches("\\d+\\.r\\d+");
-                    if (comb) {
-                        patch  = Integer.valueOf(feat.substring(0, feat.indexOf('.')));
-                        target = Integer.valueOf(feat.substring(feat.indexOf('r') + 1));
-                    }
-                    // TODO: Set these values in the JavaVersion -> parse meta in separate method
-                    System.out.println("crac  : " + crac);
-                    System.out.println("fx    : " + fx);
-                    System.out.println("graal : " + graal);
-                    System.out.println("target: " + target);
-                    System.out.println("patch : " + patch);
+                if (result.group(6) != null && !result.group(6).isEmpty()) {
+                    pre   = result.group(6) != null ? result.group(6)                  : "";  // -ea.23
+                    build = result.group(9) != null ? Integer.valueOf(result.group(9)) : 0;   // 23
                 }
 
-                return new JavaVersion(feature, interim, update, patch, pre, meta);
+                if (result.group(10) != null && !result.group(10).isEmpty()) {
+                    meta         = result.group(10); // +fx, +crac, +r25, +1.r17, +1
+                    String  feat = result.group(11) != null ? result.group(11) : ""; // 1, fx, crac, r25, 1.r17, 1
+                    build        = (build == 0 && INT_PATTERN.matcher(feat).matches()) ? Integer.parseInt(feat) : 0;
+                    crac         = feat.equals("crac");
+                    fx           = feat.equals("fx");
+                    graal        = feat.matches("r\\d+");
+                    target       = graal ? Integer.valueOf(feat.substring(1)) : 0;
+                    boolean comb = feat.matches("\\d+\\.r\\d+");
+                    if (comb) {
+                        target = Integer.valueOf(feat.substring(feat.indexOf('r') + 1));
+                    }
+                }
+                return new JavaVersion(feature, interim, update, patch, pre, meta, earlyAccess, graal, target, fx, crac, build);
             } else {
                 System.out.println("No valid JavaVersion found");
                 return null;
@@ -251,17 +249,20 @@ public class JavaVersion implements Comparable<JavaVersion> {
         return null;
     }
 
-
     @Override public boolean equals(final Object obj) {
         if (obj == JavaVersion.this) { return true; }
         if (!(obj instanceof JavaVersion)) { return false; }
         JavaVersion other = (JavaVersion) obj;
         boolean isEqual;
-        if (feature == other.getFeature()) {
-            if (interim == other.getInterim()) {
-                if (update == other.getUpdate()) {
-                    if (patch == other.getPatch()) {
-                        isEqual = true;
+        if (this.feature == other.getFeature()) {
+            if (this.interim == other.getInterim()) {
+                if (this.update == other.getUpdate()) {
+                    if (this.patch == other.getPatch()) {
+                        if (this.buildNumber == other.getBuildNumber()) {
+                            isEqual = true;
+                        } else {
+                            isEqual = false;
+                        }
                     } else {
                         isEqual = false;
                     }
@@ -274,21 +275,40 @@ public class JavaVersion implements Comparable<JavaVersion> {
         } else {
             isEqual = false;
         }
+
+        if (isEqual) {
+            isEqual = this.fx == other.hasFX();
+            if (isEqual) {
+                isEqual = this.graal == other.isGraalVM();
+                if (isEqual) {
+                    isEqual = this.target == other.getTarget();
+                } else {
+                    isEqual = false;
+                }
+                if (isEqual) {
+                    isEqual = this.crac == other.hasCRaC();
+                }
+            }
+        }
+
         return isEqual;
     }
 
-    public String toString(final boolean javaFormat, final boolean includePreAndMeta) {
-        final StringBuilder versionBuilder = new StringBuilder().append(feature).append(".").append(interim).append(".").append(update);
-        if (javaFormat)        { versionBuilder.append(".").append(patch); }
-        if (includePreAndMeta) {
-            if (!pre.isEmpty())  { versionBuilder.append("-").append(pre); }
-            if (!meta.isEmpty()) { versionBuilder.append("+").append(meta); }
-        }
-        return versionBuilder.toString();
+    @Override public int hashCode() {
+        return Objects.hash(feature, interim, update, patch, graal, fx, crac, target);
     }
 
     @Override public String toString() {
         return toString(false, true);
+    }
+    public String toString(final boolean javaFormat, final boolean includePreAndMeta) {
+        final StringBuilder versionBuilder = new StringBuilder().append(feature).append(".").append(interim).append(".").append(update);
+        if (javaFormat)        { versionBuilder.append(".").append(patch); }
+        if (includePreAndMeta) {
+            if (!this.pre.isEmpty())  { versionBuilder.append("-").append(this.pre); }
+            if (!this.meta.isEmpty()) { versionBuilder.append("+").append(this.meta); }
+        }
+        return versionBuilder.toString();
     }
 
     @Override public int compareTo(final JavaVersion otherJavaVersion) {
@@ -316,26 +336,16 @@ public class JavaVersion implements Comparable<JavaVersion> {
                     } else if (patch < otherJavaVersion.getPatch()) {
                         ret = smallerThan;
                     } else {
-                        ret = equal;
+                        if (buildNumber > otherJavaVersion.getBuildNumber()) {
+                            ret = largerThan;
+                        } else if (buildNumber < otherJavaVersion.getBuildNumber()) {
+                            ret = smallerThan;
+                        } else {
+                            ret = equal;
+                        }
                     }
                 }
             }
-        }
-
-        if (ret == equal) {
-            if (!pre.isEmpty()) {
-                if (!otherJavaVersion.getPre().isEmpty()) {
-                    ret = Integer.compare(getBuildNumber(), otherJavaVersion.getBuildNumber());
-                } else {
-                    ret = largerThan;
-                }
-            } else if (!otherJavaVersion.getPre().isEmpty()) {
-                ret = smallerThan;
-            }
-        }
-
-        if (!meta.isEmpty()) {
-            // Check for build number
         }
         return ret;
     }
