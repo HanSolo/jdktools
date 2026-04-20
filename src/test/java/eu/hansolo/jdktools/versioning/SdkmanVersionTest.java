@@ -84,28 +84,28 @@ public class SdkmanVersionTest {
 
         System.out.println("- FROM TEXT TO STRING -----------------------------");
 
-        System.out.println(v1 + " -> " + version1);
-        System.out.println(v2 + " -> " + version2);
-        System.out.println(v3 + " -> " + version3);
-        System.out.println(v4 + " -> " + version4);
-        System.out.println(v5 + " -> " + version5);
-        System.out.println(v6 + " -> " + version6);
-        System.out.println(v7 + " -> " + version7);
-        System.out.println(v8 + " -> " + version8);
-        System.out.println(v9 + " -> " + version9);
-        System.out.println(v10 + " -> " + version10);
-        System.out.println(v11 + " -> " + version11);
-        System.out.println(v12 + " -> " + version12);
-        System.out.println(v13 + " -> " + version13);
-        System.out.println(v14 + " -> " + version14);
-        System.out.println(v15 + " -> " + version15);
-        System.out.println(v16 + " -> " + version16);
-        System.out.println(v17 + " -> " + version17);
-        System.out.println(v18 + " -> " + version18);
-        System.out.println(v19 + " -> " + version19);
-        System.out.println(v20 + " -> " + version20);
-        System.out.println(v21 + " -> " + version21);
-        System.out.println(v22 + " -> " + version22);
+        System.out.println("v1 : " + v1 + " -> " + version1);
+        System.out.println("v2 : " + v2 + " -> " + version2);
+        System.out.println("v3 : " + v3 + " -> " + version3);
+        System.out.println("v4 : " + v4 + " -> " + version4);
+        System.out.println("v5 : " + v5 + " -> " + version5);
+        System.out.println("v6 : " + v6 + " -> " + version6);
+        System.out.println("v7 : " + v7 + " -> " + version7);
+        System.out.println("v8 : " + v8 + " -> " + version8);
+        System.out.println("v9 : " + v9 + " -> " + version9);
+        System.out.println("v10: " + v10 + " -> " + version10);
+        System.out.println("v11: " + v11 + " -> " + version11);
+        System.out.println("v12: " + v12 + " -> " + version12);
+        System.out.println("v13: " + v13 + " -> " + version13);
+        System.out.println("v14: " + v14 + " -> " + version14);
+        System.out.println("v15: " + v15 + " -> " + version15);
+        System.out.println("v16: " + v16 + " -> " + version16);
+        System.out.println("v17: " + v17 + " -> " + version17);
+        System.out.println("v18: " + v18 + " -> " + version18);
+        System.out.println("v19: " + v19 + " -> " + version19);
+        System.out.println("v20: " + v20 + " -> " + version20);
+        System.out.println("v21: " + v21 + " -> " + version21);
+        System.out.println("v22: " + v22 + " -> " + version22);
 
         System.out.println("- SORTING -----------------------------");
 
