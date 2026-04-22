@@ -16,15 +16,14 @@ public class SdkmanVersionBuilder {
     private int     build       = 0;
 
 
-
-    public static SdkmanVersionBuilder create() {
-        return new SdkmanVersionBuilder();
-    }
-
-    public SdkmanVersionBuilder feature(final int feature) {
+    private SdkmanVersionBuilder(final int feature) {
         this.feature = feature;
-        return this;
     }
+
+    public static SdkmanVersionBuilder feature(final int feature) {
+        return new SdkmanVersionBuilder(feature);
+    }
+
 
     public SdkmanVersionBuilder interim(final int interim) {
         this.interim = interim;
