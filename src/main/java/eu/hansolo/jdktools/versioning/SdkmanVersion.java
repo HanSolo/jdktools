@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 
 public class SdkmanVersion implements Comparable<SdkmanVersion> {
-    private static final Pattern            VERSION_NUMBER_PATTERN = Pattern.compile("^([1-9]\\d*)(\\.(\\d+)\\.(\\d+)(?:\\.(\\d+))?)((-[a-zA-Z]+)(\\.(\\d+))?)?(\\+(fx|crac|r\\d+|\\d+\\.r\\d+|\\d+))?$");
+    private static final Pattern            VERSION_NUMBER_PATTERN = Pattern.compile("^([1-9]\\d*)(\\.(\\d+)\\.(\\d+)(?:\\.(\\d+))?)(\\-(fx)(\\.crac)?)?(\\-(crac)(\\.fx)?)?(\\+ea(\\.(\\d+))?(\\.r(\\d+))?)?(\\+(\\d+)(\\.r(\\d+))?)?(\\+r(\\d+))?$");
     private static final Pattern            INT_PATTERN            = Pattern.compile("\\d+");
     private static final Pattern            ARCHIVE_TYPE_PATTERN;
     private static final Pattern            OS_ACRONYM_PATTERN;
@@ -110,8 +110,8 @@ public class SdkmanVersion implements Comparable<SdkmanVersion> {
         this.interim = interim;
         this.update  = update;
         this.patch   = patch;
-        this.pre     = pre  == null ? "" : pre.replaceFirst("-", "");
-        this.meta    = meta == null ? "" : meta.replaceFirst("\\+", "");
+        this.pre     = pre  == null ? "" : pre;//pre.replaceFirst("-", "");
+        this.meta    = meta == null ? "" : meta;//meta.replaceFirst("\\+", "");
 
         // Additional information
         this.earlyAccess  = earlyAccess;
@@ -122,27 +122,35 @@ public class SdkmanVersion implements Comparable<SdkmanVersion> {
         this.buildNumber  = buildNumber;
         this.majorVersion = new SimpleMajorVersion(feature);
 
-        if (this.pre.isEmpty()) {
-            if (this.earlyAccess) {
-                this.pre = this.buildNumber > 0 ? "ea." + this.buildNumber : "ea";
+        boolean hasBuild = buildNumber != 0;
+        if (this.meta.isEmpty()) {
+            boolean       hasMetaData = fx | crac;
+            StringBuilder metaBuilder = new StringBuilder();
+            if (hasMetaData) {
+                if (fx && crac) {
+                    metaBuilder.append("-crac.fx");
+                } else if (fx) {
+                    metaBuilder.append("-fx");
+                } else if (crac) {
+                    metaBuilder.append("-crac");
+                }
             }
+            this.meta = metaBuilder.toString();
         }
 
-        if (this.meta.isEmpty()) {
-            if (this.graal) {
-                this.meta = this.buildNumber > 0 ? this.buildNumber + "." + (this.target > 0 ? "r" + target : "r") : (this.target > 0 ? "r" + target : "r");
-            } else if (this.buildNumber > 0 && this.pre.isEmpty()) {
-                this.meta = Integer.toString(this.buildNumber);
-                if (this.fx) {
-                    this.meta += ".fx";
-                } else if (this.crac) {
-                    this.meta += ".crac";
-                }
-            } else if (this.fx) {
-                this.meta = "fx";
-            } else if (this.crac) {
-                this.meta = "crac";
+        if (this.pre.isEmpty()) {
+            StringBuilder preBuilder = new StringBuilder();
+            if (earlyAccess) {
+                preBuilder.append("+ea");
+                preBuilder.append(hasBuild ? "." + buildNumber : "");
+                preBuilder.append(graal ? ".r" + target : "");
+            } else if (hasBuild) {
+                preBuilder.append("+").append(buildNumber);
+                preBuilder.append(graal ? ".r" + target : "");
+            } else if (graal) {
+                preBuilder.append("+r").append(target);
             }
+            this.pre = preBuilder.toString();
         }
     }
     
@@ -250,34 +258,71 @@ public class SdkmanVersion implements Comparable<SdkmanVersion> {
                 boolean fx          = false;
                 boolean crac        = false;
 
-                if (result.group(6) != null && !result.group(6).isEmpty()) {
-                    pre         = result.group(6);  // -ea.23
-                    build       = result.group(9) != null ? Integer.parseInt(result.group(9)) : 0;   // 23
-                    earlyAccess = !pre.isEmpty();
+                if (result.group(6) != null) {
+                    meta = result.group(6);
+                    fx   = result.group(7) != null;
+                    crac = result.group(8) != null;
+                } else if (result.group(9) != null) {
+                    meta = result.group(9);
+                    crac = result.group(10) != null;
+                    fx   = result.group(11) != null;
+                }
+                earlyAccess = result.group(12) != null;
+
+                if (result.group(13) != null) {
+                    pre   = result.group(13);
+                    build = result.group(14) != null ? Integer.parseInt(result.group(14)) : 0;
                 }
 
-                if (result.group(10) != null && !result.group(10).isEmpty()) {
-                    meta         = result.group(10); // +fx, +crac, +r25, +1.r17, +1
-                    String  feat = result.group(11) != null ? result.group(11) : ""; // 1, fx, crac, r25, 1.r17, 1
-                    if (build == 0 && INT_PATTERN.matcher(feat).matches()) { build = Integer.parseInt(feat); }
-                    crac         = feat.equals("crac");
-                    fx           = feat.equals("fx");
-                    graal        = feat.matches("r\\d+");
-                    target       = graal ? Integer.parseInt(feat.substring(1)) : 0;
-                    boolean comb = feat.matches("\\d+\\.r\\d+");
-                    if (comb) {
-                        graal  = true;
-                        target = Integer.parseInt(feat.substring(feat.indexOf('r') + 1));
-                        if (build == 0) { build = Integer.parseInt(feat.substring(0, feat.indexOf('.'))); }
+                if (result.group(17) != null) {
+                    build = result.group(18) != null ? Integer.parseInt(result.group(18)) : 0;
+                }
+
+                if (result.group(15) != null && result.group(16) != null) {
+                    graal  = true;
+                    target = Integer.parseInt(result.group(16));
+                } else if (result.group(19) != null && result.group(20) != null) {
+                    graal  = true;
+                    target = Integer.parseInt(result.group(20));
+                } else if (result.group(21) != null) {
+                    graal = true;
+                    target = Integer.parseInt(result.group(22));
+                }
+
+                boolean hasBuild    = build != 0;
+                boolean hasMetaData = fx | crac;
+                StringBuilder metaBuilder = new StringBuilder();
+                if (hasMetaData) {
+                    if (fx && crac) {
+                        metaBuilder.append("-crac.fx");
+                    } else if (fx) {
+                        metaBuilder.append("-fx");
+                    } else if (crac) {
+                        metaBuilder.append("-crac");
                     }
                 }
+                meta = metaBuilder.toString();
+
+                StringBuilder preBuilder = new StringBuilder();
+                if (earlyAccess) {
+                    preBuilder.append("+ea");
+                    preBuilder.append(hasBuild ? "." + build : "");
+                    preBuilder.append(graal ? ".r" + target : "");
+                } else if (hasBuild) {
+                    preBuilder.append("+").append(build);
+                    preBuilder.append(graal ? ".r" + target : "");
+                } else if (graal) {
+                    preBuilder.append("+r").append(target);
+                }
+                pre = preBuilder.toString();
+
                 return new SdkmanVersion(feature, interim, update, patch, pre, meta, earlyAccess, graal, target, fx, crac, build);
             } else {
-                System.out.println("No valid JavaVersion found");
+                System.out.println("No valid Sdkman Version found (" +  text + ")");
                 return null;
             }
         }
-        System.out.println("No valid JavaVersion found");
+        System.out.println("No valid Sdkman Version found (" +  text + ")");
         return null;
     }
 
@@ -329,8 +374,8 @@ public class SdkmanVersion implements Comparable<SdkmanVersion> {
         final StringBuilder versionBuilder = new StringBuilder().append(feature).append(".").append(interim).append(".").append(update);
         if (javaFormat) { versionBuilder.append(".").append(patch); }
         if (includePreAndMeta) {
-            if (!this.pre.isEmpty())  { versionBuilder.append("-").append(this.pre); }
-            if (!this.meta.isEmpty()) { versionBuilder.append("+").append(this.meta); }
+            if (!this.meta.isEmpty()) { versionBuilder.append(this.meta); }
+            if (!this.pre.isEmpty())  { versionBuilder.append(this.pre); }
         }
         return versionBuilder.toString();
     }
