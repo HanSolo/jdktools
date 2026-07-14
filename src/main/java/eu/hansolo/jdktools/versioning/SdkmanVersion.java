@@ -3,6 +3,7 @@ package eu.hansolo.jdktools.versioning;
 import eu.hansolo.jdktools.Architecture;
 import eu.hansolo.jdktools.ArchiveType;
 import eu.hansolo.jdktools.OperatingSystem;
+import eu.hansolo.jdktools.ReleaseStatus;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -324,6 +325,10 @@ public class SdkmanVersion implements Comparable<SdkmanVersion> {
         }
         System.out.println("No valid Sdkman Version found (" +  text + ")");
         return null;
+    }
+
+    public VersionNumber toVersionNumber() {
+        return VersionNumberBuilder.create(feature).interimNumber(interim).updateNumber(update).patchNumber(patch).buildNumber(buildNumber).releaseStatus(earlyAccess ? ReleaseStatus.EA : ReleaseStatus.GA).build();
     }
 
     @Override public boolean equals(final Object obj) {

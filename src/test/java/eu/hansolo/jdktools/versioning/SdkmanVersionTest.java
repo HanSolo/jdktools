@@ -1,5 +1,6 @@
 package eu.hansolo.jdktools.versioning;
 
+import eu.hansolo.jdktools.ReleaseStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -191,5 +192,10 @@ public class SdkmanVersionTest {
         assert !sdkv3.isGreaterThan(sdkv4);
         assert sdkv3.equals(sdkv4);
         assert !sdkv3.isSmallerThan(sdkv4);
+
+        VersionNumber vn20 = cv20.toVersionNumber();
+        VersionNumber correct = VersionNumberBuilder.create(25).interimNumber(0).updateNumber(3).releaseStatus(ReleaseStatus.EA).buildNumber(2).build();
+        System.out.println(vn20 + " == " + correct);
+        assert vn20.equals(correct);
     }
 }
