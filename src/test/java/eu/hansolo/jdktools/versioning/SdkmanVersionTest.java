@@ -52,13 +52,16 @@ public class SdkmanVersionTest {
         final String v13 = "25.0.2+r25";
         final String v14 = "23.1.10+r21";
         final String v15 = "22.3.5+r11";
-        final String v16 = "25.0.2-fx+1";
+        final String v16 = "25.0.2-fx";
         final String v17 = "22.1.0+1.r17";
         final String v18 = "25.0.3+ea";
         final String v19 = "25.0.3+ea.r45";
         final String v20 = "25.0.3-crac+ea.2";
-        final String v21 = "1.8u262";
-        final String v22 = "8u242+1";
+        final String v21 = "8.0.262";
+        final String v22 = "8.0.242+1";
+        final String v23 = "18.0.2+1";
+        final String v24 = "8.0.482+1";
+        final String v25 = "17.0.8+1.10801";
 
         SdkmanVersion version1  = SdkmanVersion.fromText(v1);
         SdkmanVersion version2  = SdkmanVersion.fromText(v2);
@@ -82,29 +85,6 @@ public class SdkmanVersionTest {
         SdkmanVersion version20 = SdkmanVersion.fromText(v20);
         SdkmanVersion version21 = SdkmanVersion.fromText(v21);
         SdkmanVersion version22 = SdkmanVersion.fromText(v22);
-
-        System.out.println(v1 + " -> " + version1.toString());
-        System.out.println(v2 + " -> " + version2.toString());
-        System.out.println(v3 + " -> " + version3.toString());
-        System.out.println(v4 + " -> " + version4.toString());
-        System.out.println(v5 + " -> " + version5.toString());
-        System.out.println(v6 + " -> " + version6.toString());
-        System.out.println(v7 + " -> " + version7.toString());
-        System.out.println(v8 + " -> " + version8.toString());
-        System.out.println(v9 + " -> " + version9.toString());
-        System.out.println(v10 + " -> " + version10.toString());
-        System.out.println(v11 + " -> " + version11.toString());
-        System.out.println(v12 + " -> " + version12.toString());
-        System.out.println(v13 + " -> " + version13.toString());
-        System.out.println(v14 + " -> " + version14.toString());
-        System.out.println(v15 + " -> " + version15.toString());
-        System.out.println(v16 + " -> " + version16.toString());
-        System.out.println(v17 + " -> " + version17.toString());
-        System.out.println(v18 + " -> " + version18.toString());
-        System.out.println(v19 + " -> " + version19.toString());
-        System.out.println(v20 + " -> " + version20.toString());
-        System.out.println(v21 + " -> " + version21.toString());
-        System.out.println(v22 + " -> " + version22.toString());
 
         assert v1.equals(version1.toString());
         assert v2.equals(version2.toString());
@@ -139,8 +119,8 @@ public class SdkmanVersionTest {
         SdkmanVersion cv1  = SdkmanVersionBuilder.feature(8).interim(0).update(472).build();
         SdkmanVersion cv2  = SdkmanVersionBuilder.feature(25).interim(0).update(2).build();
         SdkmanVersion cv3  = SdkmanVersionBuilder.feature(26).interim(0).update(0).build();
-        SdkmanVersion cv4  = SdkmanVersionBuilder.feature(25).interim(0).update(2).buildNumber(1).build();
-        SdkmanVersion cv5  = SdkmanVersionBuilder.feature(8).interim(0).update(482).buildNumber(1).build();
+        SdkmanVersion cv4  = SdkmanVersionBuilder.feature(25).interim(0).update(2).patch(1).build();
+        SdkmanVersion cv5  = SdkmanVersionBuilder.feature(8).interim(0).update(482).patch(1).build();
         SdkmanVersion cv6  = SdkmanVersionBuilder.feature(21).interim(0).update(10).fx(true).build();
         SdkmanVersion cv7  = SdkmanVersionBuilder.feature(21).interim(0).update(10).crac(true).build();
         SdkmanVersion cv8  = SdkmanVersionBuilder.feature(26).interim(0).update(0).fx(true).build();
@@ -151,13 +131,13 @@ public class SdkmanVersionTest {
         SdkmanVersion cv13 = SdkmanVersionBuilder.feature(25).interim(0).update(2).graal(true).target(25).build();
         SdkmanVersion cv14 = SdkmanVersionBuilder.feature(23).interim(1).update(10).graal(true).target(21).build();
         SdkmanVersion cv15 = SdkmanVersionBuilder.feature(22).interim(3).update(5).graal(true).target(11).build();
-        SdkmanVersion cv16 = SdkmanVersionBuilder.feature(25).interim(0).update(2).fx(true).buildNumber(1).build();
-        SdkmanVersion cv17 = SdkmanVersionBuilder.feature(22).interim(1).update(0).graal(true).buildNumber(1).target(17).build();
+        SdkmanVersion cv16 = SdkmanVersionBuilder.feature(25).interim(0).update(2).fx(true).build();
+        SdkmanVersion cv17 = SdkmanVersionBuilder.feature(22).interim(1).update(0).graal(true).patch(1).target(17).build();
         SdkmanVersion cv18 = SdkmanVersionBuilder.feature(25).interim(0).update(3).earlyAccess(true).build();
         SdkmanVersion cv19 = SdkmanVersionBuilder.feature(25).interim(0).update(3).earlyAccess(true).graal(true).target(45).build();
         SdkmanVersion cv20 = SdkmanVersionBuilder.feature(25).interim(0).update(3).earlyAccess(true).buildNumber(2).crac(true).build();
         SdkmanVersion cv21 = SdkmanVersionBuilder.feature(8).interim(0).update(262).build();
-        SdkmanVersion cv22 = SdkmanVersionBuilder.feature(8).interim(0).update(242).buildNumber(1).build();
+        SdkmanVersion cv22 = SdkmanVersionBuilder.feature(8).interim(0).update(242).patch(1).build();
         assert version1.equals(cv1);
         assert version2.equals(cv2);
         assert version3.equals(cv3);
