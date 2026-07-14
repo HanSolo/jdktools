@@ -2,8 +2,8 @@ import java.text.SimpleDateFormat
 
 plugins {
     id 'java-library'
-    id 'net.nemerosa.versioning'      version '3.1.0'
-    id 'com.vanniktech.maven.publish' version '0.36.0'
+    id 'net.nemerosa.versioning'      version '4.0.1'
+    id 'com.vanniktech.maven.publish' version '0.37.0'
 }
 
 description = 'JDKTools is a library that contains tools related to system info and versioning'

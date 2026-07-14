@@ -41,8 +41,7 @@ public class SdkmanVersionBuilder {
     }
 
     public SdkmanVersionBuilder pre(final String pre) {
-        this.pre         = (pre == null || pre.isEmpty()) ? "" : pre.replaceFirst("-", "");
-        this.earlyAccess = !this.pre.isEmpty();
+        this.pre = (pre == null || pre.isEmpty()) ? "" : pre.replaceFirst("-", "");
         return this;
     }
 

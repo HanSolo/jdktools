@@ -175,7 +175,6 @@ public class SdkmanVersionTest {
 
         VersionNumber vn20 = cv20.toVersionNumber();
         VersionNumber correct = VersionNumberBuilder.create(25).interimNumber(0).updateNumber(3).releaseStatus(ReleaseStatus.EA).buildNumber(2).build();
-        System.out.println(vn20 + " == " + correct);
         assert vn20.equals(correct);
     }
 }
