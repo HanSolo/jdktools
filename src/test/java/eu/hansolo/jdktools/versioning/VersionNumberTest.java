@@ -635,4 +635,21 @@ class VersionNumberTest {
         assert v2.toString(OutputFormat.REDUCED_COMPRESSED, true, false).equals("25.0.2");
         assert v3.toString(OutputFormat.REDUCED_COMPRESSED, true, false).equals("25");
     }
+
+    @Test
+    void metaData() {
+        VersionNumber v1 = VersionNumberBuilder.create(25).interimNumber(0).updateNumber(3).buildNumber(17).releaseStatus(ReleaseStatus.EA).meta("25.1.3").build();
+        String        v1Correct = "25.0.3-ea.25.1.3+17";
+        //System.out.println(v1.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
+        assert v1.toString(OutputFormat.FULL_COMPRESSED, true, true, true).equals(v1Correct);
+
+        VersionNumber v2 = VersionNumberBuilder.create(25).interimNumber(0).updateNumber(3).buildNumber(17).meta("25.1.3").build();
+        String        v2Correct = "25.0.3-25.1.3+17";
+        //System.out.println(v2.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
+        assert v2.toString(OutputFormat.FULL_COMPRESSED, true, true, true).equals(v2Correct);
+
+        VersionNumber v1Parsed        = VersionNumber.fromText(v1Correct);
+        String        v1ParsedCorrect = "25.0.3-ea.25.1.3+17";
+        //System.out.println(v1Parsed.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
+    }
 }

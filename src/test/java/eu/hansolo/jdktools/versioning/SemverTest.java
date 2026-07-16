@@ -227,7 +227,7 @@ class SemverTest {
     public void emptyVersionNumberConstructor() {
         VersionNumber versionNumber = new VersionNumber();
         Semver        semver        = new Semver(versionNumber);
-        assert semver.toString(true).isEmpty();
+        assert semver.toString(true).equals("1");
     }
 
     @Test

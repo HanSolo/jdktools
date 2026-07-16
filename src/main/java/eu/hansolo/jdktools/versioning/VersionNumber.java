@@ -38,157 +38,188 @@ import java.util.regex.Pattern;
 
 
 public class VersionNumber implements Comparable<VersionNumber> {
-    public static final Pattern                 VERSION_NO_PATTERN      = Pattern.compile("([1-9]\\d*)((u(\\d+))|(\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.(\\d+)))?(([_b])(\\d+))?(((\\+|\\-)([a-zA-Z0-9_]+))?((\\+|\\-)([a-zA-Z0-9_]+))?)?");
-    public static final Pattern                 BUILD_NUMBER_PATTERN    = Pattern.compile("\\+?([bB])([0-9]+)");
-    public static final Pattern                 BUILD_PATTERN           = Pattern.compile("\\d+");
-    public static final Pattern                 LEADING_INT_PATTERN     = Pattern.compile("^[0-9]*");
-    private             OptionalInt             feature;
-    private             OptionalInt             interim;
-    private             OptionalInt             update;
-    private             OptionalInt             patch;
-    private             OptionalInt             fifth;
-    private             OptionalInt             sixth;
-    private             OptionalInt             build;
-    private             Optional<ReleaseStatus> releaseStatus;
+    public static final Pattern       VERSION_NO_PATTERN   = Pattern.compile("([1-9]\\d*)((u(\\d+))|(\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.?(\\d+)?\\.(\\d+)))?(([_b])(\\d+))?(-([a-zA-Z][a-zA-Z0-9]*(?:\\.\\d+)*|\\d+(?:\\.\\d+)*))?(\\+([a-zA-Z0-9_]+))?");
+    public static final Pattern       BUILD_NUMBER_PATTERN = Pattern.compile("\\+?([bB])([0-9]+)");
+    public static final Pattern       BUILD_PATTERN        = Pattern.compile("\\d+");
+    public static final Pattern       LEADING_INT_PATTERN  = Pattern.compile("^[0-9]*");
+    private             Integer       feature;
+    private             Integer       interim;
+    private             Integer       update;
+    private             Integer       patch;
+    private             Integer       fifth;
+    private             Integer       sixth;
+    private             Integer       build;
+    private             ReleaseStatus releaseStatus;
+    private             String        meta;
 
 
     // ******************** Constructors **************************************
     public VersionNumber() {
-        this(OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), OptionalInt.empty(), Optional.empty());
+        this.feature       = 1;
+        this.interim       = null;
+        this.update        = null;
+        this.patch         = null;
+        this.fifth         = null;
+        this.sixth         = null;
+        this.build         = null;
+        this.releaseStatus = ReleaseStatus.NONE;
+        this.meta          = "";
     }
     public VersionNumber(VersionNumber versionNumber) {
-        this(versionNumber.getFeature(), versionNumber.getInterim(), versionNumber.getUpdate(), versionNumber.getPatch(), versionNumber.getFifth(), versionNumber.getSixth(), versionNumber.getBuild(), versionNumber.getReleaseStatus());
+        this(versionNumber.getFeatureNumber(), versionNumber.getInterimNumber(), versionNumber.getUpdateNumber(), versionNumber.getPatchNumber(), versionNumber.getFifthNumber(), versionNumber.getSixthNumber(), versionNumber.getBuildNumber(), versionNumber.getReleaseStatusValue(), versionNumber.getMeta());
     }
     public VersionNumber(final Integer feature) {
-        this(feature, 0, 0, 0, 0, 0, null, null);
+        this(feature, 0, 0, 0, 0, 0, null, ReleaseStatus.NONE, "");
     }
     public VersionNumber(final Integer feature, final Integer interim) {
-        this(feature, interim, 0, 0, 0, 0, null, null);
+        this(feature, interim, 0, 0, 0, 0, null, ReleaseStatus.NONE, "");
     }
     public VersionNumber(final Integer feature, final Integer interim, final Integer update) {
-        this(feature, interim, update, 0, 0, 0, null, null);
+        this(feature, interim, update, 0, 0, 0, null, ReleaseStatus.NONE, "");
     }
     public VersionNumber(final Integer feature, final Integer interim, final Integer update, final Integer patch) throws IllegalArgumentException {
-        this(feature, interim, update, patch, 0, 0, null, null);
+        this(feature, interim, update, patch, 0, 0, null, ReleaseStatus.NONE, "");
     }
     public VersionNumber(final Integer feature, final Integer interim, final Integer update, final Integer patch, final Integer build) throws IllegalArgumentException {
-        this(feature, interim, update, patch, 0, 0, build, null);
+        this(feature, interim, update, patch, 0, 0, build, ReleaseStatus.NONE, "");
     }
     public VersionNumber(final Integer feature, final Integer interim, final Integer update, final Integer patch, final Integer fifth, final Integer sixth) {
-        this(feature, interim, update, patch, fifth, sixth, null, null);
+        this(feature, interim, update, patch, fifth, sixth, null, ReleaseStatus.NONE, "");
     }
     public VersionNumber(final Integer feature, final Integer interim, final Integer update, final Integer patch, final Integer fifth, final Integer sixth, final Integer build, final ReleaseStatus releaseStatus) throws IllegalArgumentException {
+        this(feature, interim, update, patch, fifth, sixth, build, releaseStatus, "");
+    }
+    public VersionNumber(final Integer feature, final Integer interim, final Integer update, final Integer patch, final Integer fifth, final Integer sixth, final Integer build, final ReleaseStatus releaseStatus, final String meta) throws IllegalArgumentException {
         Objects.requireNonNull(feature, "Feature version cannot be null");
-        if (0 >= feature)    { throw new IllegalArgumentException("Feature version must be greater than 0"); }
+        if (0 >= feature)                     { throw new IllegalArgumentException("Feature version must be greater than 0"); }
         if (null != interim  && 0 > interim)  { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
         if (null != update   && 0 > update)   { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
         if (null != patch    && 0 > patch)    { throw new IllegalArgumentException("Patch version cannot be smaller than 0"); }
         if (null != fifth    && 0 > fifth)    { throw new IllegalArgumentException("Fifth number cannot be smaller than 0"); }
         if (null != sixth    && 0 > sixth)    { throw new IllegalArgumentException("Sixth number cannot be smaller than 0"); }
         if (null != build    && 0 > build)    { throw new IllegalArgumentException("Build number cannot be smaller than 0"); }
-        this.feature        = OptionalInt.of(feature);
-        this.interim        = null == interim       ? OptionalInt.of(0)   : OptionalInt.of(interim);
-        this.update         = null == update        ? OptionalInt.of(0)   : OptionalInt.of(update);
-        this.patch          = null == patch         ? OptionalInt.of(0)   : OptionalInt.of(patch);
-        this.fifth          = null == fifth         ? OptionalInt.of(0)   : OptionalInt.of(fifth);
-        this.sixth          = null == sixth         ? OptionalInt.of(0)   : OptionalInt.of(sixth);
-        this.build          = null == build         ? OptionalInt.empty() : OptionalInt.of(build);
-        this.releaseStatus  = null == releaseStatus ? Optional.empty()    : Optional.of(releaseStatus);
+        this.feature       = feature;
+        this.interim       = null == interim       ? 0 : interim;
+        this.update        = null == update        ? 0 : update;
+        this.patch         = null == patch         ? 0 : patch;
+        this.fifth         = null == fifth         ? 0 : fifth;
+        this.sixth         = null == sixth         ? 0 : sixth;
+        this.build         = build;
+        this.releaseStatus = null == releaseStatus ? ReleaseStatus.NONE : releaseStatus;
+        this.meta          = null == meta          ? "" : meta;
     }
-    public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch) {
+    @Deprecated public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch) {
         this(feature, interim, update, patch, OptionalInt.of(0), OptionalInt.of(0), OptionalInt.empty(), Optional.empty());
     }
-    public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch, final OptionalInt fifth, final OptionalInt sixth) {
+    @Deprecated public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch, final OptionalInt fifth, final OptionalInt sixth) {
         this(feature, interim, update, patch, fifth, sixth, OptionalInt.empty(), Optional.empty());
     }
-    public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch, final OptionalInt fifth, final OptionalInt sixth, final OptionalInt build, final Optional<ReleaseStatus> releaseStatus) {
+    @Deprecated public VersionNumber(final OptionalInt feature, final OptionalInt interim, final OptionalInt update, final OptionalInt patch, final OptionalInt fifth, final OptionalInt sixth, final OptionalInt build, final Optional<ReleaseStatus> releaseStatus) {
         if (null == feature)                                                     { throw new IllegalArgumentException("Feature version cannot be null"); }
-        if (feature.isPresent()  && 0 >= feature.getAsInt()) { throw new IllegalArgumentException("Feature version must be greater than 0"); }
-        if (null != interim  && interim.isPresent()  && 0 > interim.getAsInt())  { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
-        if (null != update   && update.isPresent()   && 0 > update.getAsInt())   { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
-        if (null != patch    && patch.isPresent()    && 0 > patch.getAsInt())    { throw new IllegalArgumentException("Patch version cannot be smaller than 0"); }
-        if (null != fifth    && fifth.isPresent()    && 0 > fifth.getAsInt())    { throw new IllegalArgumentException("Fifth number cannot be smaller than 0"); }
-        if (null != sixth    && sixth.isPresent()    && 0 > sixth.getAsInt())    { throw new IllegalArgumentException("Sixth number cannot be smaller than 0"); }
-        if (null != build    && build.isPresent()    && 0 > build.getAsInt())    { throw new IllegalArgumentException("Build number cannot be smaller than 0"); }
-
-        this.feature       = feature;
-        this.interim       = null == interim       ? OptionalInt.of(0)   : interim;
-        this.update        = null == update        ? OptionalInt.of(0)   : update;
-        this.patch         = null == patch         ? OptionalInt.of(0)   : patch;
-        this.fifth         = null == fifth         ? OptionalInt.of(0)   : fifth;
-        this.sixth         = null == sixth         ? OptionalInt.of(0)   : sixth;
-        this.build         = null == build         ? OptionalInt.empty() : build;
-        this.releaseStatus = null == releaseStatus ? Optional.empty()    : releaseStatus;
+        if (feature.isPresent()  && 0 >= feature.getAsInt())                    { throw new IllegalArgumentException("Feature version must be greater than 0"); }
+        if (null != interim  && interim.isPresent()  && 0 > interim.getAsInt()) { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
+        if (null != update   && update.isPresent()   && 0 > update.getAsInt())  { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
+        if (null != patch    && patch.isPresent()    && 0 > patch.getAsInt())   { throw new IllegalArgumentException("Patch version cannot be smaller than 0"); }
+        if (null != fifth    && fifth.isPresent()    && 0 > fifth.getAsInt())   { throw new IllegalArgumentException("Fifth number cannot be smaller than 0"); }
+        if (null != sixth    && sixth.isPresent()    && 0 > sixth.getAsInt())   { throw new IllegalArgumentException("Sixth number cannot be smaller than 0"); }
+        if (null != build    && build.isPresent()    && 0 > build.getAsInt())   { throw new IllegalArgumentException("Build number cannot be smaller than 0"); }
+        this.feature       = (null == feature || feature.isEmpty())           ? null               : feature.getAsInt();
+        this.interim       = (null == interim)                                ? Integer.valueOf(0) : (interim.isEmpty() ? null : interim.getAsInt());
+        this.update        = (null == update)                                 ? Integer.valueOf(0) : (update.isEmpty()  ? null : update.getAsInt());
+        this.patch         = (null == patch)                                  ? Integer.valueOf(0) : (patch.isEmpty()   ? null : patch.getAsInt());
+        this.fifth         = (null == fifth)                                  ? Integer.valueOf(0) : (fifth.isEmpty()   ? null : fifth.getAsInt());
+        this.sixth         = (null == sixth)                                  ? Integer.valueOf(0) : (sixth.isEmpty()   ? null : sixth.getAsInt());
+        this.build         = (null == build || build.isEmpty())               ? null               : build.getAsInt();
+        this.releaseStatus = (null == releaseStatus || releaseStatus.isEmpty()) ? ReleaseStatus.NONE : releaseStatus.get();
     }
 
 
     // ******************** Methods *******************************************
-    public OptionalInt getFeature() { return feature; }
+    /** @deprecated Use {@link #getFeatureNumber()} instead. */
+    @Deprecated public OptionalInt getFeature() { return feature == null ? OptionalInt.empty() : OptionalInt.of(feature); }
+    public Integer getFeatureNumber() { return feature; }
     public void setFeature(final Integer feature) throws IllegalArgumentException {
         if (null == feature) { throw new IllegalArgumentException("Feature version cannot be null"); }
         if (0 >= feature) { throw new IllegalArgumentException("Feature version must be greater than 0 (" + feature + ")"); }
-        this.feature = OptionalInt.of(feature);
+        this.feature = feature;
     }
 
-    public OptionalInt getInterim() { return interim; }
+    /** @deprecated Use {@link #getInterimNumber()} instead. */
+    @Deprecated public OptionalInt getInterim() { return interim == null ? OptionalInt.empty() : OptionalInt.of(interim); }
+    public Integer getInterimNumber() { return interim; }
     public void setInterim(final Integer interim) throws IllegalArgumentException {
         if (null != interim && 0 > interim) { throw new IllegalArgumentException("Interim version cannot be smaller than 0"); }
-        this.interim = null == interim ? OptionalInt.empty() : OptionalInt.of(interim);
+        this.interim = interim;
     }
 
-    public OptionalInt getUpdate() { return update; }
+    /** @deprecated Use {@link #getUpdateNumber()} instead. */
+    @Deprecated public OptionalInt getUpdate() { return update == null ? OptionalInt.empty() : OptionalInt.of(update); }
+    public Integer getUpdateNumber() { return update; }
     public void setUpdate(final Integer update) throws IllegalArgumentException {
-        if (null != update &&  0 > update) { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
-        this.update = null == update ? OptionalInt.empty() : OptionalInt.of(update);
+        if (null != update && 0 > update) { throw new IllegalArgumentException("Update version cannot be smaller than 0"); }
+        this.update = update;
     }
 
-    public OptionalInt getPatch() { return patch; }
+    /** @deprecated Use {@link #getPatchNumber()} instead. */
+    @Deprecated public OptionalInt getPatch() { return patch == null ? OptionalInt.empty() : OptionalInt.of(patch); }
+    public Integer getPatchNumber() { return patch; }
     public void setPatch(final Integer patch) throws IllegalArgumentException {
         if (null != patch && 0 > patch) { throw new IllegalArgumentException("Patch version cannot be smaller than 0"); }
-        this.patch = null == patch ? OptionalInt.empty() : OptionalInt.of(patch);
+        this.patch = patch;
     }
 
-    public OptionalInt getFifth() { return fifth; }
+    /** @deprecated Use {@link #getFifthNumber()} instead. */
+    @Deprecated public OptionalInt getFifth() { return fifth == null ? OptionalInt.empty() : OptionalInt.of(fifth); }
+    public Integer getFifthNumber() { return fifth; }
     public void setFifth(final Integer fifth) throws IllegalArgumentException {
         if (null != fifth && 0 > fifth) { throw new IllegalArgumentException("Fifth number cannot be smaller than 0"); }
-        this.fifth = null == fifth ? OptionalInt.empty() : OptionalInt.of(fifth);
+        this.fifth = fifth;
     }
 
-    public OptionalInt getSixth() { return sixth; }
+    /** @deprecated Use {@link #getSixthNumber()} instead. */
+    @Deprecated public OptionalInt getSixth() { return sixth == null ? OptionalInt.empty() : OptionalInt.of(sixth); }
+    public Integer getSixthNumber() { return sixth; }
     public void setSixth(final Integer sixth) throws IllegalArgumentException {
         if (null != sixth && 0 > sixth) { throw new IllegalArgumentException("Sixth number cannot be smaller than 0"); }
-        this.sixth = null == sixth ? OptionalInt.empty() : OptionalInt.of(sixth);
+        this.sixth = sixth;
     }
 
-    public OptionalInt getBuild() { return build; }
+    /** @deprecated Use {@link #getBuildNumber()} instead. */
+    @Deprecated public OptionalInt getBuild() { return build == null ? OptionalInt.empty() : OptionalInt.of(build); }
+    public Integer getBuildNumber() { return build; }
     public void setBuild(final Integer build) throws IllegalArgumentException {
         if (null != build && 0 >= build) {
-            this.build = OptionalInt.empty();
+            this.build = null;
         } else {
-            this.build = null == build ? OptionalInt.empty() : OptionalInt.of(build);
+            this.build = build;
         }
     }
 
-    public Optional<ReleaseStatus> getReleaseStatus() { return releaseStatus; }
+    /** @deprecated Use {@link #getReleaseStatusValue()} instead. */
+    @Deprecated
+    public Optional<ReleaseStatus> getReleaseStatus() { return releaseStatus == ReleaseStatus.NONE ? Optional.empty() : Optional.of(releaseStatus); }
+    public ReleaseStatus getReleaseStatusValue() { return releaseStatus; }
     public void setReleaseStatus(final ReleaseStatus releaseStatus) {
-        if (null == releaseStatus) { throw new IllegalArgumentException("Release status cannot be null"); }
-        this.releaseStatus = Optional.of(releaseStatus);
+        this.releaseStatus = null == releaseStatus ? ReleaseStatus.NONE : releaseStatus;
     }
 
-    public SimpleMajorVersion getMajorVersion() { return new SimpleMajorVersion(feature.isPresent() ? feature.getAsInt() : 0); }
+    public String getMeta() { return this.meta; }
+    public void setMeta(final String meta) { this.meta = null == meta ? "" : meta; }
+
+    public SimpleMajorVersion getMajorVersion() { return new SimpleMajorVersion(feature != null ? feature : 0); }
 
     public String getNormalizedVersionNumber() {
         StringBuilder versionBuilder = new StringBuilder();
-        if (feature.isPresent()) {
-            versionBuilder.append(feature.getAsInt());
+        if (feature != null) {
+            versionBuilder.append(feature);
         } else {
             throw new IllegalArgumentException("Feature version number cannot be null");
         }
-        versionBuilder.append(".").append(interim.isPresent() ? interim.getAsInt() : "0");
-        versionBuilder.append(".").append(update.isPresent()  ? update.getAsInt()  : "0");
-        versionBuilder.append(".").append(patch.isPresent()   ? patch.getAsInt()   : "0");
-        versionBuilder.append(".").append(fifth.isPresent()   ? fifth.getAsInt()   : "0");
-        versionBuilder.append(".").append(sixth.isPresent()   ? sixth.getAsInt()   : "0");
+        versionBuilder.append(".").append(interim != null ? interim : 0);
+        versionBuilder.append(".").append(update  != null ? update  : 0);
+        versionBuilder.append(".").append(patch   != null ? patch   : 0);
+        versionBuilder.append(".").append(fifth   != null ? fifth   : 0);
+        versionBuilder.append(".").append(sixth   != null ? sixth   : 0);
         return versionBuilder.toString();
     }
 
@@ -242,20 +273,22 @@ public class VersionNumber implements Comparable<VersionNumber> {
         tmp.set(tmp.get().replaceAll("\\-beta", "-ea"));
         tmp.set(tmp.get().replaceAll("\\-BETA", "-ea"));
         tmp.set(tmp.get().replaceAll("_ea", "-ea"));
-        tmp.set(tmp.get().replaceAll("_b", "+b"));
-        tmp.set(tmp.get().replaceAll("\\-b", "+b"));
-        tmp.set(tmp.get().replaceAll("\\.b", "+b"));
+        tmp.set(tmp.get().replaceAll("_b([0-9])", "+b$1"));
+        tmp.set(tmp.get().replaceAll("\\-b([0-9])", "+b$1"));
+        tmp.set(tmp.get().replaceAll("\\.b([0-9])", "+b$1"));
         tmp.set(tmp.get().replaceAll("([0-9])b", "$1+b"));
-        tmp.set(tmp.get().replaceAll("(ea|EA)\\.([0-9]+)$", "ea+b$2"));
         tmp.set(tmp.get().replaceAll("\\-([0-9]+)$", "+$1"));
         tmp.set(tmp.get().replaceAll("_openj9.*", ""));
         tmp.set(tmp.get().replaceAll("\\-openj9.*", ""));
         tmp.set(tmp.get().replaceAll("\\-LTS|\\-lts", ""));
+        // Normalize: swap +build-preRelease → -preRelease+build so the regex always sees preRelease first.
+        // Only swap for known pre-release keywords to avoid misidentifying OS/libc suffixes (e.g. -musl).
+        tmp.set(tmp.get().replaceAll("(?i)(\\+[a-zA-Z0-9_]+)(-(ea|beta|pre|alpha)(?:[.][0-9]+)*)", "$2$1"));
 
         //System.out.println("stripped: " + tmp.get());
 
         // Remove leading "1." to get correct version number e.g. 1.8u262 -> 8u262
-        String version = tmp.get();
+        String   version  = tmp.get();
         String[] tmpParts = tmp.get().split("\\.");
         if (isJavaVersion && tmpParts.length > 1) {
             if (tmpParts[0].equals("1") && Integer.parseInt(tmpParts[1].substring(0, 1)) <= 8) {
@@ -361,124 +394,46 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 versionNumber.setInterim(getPositiveIntFromText(result.group(10)));
             }
 
-            // Parse release status and build
+            // Parse release status, build and meta
+            // New pattern groups: 14 = -preRelease block, 15 = preRelease content, 16 = +build block, 17 = build content
             versionNumber.setReleaseStatus(ReleaseStatus.GA);
-            if (null == result.group(18)) {
-                if (null == result.group(15)) {
-                    versionNumber.setReleaseStatus(ReleaseStatus.GA);
-                } else if (null != result.group(15) && null == result.group(18)) {
-                    // Group 15 is present
-                    if (result.group(16).equals("-")) {
-                        // Early Access
-                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                    } else {
-                        // Build
-                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
-                        final List<MatchResult> buildResults = buildMatcher.results().toList();
-                        if (!buildResults.isEmpty()) {
-                            int build = Integer.parseInt(buildResults.get(0).group());
-                            versionNumber.setBuild(build);
-                        }
-                    }
-                } else if (null == result.group(15) && null != result.group(18)) {
-                    // Group 18 is present
-                    if (result.group(19).equals("-")) {
-                        // Early Access
-                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                    } else {
-                        // Build
-                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
-                        final List<MatchResult> buildResults = buildMatcher.results().toList();
-                        if (!buildResults.isEmpty()) {
-                            int build = Integer.parseInt(buildResults.get(0).group());
-                            versionNumber.setBuild(build);
+            versionNumber.setMeta("");
+
+            if (null != result.group(14)) {
+                // Pre-release section present, e.g. -ea, -ea.25.3.1.2, -23.1.3, -DEBUG
+                final String preRelease = result.group(15);
+                final int    dotIndex   = preRelease.indexOf('.');
+                final String identifier = dotIndex >= 0 ? preRelease.substring(0, dotIndex) : preRelease;
+                final String suffix     = dotIndex >= 0 ? preRelease.substring(dotIndex + 1) : "";
+                if (!identifier.isEmpty() && Character.isLetter(identifier.charAt(0))) {
+                    // Any alphabetic identifier (ea, beta, pre, DEBUG, etc.) → EA
+                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
+                    if (!suffix.isEmpty()) {
+                        if (Helper.isPositiveInteger(suffix)) {
+                            // Single integer suffix → build number (e.g. -ea.28)
+                            versionNumber.setBuild(Integer.parseInt(suffix));
+                        } else {
+                            // Multi-part dot-separated suffix → meta (e.g. -ea.25.3.1.2)
+                            versionNumber.setMeta(suffix);
                         }
                     }
                 } else {
-                    // Group 15 and 18 are present
-                    if (result.group(16).equals("-")) {
-                        // Early Access
-                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                    } else {
-                        // Build
-                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
-                        final List<MatchResult> buildResults = buildMatcher.results().toList();
-                        if (!buildResults.isEmpty()) {
-                            int build = Integer.parseInt(buildResults.get(0).group());
-                            versionNumber.setBuild(build);
-                        }
-                    }
-                    if (result.group(19).equals("-")) {
-                        // Early Access
-                        versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                    } else {
-                        // Build
-                        final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
-                        final List<MatchResult> buildResults = buildMatcher.results().toList();
-                        if (!buildResults.isEmpty()) {
-                            int build = Integer.parseInt(buildResults.get(0).group());
-                            versionNumber.setBuild(build);
-                        }
-                    }
+                    // Numeric identifier: entire pre-release content goes to meta (e.g. -23.1.3)
+                    versionNumber.setMeta(preRelease);
                 }
-            } else if (null != result.group(15) && null == result.group(18)) {
-                // Group 15 is present
-                if (result.group(16).equals("-")) {
-                    // Early Access
-                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                } else {
-                    // Build
-                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
-                    final List<MatchResult> buildResults = buildMatcher.results().toList();
-                    if (!buildResults.isEmpty()) {
-                        int build = Integer.parseInt(buildResults.get(0).group());
-                        versionNumber.setBuild(build);
-                    }
-                }
-            } else if (null == result.group(15) && null != result.group(18)) {
-                // Group 18 is present
-                if (result.group(19).equals("-")) {
-                    // Early Access
-                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                } else {
-                    // Build
-                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
-                    final List<MatchResult> buildResults = buildMatcher.results().toList();
-                    if (!buildResults.isEmpty()) {
-                        int build = Integer.parseInt(buildResults.get(0).group());
-                        versionNumber.setBuild(build);
-                    }
-                }
-            } else {
-                // Group 15 and 18 are present
-                if (result.group(16).equals("-")) {
-                    // Early Access
-                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                } else {
-                    // Build
-                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
-                    final List<MatchResult> buildResults = buildMatcher.results().toList();
-                    if (!buildResults.isEmpty()) {
-                        int build = Integer.parseInt(buildResults.get(0).group());
-                        versionNumber.setBuild(build);
-                    }
-                }
-                if (result.group(19).equals("-")) {
-                    // Early Access
-                    versionNumber.setReleaseStatus(ReleaseStatus.EA);
-                } else {
-                    // Build
-                    final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(20));
-                    final List<MatchResult> buildResults = buildMatcher.results().toList();
-                    if (!buildResults.isEmpty()) {
-                        int build = Integer.parseInt(buildResults.get(0).group());
-                        versionNumber.setBuild(build);
-                    }
+            }
+
+            if (null != result.group(16)) {
+                // Build metadata section present, e.g. +7, +b25
+                final Matcher           buildMatcher = BUILD_PATTERN.matcher(result.group(17));
+                final List<MatchResult> buildResults = buildMatcher.results().toList();
+                if (!buildResults.isEmpty()) {
+                    versionNumber.setBuild(Integer.parseInt(buildResults.get(0).group()));
                 }
             }
 
             // No Semver build found, try things like "b01" etc.
-            if (versionNumber.getBuild().isEmpty()) {
+            if (versionNumber.getBuildNumber() == null) {
                 final Matcher           buildNumberMatcher = BUILD_NUMBER_PATTERN.matcher(version);
                 final List<MatchResult> buildNumberResults = buildNumberMatcher.results().toList();
                 if (!buildNumberResults.isEmpty()) {
@@ -489,19 +444,19 @@ public class VersionNumber implements Comparable<VersionNumber> {
                 }
             }
 
-            if (versionNumber.getInterim().isEmpty()) {
+            if (versionNumber.getInterimNumber() == null) {
                 versionNumber.setInterim(0);
             }
-            if (versionNumber.getUpdate().isEmpty()) {
+            if (versionNumber.getUpdateNumber() == null) {
                 versionNumber.setUpdate(0);
             }
-            if (versionNumber.getPatch().isEmpty()) {
+            if (versionNumber.getPatchNumber() == null) {
                 versionNumber.setPatch(0);
             }
-            if (versionNumber.getFifth().isEmpty()) {
+            if (versionNumber.getFifthNumber() == null) {
                 versionNumber.setFifth(0);
             }
-            if (versionNumber.getSixth().isEmpty()) {
+            if (versionNumber.getSixthNumber() == null) {
                 versionNumber.setSixth(0);
             }
             numbersFound.add(versionNumber);
@@ -525,7 +480,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
      * @return the numbers that are available in the version number
      */
     public int numbersAvailable() {
-        return 1 + (interim.isPresent() ? 1 : 0) + (update.isPresent() ? 1 : 0) + (patch.isPresent() ? 1 : 0) + (fifth.isPresent() ? 1 : 0) + (sixth.isPresent() ? 1 : 0);
+        return 1 + (interim != null ? 1 : 0) + (update != null ? 1 : 0) + (patch != null ? 1 : 0) + (fifth != null ? 1 : 0) + (sixth != null ? 1 : 0);
     }
 
     private static Integer getPositiveIntFromText(final String text) {
@@ -559,7 +514,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
      */
     public int compareForFilterTo(final VersionNumber otherVersionNumber) {
         int comparisonResult = 0;
-        if (feature.isEmpty() || otherVersionNumber.getFeature().isEmpty()) { return comparisonResult; }
+        if (feature == null || otherVersionNumber.getFeatureNumber() == null) { return comparisonResult; }
         String[] version1Splits = toString().split("\\.");
         String[] version2Splits = otherVersionNumber.toString().split("\\.");
         int maxLengthOfVersionSplits = Math.min(version1Splits.length, version2Splits.length);
@@ -577,33 +532,33 @@ public class VersionNumber implements Comparable<VersionNumber> {
     }
 
     @Override public int hashCode() {
-        if (feature.isEmpty()) { throw new IllegalArgumentException("feature cannot be null or empty"); }
-        return Objects.hash(feature.getAsInt(), interim.orElse(0), update.orElse(0), patch.orElse(0));
+        if (feature == null) { throw new IllegalArgumentException("feature cannot be null or empty"); }
+        return Objects.hash(feature, interim == null ? 0 : interim, update == null ? 0 : update, patch == null ? 0 : patch);
     }
 
     @Override public boolean equals(final Object obj) {
         if (obj == VersionNumber.this) { return true; }
         if (!(obj instanceof VersionNumber)) { return false; }
-        if (feature.isEmpty()) { throw new IllegalArgumentException("feature cannot be null or empty"); }
+        if (feature == null) { throw new IllegalArgumentException("feature cannot be null or empty"); }
         VersionNumber other = (VersionNumber) obj;
-        if (other.feature.isEmpty()) { throw new IllegalArgumentException("feature cannot be null or empty"); }
+        if (other.feature == null) { throw new IllegalArgumentException("feature cannot be null or empty"); }
         boolean isEqual;
-        if (feature.getAsInt() == other.getFeature().getAsInt()) {
-            if (interim.isPresent()) {
-                if (other.getInterim().isPresent()) {
-                    if (interim.getAsInt() == other.getInterim().getAsInt()) {
-                        if (update.isPresent()) {
-                            if (other.getUpdate().isPresent()) {
-                                if (update.getAsInt() == other.getUpdate().getAsInt()) {
-                                    if (patch.isPresent()) {
-                                        if (other.getPatch().isPresent()) {
-                                            if (patch.getAsInt() == other.getPatch().getAsInt()) {
-                                                if (fifth.isPresent()) {
-                                                    if (other.getFifth().isPresent()) {
-                                                        if (fifth.getAsInt() == other.getFifth().getAsInt()) {
-                                                            if (sixth.isPresent()) {
-                                                                if (other.getSixth().isPresent()) {
-                                                                    isEqual = sixth.getAsInt() == other.getSixth().getAsInt();
+        if (feature.equals(other.feature)) {
+            if (interim != null) {
+                if (other.interim != null) {
+                    if (interim.equals(other.interim)) {
+                        if (update != null) {
+                            if (other.update != null) {
+                                if (update.equals(other.update)) {
+                                    if (patch != null) {
+                                        if (other.patch != null) {
+                                            if (patch.equals(other.patch)) {
+                                                if (fifth != null) {
+                                                    if (other.fifth != null) {
+                                                        if (fifth.equals(other.fifth)) {
+                                                            if (sixth != null) {
+                                                                if (other.sixth != null) {
+                                                                    isEqual = sixth.equals(other.sixth);
                                                                 } else {
                                                                     isEqual = false;
                                                                 }
@@ -649,9 +604,9 @@ public class VersionNumber implements Comparable<VersionNumber> {
         } else {
             isEqual = false;
         }
-        if (isEqual && releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isPresent() &&
-            other.getReleaseStatus().isPresent() && ReleaseStatus.EA == other.getReleaseStatus().get() && other.getBuild().isPresent()) {
-            isEqual = getBuild().getAsInt() == other.getBuild().getAsInt();
+        if (isEqual && ReleaseStatus.EA == releaseStatus && build != null &&
+            ReleaseStatus.EA == other.releaseStatus && other.build != null) {
+            isEqual = build.equals(other.build);
         }
         return isEqual;
     }
@@ -670,100 +625,135 @@ public class VersionNumber implements Comparable<VersionNumber> {
     }
 
     public String toString(final OutputFormat outputFormat, final boolean javaFormat, final boolean includeReleaseStatusAndBuild) {
-        String pre   = this.releaseStatus.isPresent() ? (ReleaseStatus.EA == this.releaseStatus.get() ? "-ea" : "") : "";
-        String build = (this.build.isPresent() && this.build.getAsInt() > 0) ? ("+" + this.build.getAsInt()) : "";
-
+        return toString(outputFormat, javaFormat, includeReleaseStatusAndBuild, false);
+    }
+    public String toString(final OutputFormat outputFormat, final boolean javaFormat, final boolean includeReleaseStatusAndBuild, final boolean includeMeta) {
+        String pre      = ReleaseStatus.EA == this.releaseStatus ? "-ea" : "";
+        String buildStr = (this.build != null && this.build > 0) ? ("+" + this.build) : "";
+        if (includeMeta && !meta.isEmpty()) { pre += ReleaseStatus.EA == this.releaseStatus ? ("." + meta) : "-" + meta; }
         StringBuilder versionBuilder = new StringBuilder();
         switch(outputFormat) {
             case REDUCED:
             case REDUCED_COMPRESSED: // e.g. 25.0.0.0 -> 25
-                if (feature.isPresent()) { versionBuilder.append(feature.getAsInt()); }
-                if (sixth.isPresent() && sixth.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent())  { versionBuilder.append(".").append(update.getAsInt()); }
-                    if (patch.isPresent())   { versionBuilder.append(".").append(patch.getAsInt()); }
+                if (feature != null) { versionBuilder.append(feature); }
+                if (sixth != null && sixth != 0) {
+                    if (interim != null) { versionBuilder.append(".").append(interim); }
+                    if (update  != null) { versionBuilder.append(".").append(update); }
+                    if (patch   != null) { versionBuilder.append(".").append(patch); }
                     if (!javaFormat) {
-                        if (fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
-                        versionBuilder.append(".").append(sixth.getAsInt());
+                        if (fifth != null) {
+                            versionBuilder.append(".").append(fifth);
+                            versionBuilder.append(".").append(sixth);
+                        }
                     }
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
-                } else if (fifth.isPresent() && fifth.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                    if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
-                    if (!javaFormat) { versionBuilder.append(".").append(fifth.getAsInt()); }
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (fifth != null && fifth != 0) {
+                    if (interim != null) { versionBuilder.append(".").append(interim); }
+                    if (update  != null) { versionBuilder.append(".").append(update); }
+                    if (patch   != null) { versionBuilder.append(".").append(patch); }
+                    if (!javaFormat) { versionBuilder.append(".").append(fifth); }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
+
                     return versionBuilder.toString();
-                } else if (patch.isPresent() && patch.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                    versionBuilder.append(".").append(patch.getAsInt());
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (patch != null && patch != 0) {
+                    if (interim != null) {
+                        versionBuilder.append(".").append(interim);
+                        if (update  != null) {
+                            versionBuilder.append(".").append(update);
+                            versionBuilder.append(".").append(patch);
+                        }
+                    }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
-                } else if (update.isPresent() && update.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    versionBuilder.append(".").append(update.getAsInt());
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (update != null && update != 0) {
+                    if (interim != null) {
+                        versionBuilder.append(".").append(interim);
+                        versionBuilder.append(".").append(update);
+                    }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
-                } else if (interim.isPresent() && interim.getAsInt() != 0) {
-                    versionBuilder.append(".").append(interim.getAsInt());
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (interim != null && interim != 0) {
+                    versionBuilder.append(".").append(interim);
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
                 } else {
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
                 }
             case FULL_COMPRESSED: // e.g. 25.0.0
-                if (feature.isPresent()) { versionBuilder.append(feature.getAsInt()); }
-                if (sixth.isPresent() && sixth.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                    if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
-                    if (!javaFormat) {
-                        if (fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
-                        versionBuilder.append(".").append(sixth.getAsInt());
+                if (feature != null) { versionBuilder.append(feature); }
+                if (sixth != null && sixth != 0) {
+                    if (interim != null) {
+                        versionBuilder.append(".").append(interim);
+                        if (update != null) {
+                            versionBuilder.append(".").append(update);
+                            if (patch != null) {
+                                versionBuilder.append(".").append(patch);
+                            }
+                        }
                     }
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+
+                    if (!javaFormat) {
+                        if (fifth != null) {
+                            versionBuilder.append(".").append(fifth);
+                            versionBuilder.append(".").append(sixth);
+                        }
+                    }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
-                } else if (fifth.isPresent() && fifth.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                    if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
-                    if (!javaFormat) { versionBuilder.append(".").append(fifth.getAsInt()); }
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (fifth != null && fifth != 0) {
+                    if (interim != null) {
+                        versionBuilder.append(".").append(interim);
+                        if (update  != null) {
+                            versionBuilder.append(".").append(update);
+                            if (patch   != null) {
+                                versionBuilder.append(".").append(patch);
+                            }
+                        }
+                    }
+                    if (!javaFormat) { versionBuilder.append(".").append(fifth); }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
-                } else if (patch.isPresent() && patch.getAsInt() != 0) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                    versionBuilder.append(".").append(patch.getAsInt());
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (patch != null && patch != 0) {
+                    if (interim != null) { versionBuilder.append(".").append(interim); }
+                    if (update  != null) { versionBuilder.append(".").append(update); }
+                    versionBuilder.append(".").append(patch);
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
-                } else if (update.isPresent()) {
-                    if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                    versionBuilder.append(".").append(update.getAsInt());
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (update != null) {
+                    if (interim != null) { versionBuilder.append(".").append(interim); }
+                    versionBuilder.append(".").append(update);
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
-                } else if (interim.isPresent()) {
-                    versionBuilder.append(".").append(interim.getAsInt());
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                } else if (interim != null) {
+                    versionBuilder.append(".").append(interim);
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
                 } else {
-                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                    if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                     return versionBuilder.toString();
                 }
             default:
-                if (feature.isPresent()) { versionBuilder.append(feature.getAsInt()); }
-                if (interim.isPresent()) { versionBuilder.append(".").append(interim.getAsInt()); }
-                if (update.isPresent()) { versionBuilder.append(".").append(update.getAsInt()); }
-                if (patch.isPresent()) { versionBuilder.append(".").append(patch.getAsInt()); }
-                if (!javaFormat) {
-                    if (fifth.isPresent()) { versionBuilder.append(".").append(fifth.getAsInt()); }
-                    if (sixth.isPresent()) { versionBuilder.append(".").append(sixth.getAsInt()); }
+                if (feature != null) {
+                    versionBuilder.append(feature);
+                    if (interim != null) {
+                        versionBuilder.append(".").append(interim);
+                        if (update != null) {
+                            versionBuilder.append(".").append(update);
+                            if (patch != null) {
+                                versionBuilder.append(".").append(patch);
+                            }
+                        }
+                    }
                 }
-                if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(build); }
+                if (!javaFormat) {
+                    if (fifth  != null) { versionBuilder.append(".").append(fifth); }
+                    if (sixth  != null) { versionBuilder.append(".").append(sixth); }
+                }
+                if (includeReleaseStatusAndBuild) { versionBuilder.append(pre).append(buildStr); }
                 return versionBuilder.toString();
-            }
+        }
     }
 
     @Override public String toString() {
@@ -776,44 +766,44 @@ public class VersionNumber implements Comparable<VersionNumber> {
         final int largerThan  = 1;
         int ret;
 
-        if (feature.isPresent() && otherVersionNumber.getFeature().isPresent()) {
-            if (feature.getAsInt() > otherVersionNumber.getFeature().getAsInt()) {
+        if (feature != null && otherVersionNumber.feature != null) {
+            if (feature > otherVersionNumber.feature) {
                 ret = largerThan;
-            } else if (feature.getAsInt() < otherVersionNumber.getFeature().getAsInt()) {
+            } else if (feature < otherVersionNumber.feature) {
                 ret = smallerThan;
             } else {
-                if (interim.isPresent() && otherVersionNumber.getInterim().isPresent()) {
-                    if (interim.getAsInt() > otherVersionNumber.getInterim().getAsInt()) {
+                if (interim != null && otherVersionNumber.interim != null) {
+                    if (interim > otherVersionNumber.interim) {
                         ret = largerThan;
-                    } else if (interim.getAsInt() < otherVersionNumber.getInterim().getAsInt()) {
+                    } else if (interim < otherVersionNumber.interim) {
                         ret = smallerThan;
                     } else {
-                        if (update.isPresent() && otherVersionNumber.getUpdate().isPresent()) {
-                            if (update.getAsInt() > otherVersionNumber.getUpdate().getAsInt()) {
+                        if (update != null && otherVersionNumber.update != null) {
+                            if (update > otherVersionNumber.update) {
                                 ret = largerThan;
-                            } else if (update.getAsInt() < otherVersionNumber.getUpdate().getAsInt()) {
+                            } else if (update < otherVersionNumber.update) {
                                 ret = smallerThan;
                             } else {
-                                if (patch.isPresent() && otherVersionNumber.getPatch().isPresent()) {
-                                    if (patch.getAsInt() > otherVersionNumber.getPatch().getAsInt()) {
+                                if (patch != null && otherVersionNumber.patch != null) {
+                                    if (patch > otherVersionNumber.patch) {
                                         ret = largerThan;
-                                    } else if (patch.getAsInt() < otherVersionNumber.getPatch().getAsInt()) {
+                                    } else if (patch < otherVersionNumber.patch) {
                                         ret = smallerThan;
                                     } else {
-                                        if (fifth.isPresent() && otherVersionNumber.getFifth().isPresent()) {
-                                            if (fifth.getAsInt() > otherVersionNumber.getFifth().getAsInt()) {
+                                        if (fifth != null && otherVersionNumber.fifth != null) {
+                                            if (fifth > otherVersionNumber.fifth) {
                                                 ret = largerThan;
-                                            } else if (fifth.getAsInt() < otherVersionNumber.getFifth().getAsInt()) {
+                                            } else if (fifth < otherVersionNumber.fifth) {
                                                 ret = smallerThan;
                                             } else {
-                                                if (sixth.isPresent() && otherVersionNumber.getSixth().isPresent()) {
-                                                    if (sixth.getAsInt() > otherVersionNumber.getSixth().getAsInt()) {
+                                                if (sixth != null && otherVersionNumber.sixth != null) {
+                                                    if (sixth > otherVersionNumber.sixth) {
                                                         ret = largerThan;
-                                                    } else if (sixth.getAsInt() < otherVersionNumber.getSixth().getAsInt()) {
+                                                    } else if (sixth < otherVersionNumber.sixth) {
                                                         ret = smallerThan;
                                                     } else {
-                                                        ReleaseStatus thisStatus  = releaseStatus.isPresent()                         ? releaseStatus.get()                         : ReleaseStatus.GA;
-                                                        ReleaseStatus otherStatus = otherVersionNumber.getReleaseStatus().isPresent() ? otherVersionNumber.getReleaseStatus().get() : ReleaseStatus.GA;
+                                                        ReleaseStatus thisStatus  = releaseStatus == ReleaseStatus.NONE                         ? ReleaseStatus.GA : releaseStatus;
+                                                        ReleaseStatus otherStatus = otherVersionNumber.releaseStatus == ReleaseStatus.NONE ? ReleaseStatus.GA : otherVersionNumber.releaseStatus;
 
                                                         if (ReleaseStatus.GA == thisStatus && ReleaseStatus.EA == otherStatus) {
                                                             ret = largerThan;
@@ -821,71 +811,69 @@ public class VersionNumber implements Comparable<VersionNumber> {
                                                             ret = smallerThan;
                                                         } else if (thisStatus == otherStatus) {
                                                             // Either both GA or both EA
-                                                            int thisBuild = build.isPresent()                          ? build.getAsInt()                         : 0;
-                                                            int otherBuild = otherVersionNumber.getBuild().isPresent() ? otherVersionNumber.getBuild().getAsInt() : 0;
+                                                            int thisBuild  = build != null                  ? build                  : 0;
+                                                            int otherBuild = otherVersionNumber.build != null ? otherVersionNumber.build : 0;
 
                                                             ret = Integer.compare(thisBuild, otherBuild);
                                                         } else {
                                                             ret = equal;
                                                         }
                                                     }
-                                                } else if (sixth.isPresent() && otherVersionNumber.getSixth().isEmpty()) {
+                                                } else if (sixth != null && otherVersionNumber.sixth == null) {
                                                     ret = largerThan;
-                                                } else if (sixth.isEmpty() && otherVersionNumber.getSixth().isPresent()) {
+                                                } else if (sixth == null && otherVersionNumber.sixth != null) {
                                                     ret = smallerThan;
                                                 } else {
                                                     ret = equal;
                                                 }
                                             }
-                                        } else if (fifth.isPresent() && otherVersionNumber.getFifth().isEmpty()) {
+                                        } else if (fifth != null && otherVersionNumber.fifth == null) {
                                             ret = largerThan;
-                                        } else if (fifth.isEmpty() && otherVersionNumber.getFifth().isPresent()) {
+                                        } else if (fifth == null && otherVersionNumber.fifth != null) {
                                             ret = smallerThan;
                                         } else {
                                             ret= equal;
                                         }
                                     }
-                                } else if (patch.isPresent() && otherVersionNumber.getPatch().isEmpty()) {
+                                } else if (patch != null && otherVersionNumber.patch == null) {
                                     ret = largerThan;
-                                } else if (patch.isEmpty() && otherVersionNumber.getPatch().isPresent()) {
+                                } else if (patch == null && otherVersionNumber.patch != null) {
                                     ret = smallerThan;
                                 } else {
                                     ret = equal;
                                 }
                             }
-                        } else if (update.isPresent() && otherVersionNumber.getUpdate().isEmpty()) {
+                        } else if (update != null && otherVersionNumber.update == null) {
                             ret = largerThan;
-                        } else if (update.isEmpty() && otherVersionNumber.getUpdate().isPresent()) {
+                        } else if (update == null && otherVersionNumber.update != null) {
                             ret = smallerThan;
                         } else {
                             ret = equal;
                         }
                     }
-                } else if (interim.isPresent() && otherVersionNumber.getInterim().isEmpty()) {
+                } else if (interim != null && otherVersionNumber.interim == null) {
                     ret = largerThan;
-                } else if (interim.isEmpty() && otherVersionNumber.getInterim().isPresent()) {
+                } else if (interim == null && otherVersionNumber.interim != null) {
                     ret = smallerThan;
                 } else {
                     ret = equal;
                 }
             }
-        } else if (feature.isPresent() && otherVersionNumber.getFeature().isEmpty()) {
+        } else if (feature != null && otherVersionNumber.feature == null) {
             ret = largerThan;
-        } else if (feature.isEmpty() && otherVersionNumber.getFeature().isPresent()) {
+        } else if (feature == null && otherVersionNumber.feature != null) {
             ret = smallerThan;
         } else {
             ret = equal;
         }
         if (ret == equal) {
-            if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isPresent() &&
-                otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isPresent()) {
-                int buildNumber      = getBuild().getAsInt();
-                int otherBuildNumber = otherVersionNumber.getBuild().getAsInt();
-                ret = Integer.compare(buildNumber, otherBuildNumber);
-            } else if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isPresent() && otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isEmpty()) {
+            if (ReleaseStatus.EA == releaseStatus && build != null &&
+                ReleaseStatus.EA == otherVersionNumber.releaseStatus && otherVersionNumber.build != null) {
+                ret = Integer.compare(build, otherVersionNumber.build);
+            } else if (ReleaseStatus.EA == releaseStatus && build != null && ReleaseStatus.EA == otherVersionNumber.releaseStatus && otherVersionNumber.build == null) {
                 ret = largerThan;
-            } else if (releaseStatus.isPresent() && ReleaseStatus.EA == releaseStatus.get() && build.isEmpty() &&
-                       otherVersionNumber.getReleaseStatus().isPresent() && ReleaseStatus.EA == otherVersionNumber.getReleaseStatus().get() && otherVersionNumber.getBuild().isPresent()) {
+            } else if (ReleaseStatus.EA == releaseStatus && build == null &&
+                       ReleaseStatus.EA == otherVersionNumber.releaseStatus && otherVersionNumber.build != null) {
                 ret = smallerThan;
             }
         }

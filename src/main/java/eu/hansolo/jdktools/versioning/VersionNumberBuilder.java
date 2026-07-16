@@ -82,6 +82,11 @@ public class VersionNumberBuilder {
         return this;
     }
 
+    public VersionNumberBuilder meta(final String meta) {
+        versionNumber.setMeta((null == meta || meta.isEmpty()) ? "" : meta);
+        return this;
+    }
+
     public VersionNumber build() {
         return versionNumber;
     }
