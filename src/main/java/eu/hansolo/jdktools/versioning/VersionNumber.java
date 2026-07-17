@@ -628,9 +628,12 @@ public class VersionNumber implements Comparable<VersionNumber> {
         return toString(outputFormat, javaFormat, includeReleaseStatusAndBuild, false);
     }
     public String toString(final OutputFormat outputFormat, final boolean javaFormat, final boolean includeReleaseStatusAndBuild, final boolean includeMeta) {
+        // pre : -ea, -ea.21.0.8
+        // meta: +5
         String pre      = ReleaseStatus.EA == this.releaseStatus ? "-ea" : "";
-        String buildStr = (this.build != null && this.build > 0) ? ("+" + this.build) : "";
         if (includeMeta && !meta.isEmpty()) { pre += ReleaseStatus.EA == this.releaseStatus ? ("." + meta) : "-" + meta; }
+        String buildStr = (this.build != null && this.build > 0) ? ("+" + this.build) : "";
+        if (pre.indexOf(buildStr) > -1) { buildStr = ""; }
         StringBuilder versionBuilder = new StringBuilder();
         switch(outputFormat) {
             case REDUCED:

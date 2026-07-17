@@ -650,6 +650,12 @@ class VersionNumberTest {
 
         VersionNumber v1Parsed        = VersionNumber.fromText(v1Correct);
         String        v1ParsedCorrect = "25.0.3-ea.25.1.3+17";
-        //System.out.println(v1Parsed.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
+        //System.out.println(v1ParsedCorrect + " -> " + v1Parsed.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
+        assert v1Parsed.toString(OutputFormat.FULL_COMPRESSED, true, true, true).equals(v1ParsedCorrect);
+
+        VersionNumber v3 = VersionNumberBuilder.create(21).interimNumber(0).updateNumber(8).buildNumber(5).releaseStatus(ReleaseStatus.EA).meta("21.0.8+5").build();
+        String        v3Correct = "21.0.8-ea.21.0.8+5";
+        //System.out.println(v3Correct + " -> " + v3.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
+        assert v3Correct.equals(v3.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
     }
 }
