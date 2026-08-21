@@ -658,4 +658,12 @@ class VersionNumberTest {
         //System.out.println(v3Correct + " -> " + v3.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
         assert v3Correct.equals(v3.toString(OutputFormat.FULL_COMPRESSED, true, true, true));
     }
+
+    @Test
+    void isFeatureRelease() {
+        final VersionNumber v1 = new VersionNumber(23);
+        final VersionNumber v2 = new VersionNumber(25, 0, 4, 1);
+        assert v1.isFeatureRelease() == true;
+        assert v2.isFeatureRelease() == false;
+    }
 }

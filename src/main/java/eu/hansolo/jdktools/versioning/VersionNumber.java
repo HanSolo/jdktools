@@ -469,6 +469,10 @@ public class VersionNumber implements Comparable<VersionNumber> {
         }
     }
 
+    public boolean isFeatureRelease() {
+        return feature > 0 && interim == 0 && update == 0 && patch == 0 && fifth == 0 && sixth == 0;
+    }
+
     /**
      * Returns the numbers that are available in the version number
      * e.g. Feature                                  (Number 1)
